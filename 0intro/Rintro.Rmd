@@ -1,0 +1,46 @@
+---
+title: "第1篇 数据与分析"
+author: "ad"
+date: "2014-11-20 abc"
+output:  ioslides_presentation
+logo: logo.png
+
+---
+
+## R Markdown
+
+This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+![logo文件](logo.png)
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+
+## Slide with Bullets
+
+- Bullet 1
+- Bullet 2
+- Bullet 3
+
+[id]: http://example.com/ "Title"
+Images
+![alt text][id]
+
+## Slide with R Code and Output
+
+```{r}
+summary(cars)
+
+```
+| Tables        | Are           | Cool  |  
+| ------------- |:-------------:| -----:|  
+| col 3 is      | right-aligned | $1600 |  
+| col 2 is      | centered      |   $12 |  
+| zebra stripes | are neat      |    $1 |  
+
+
+## Slide with Plot
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
