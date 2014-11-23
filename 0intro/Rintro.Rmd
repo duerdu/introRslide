@@ -3,15 +3,23 @@ title: "第1篇 数据与分析"
 author: "ad"
 date: "2014-11-20 abc"
 output:  ioslides_presentation
-logo: logo.png
+logo: ../pic/rlogo.png
 
 ---
 
-## R Markdown
+## 大纲
+* 数据
+* 统计
 
-This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+感谢  
+![thanks](../pic/thank.png)  
+[统计之都](http://cos.name/)  
+[Rstudio](http://www.rstudio.com/)  
 
-![logo文件](logo.png)
+
+This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see [rmarkdown](http://rmarkdown.rstudio.com).
+
+![test.png文件](../pic/test.png)
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
 
@@ -43,4 +51,20 @@ summary(cars)
 ```{r, echo=FALSE}
 plot(cars)
 ```
+
+This is an H1
+=============
+
+This is an H2
+-------------
+
+## 这是 H2
+
+###### 这是 H6
+
+This is [an example](http://example.com/ "Title") inline link.
+
+[This link](http://example.net/) has no title attribute.
+
+
 
