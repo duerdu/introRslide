@@ -14,27 +14,62 @@ css: ../html/0intro.css
 -  **方法**  
 <br>
 
-####  当数据指数级增长时
-ab
+  <dfp>
+  当数据指数级增长时
+  </dfp> 
 
 <br>
 ***感谢***  
 ![thanks](../pic/thank.png)  
-[统计之都](http://cos.name/)  
-[Rstudio](http://www.rstudio.com/)  
+[<dfp6>统计之都</dfp6>](http://cos.name/)  
+[<dfp6>Rstudio</dfp6>](http://www.rstudio.com/)  
 
 
 
-##  <ds>数据</ds>分析方法
+##  <dfb>数据</dfb>分析方法
+- Bullet 1
+- 相关性
+- Bullet 3
+
+<s> asd托尔斯泰s </s> 爱是
+
+
+辛普森悖论
+
+
+
+
+
+身高与股价的相关性
+相关性假象
+
+
+
+
+
+
+
+
+##  数据<dfb>分析</dfb>方法
+- Bullet 1
+- Bullet 2
+
+<s> asd托尔斯泰s </s> 爱是
+
+
+
+##  数据分析<dfb>方法</dfb>
 - Bullet 1
 - Bullet 2
 - Bullet 3
 
 <s> asd托尔斯泰s </s> 爱是
-![test.png文件](../pic/test.png)
+![test.png文件](../pic/rlogo.png)  
 [id]: http://example.com/ "Title"
 Images
 ![alt text][id]
+
+
 
 ## Slide with R Code and Output
 
