@@ -13,11 +13,7 @@ css: ../html/0intro.css
 -  **分析**
 -  **方法**  
 <br>
-
-  <dfp>
   当数据指数级增长时
-  </dfp> 
-
 <br>
 ***感谢***  
 ![thanks](../pic/thank.png)  
@@ -27,42 +23,72 @@ css: ../html/0intro.css
 
 
 ##  <dfb>数据</dfb>分析方法
-- Bullet 1
-- 相关性
-- Bullet 3
-
-<s> asd托尔斯泰s </s> 爱是
+- 数据量级
+- 数据内容
+- 数据来源
 
 
-辛普森悖论
+样本量
 
 
+getSymbols("^SSEC")
+tail(SSEC)
+plot(filter(SSEC$SSEC.Open/12,rep(1,12)))
 
-
+read.csv("../data/babyweight.txt", header = TRUE, sep = "\t")
 
 身高与股价的相关性
-相关性假象
-
-
-
-
-
-
 
 
 ##  数据<dfb>分析</dfb>方法
-- Bullet 1
+- 
 - Bullet 2
+辛普森悖论
+相关性假象
+换个视角（圈圈图）
 
-<s> asd托尔斯泰s </s> 爱是
+##  数据<dfb>分析</dfb>方法
+
+```{r,echo=FALSE,warning=FALSE}
+library(MSG)
+data(BinormCircle)
+```
+```{r,echo=TRUE,warning=FALSE,message=FALSE}
+par(mfrow = c(1, 2), ann = FALSE)
+plot(BinormCircle)
+smoothScatter(BinormCircle)
+```
+
+##  数据<dfb>分析</dfb>方法
+观察视角：改变点的大小+放大
+```{r}
+par(mfrow = c(1, 1))
+plot(BinormCircle,pch=19,cex=0.01)
+```
 
 
 
 ##  数据分析<dfb>方法</dfb>
-- Bullet 1
-- Bullet 2
-- Bullet 3
+1. 分析与观察
+2. 统计建模
+3. 数据挖掘
+4. 分析工具
 
+
+##  方法--1.分析与观察
+
+最常用的图形
+excel统计分析
+Tableau
+
+
+
+##  参考
+[1]:谢益辉,"统计图形和模拟视角下的模型理论解析".
+
+
+
+##  其他
 <s> asd托尔斯泰s </s> 爱是
 ![test.png文件](../pic/rlogo.png)  
 [id]: http://example.com/ "Title"
