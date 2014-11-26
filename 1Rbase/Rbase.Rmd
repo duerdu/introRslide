@@ -10,12 +10,14 @@ css: ../html/0intro.css
 
 ## 大纲
 -  **认识R**
--  **分析**
--  **方法**  
+-  **基本语法**
+-  **控制语句**  
 
+
+关于 R 语言的注解：一个数据分析和图形显示的程序设计环境<dcit>[1]</dcit>
 
 ##  <dfb>认识R</dfb>
--  R
+-  R/S语言
 -  R环境
 命令行
 Rgui
@@ -23,37 +25,38 @@ Rcmdr
 Rstudio
 Rstudio server
 linux
+rexcel
+rDCOM
+其他IDE（eclipse）
 
 - R资源
-cran
+cran.r-project.org
 install.packages()
-help(help)
+help(help);help.start();?help
 
-##  数据<dfb>分析</dfb>方法
-- 
-- Bullet 2
-辛普森悖论
-相关性假象
-换个视角（圈圈图）
 
-##  数据<dfb>分析</dfb>方法
 
-```{r,echo=FALSE,warning=FALSE}
-library(MSG)
-data(BinormCircle)
-```
-```{r,echo=TRUE,warning=FALSE,message=FALSE}
-par(mfrow = c(1, 2), ann = FALSE)
-plot(BinormCircle)
-smoothScatter(BinormCircle)
-```
+##  <dfb>基本语法</dfb>
+- R命令
+大小写敏感，";"分隔，"#"注释，"{}"多命令复合.
 
-##  数据<dfb>分析</dfb>方法
-观察视角：改变点的大小+放大
-```{r}
-par(mfrow = c(1, 1))
-plot(BinormCircle,pch=19,cex=0.01)
-```
+
+source("commands.R")
+sink("record.lis")
+sink()
+
+- 赋值
+
+
+##  <dfb>控制语句</dfb>
+
+- 分支
+
+
+- 循环
+
+并行小试
+
 
 ##  数据分析<dfb>方法</dfb>
 1. 分析与观察
@@ -62,23 +65,17 @@ plot(BinormCircle,pch=19,cex=0.01)
 4. 分析工具
 
 
-##  方法--1.分析与观察
-
-最常用的图形
-excel统计分析
-Tableau
-
-
 
 ##  参考
-[1]:谢益辉,"统计图形和模拟视角下的模型理论解析".
-http://www.biosino.org/R/R-doc/
+![1]: W.N.Venables,D.M.Smith,R核心开发小组,2006,"R导论"   
+![2]: http://www.biosino.org/R/R-doc/  "biosino"  
+
 
 
 ##  其他
 <s> asd托尔斯泰s </s> 爱是
-![test.png文件](../pic/rlogo.png)  
-[id]: http://example.com/ "Title"
+![test.png文件](../pic/rlogo.png)    
+[id]: http://example.com/ "Title"   
 Images
 ![alt text][id]
 
