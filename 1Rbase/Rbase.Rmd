@@ -11,15 +11,19 @@ css: ../html/0intro.css
 ## 大纲
 -  **认识R**
 -  **基本语法**
+-  **数据结构**  
 -  **控制语句**  
+-  **数据IO**  
+-  **函数**   
 
 
-关于 R 语言的注解：一个数据分析和图形显示的程序设计环境<dcit>[1]</dcit>
+关于 R 语言的注解：一个数据分析和图形显示的程序设计环境<dcit>[1]</dcit>  
 
 ##  <dfb>认识R</dfb>
 -  R/S语言
 -  R环境
 命令行
+R CMD BATCH test.R; (nohup Rscript test.R &)
 Rgui
 Rcmdr
 Rstudio
@@ -41,11 +45,35 @@ help(help);help.start();?help
 大小写敏感，";"分隔，"#"注释，"{}"多命令复合.
 
 
+
 source("commands.R")
 sink("record.lis")
 sink()
 
 - 赋值
+x <- 100
+s = 'abcdedf'
+assign('t',c(4,56,6))
+
+
+##  <dfb>数据结构</dfb>
+- 向量
+
+abc
+
+
+##  <dfb>数据结构</dfb>
+- 字符串
+
+paste()
+
+
+
+##  <dfb>数据结构</dfb>
+- 字符串
+
+字符串，也是向量
+
 
 
 ##  <dfb>控制语句</dfb>
