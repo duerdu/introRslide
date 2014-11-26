@@ -1,7 +1,7 @@
 ---
-title: "第一篇 数据与分析"
+title: "第二篇 R分析基础"
 author: "beitta#微信"
-date: "2014-11-20"
+date: "2014-11-26"
 output:  ioslides_presentation
 logo: ../pic/rlogo.png
 css: ../html/0intro.css
@@ -9,34 +9,25 @@ css: ../html/0intro.css
 ---
 
 ## 大纲
--  **数据**
+-  **认识R**
 -  **分析**
 -  **方法**  
-<br>
-  当数据指数级增长时
-<br>
-***感谢***  
-![thanks](../pic/thank.png)  
-[<dfp6>统计之都</dfp6>](http://cos.name/)  
-[<dfp6>Rstudio</dfp6>](http://www.rstudio.com/)  
 
 
+##  <dfb>认识R</dfb>
+-  R
+-  R环境
+命令行
+Rgui
+Rcmdr
+Rstudio
+Rstudio server
+linux
 
-##  <dfb>数据</dfb>分析方法
-- 数据量级
-- 数据内容
-- 数据来源
-
-样本量
-
-getSymbols("^SSEC")
-tail(SSEC)
-plot(filter(SSEC$SSEC.Open/12,rep(1,12)))
-
-read.csv("../data/babyweight.txt", header = TRUE, sep = "\t")
-
-身高与股价的相关性
-
+- R资源
+cran
+install.packages()
+help(help)
 
 ##  数据<dfb>分析</dfb>方法
 - 
@@ -77,40 +68,11 @@ plot(BinormCircle,pch=19,cex=0.01)
 excel统计分析
 Tableau
 
-##  方法--2.统计建模
-
-最常用的图形
-excel统计分析
-Tableau
-
-##  方法--3.数据挖掘
-
-最常用的图形
-excel统计分析
-Tableau
-
-##  方法--4.分析工具
-
-最常用的图形
-excel统计分析
-Tableau
-
-
-## 数据>分析>方法--小结
-
-数据敏感性+分析师
-统计建模
-数据挖掘
-代码流+工具流
-
-
-因地制宜，发挥所长。
-
 
 
 ##  参考
-[1]:谢益辉(2010),"统计图形和模拟视角下的模型理论解析".
-
+[1]:谢益辉,"统计图形和模拟视角下的模型理论解析".
+http://www.biosino.org/R/R-doc/
 
 
 ##  其他
