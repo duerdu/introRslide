@@ -14,13 +14,15 @@ css: ../html/0intro.css
 -  **方法**  
 <br>
   当数据指数级增长时
-<br>
+<br>  
+
 ***感谢***  
 ![thanks](../pic/thank.png)  
-[<dfp6>统计之都</dfp6>](http://cos.name/)  
-[<dfp6>Rstudio</dfp6>](http://www.rstudio.com/)  
-
-
+<dfp6>
+[统计之都](http://cos.name/)  
+[Rstudio](http://www.rstudio.com/)  
+……
+</dfp6>
 
 ##  <dfb>数据</dfb>分析方法
 - 数据量级

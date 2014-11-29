@@ -12,135 +12,518 @@ css: ../html/0intro.css
 -  **认识R**
 -  **基本语法**
 -  **数据结构**  
--  **控制语句**  
--  **数据IO**  
 -  **函数**   
+-  **控制语句**  
+-  **并行效率**  
+-  **数据IO**  
 
 
-关于 R 语言的注解：一个数据分析和图形显示的程序设计环境<dcit>[1]</dcit>  
+<dfp6>关于 R 语言的注解：一个数据分析和图形显示的程序设计环境</dfp6><dcit>[1]</dcit>  
 
-##  <dfb>认识R</dfb>
+##  认识R
 -  R/S语言
--  R环境
-命令行
-R CMD BATCH test.R; (nohup Rscript test.R &)
-Rgui
-Rcmdr
-Rstudio
-Rstudio server
-linux
-rexcel
-rDCOM
-其他IDE（eclipse）
+-  R环境  
+<dfp>
+> 命令行  
+> R CMD BATCH test.R; (nohup Rscript test.R &)   
+> Rgui  
+> Rcmdr  
+> Rstudio  
+> Rstudio server  
+> linux  
+> rexcel/rDCOM  
+> 其他IDE（eclipse）
+</dfp>
 
-- R资源
-cran.r-project.org
-install.packages()
-help(help);help.start();?help
+- R资源  
+<dfp>
+> cran.r-project.org  
+> install.packages()  
+> help(help);help.start();?help;  data();  
+> 环境变量R_PROFILE, R_HOME/etc/Rprofile.site
+</dfp>
 
+##  基本语法  
+- R命令  
+<dfp>
+> 大小写敏感  
+> ";"分隔  
+> "#"注释  
+> "{}"多命令复合  
+</dfp>
 
+- 赋值和运算
+```{r,eval=FALSE}
+x <- 100          # +-*/ ><= != & | …… 
+s = 'abcdedf'
+assign('t',c(4,56,6))
+ls();rm(x,"s");   #列出对象;删除对象; gc()
+```
 
-##  <dfb>基本语法</dfb>
-- R命令
-大小写敏感，";"分隔，"#"注释，"{}"多命令复合.
-
-
-
+- 执行文件和重定向
+```{r,eval=FALSE}
 source("commands.R")
 sink("record.lis")
 sink()
+```
 
-- 赋值
-x <- 100
-s = 'abcdedf'
-assign('t',c(4,56,6))
+##  基本语法-示例  
+```{r,error=TRUE}
+f1=function(x,y=2) {
+  z<-3
+  print(x+y+z)
+  }
+f1(1);  f1(10,y=20);  y
+f1(100,y<-200); y
 
+```
 
-##  <dfb>数据结构</dfb>
-- 向量
+##  数据结构-对象类型
+- 对象类型  
+<dfp6>
+数值型numeric;复数型complex;逻辑型logical; 字符型character;原味型raw;
+</dfp6>
+```{r}
+# raw,16进制显示，二进制运算，参考ascii编码
+as.raw(68);
+rawToChar(as.raw(68));
+x <- "123,go,A test string";
+charToRaw(x)
+```
+##  数据结构-raw type
+```{r}
+t1<-as.raw(3)  # 0000 0011
+t2<-as.raw(6)  # 0000 0110
+t3<-as.raw(68) # 0100 0100 
+t1&t2;
+t2&t3;
+is.raw(t2&t3)
 
-abc
+```
 
+##  数据结构-向量
+- 创建向量：c()
+- 向量元素需是相同的对象类型,  
+```{r}
+v1<-v2<-c(1,2.2,NA,NULL,55);    # is.na();is.nan(0/0);is.null();
+v1[c(0,1,2,100)];               # []下标,从1起始,越界返回NA
+v2[2]<-'er';v2[c(F,T,F,T,T,T)]; # NA缺失值(占位),NULL为空（不占位）
+paste('v1:',mode(v1),'; length(v1):',length(v1),'; v2:',mode(v2))
+```
 
-##  <dfb>数据结构</dfb>
-- 字符串
+##  数据结构-向量运算
+- 算术表达式
+```{r,echo=c(1:4,6)}
+v1<-1:5             # v1=c(1:5); v1=c(1,2,3,4,5)
+v2<-seq(10,100,10)
+v1_2=v1*2;
+v1av2=v1+v2;
+c(paste('v1:',paste(v1,collapse = ',')),
+  paste('v2:',paste(v2,collapse = ',')),
+  paste('v1_2:',paste(v1_2,collapse = ',')),
+  paste('v1av2:',paste(v1av2,collapse = ','))
+  )
+rep(v1,2)
 
-paste()
+```
 
+- <dfb>矩阵式思维</dfb>
 
+##  数据结构-向量运算
+- <dfb>符号优先级</dfb>  
+```{r}
+n=10;    n:1;
+15-n:1;  (15-n):1;
+n:1*5
 
-##  <dfb>数据结构</dfb>
-- 字符串
+```
 
-字符串，也是向量
+##  数据结构-向量运算
+- 筛选和逻辑  
+```{r,echo=1:3}
+x=c(seq(1,10,2),seq(2,10,2)); x
+x[x>5];    subset(x,x<5);
+ifelse(x>5,1,0)
+c(paste('any(x>0.5):',any(x>0.5)),
+  paste('all(x>0.5):',all(x>0.5))
+  )
 
+```
 
+##  数据结构-字符串
+- 字符串(字符向量)
+```{r}
+sv=c('x','y','z')
+sv2=paste(sv,1:9,sep='',collapse = ';');sv2
+sv3=sv[c(1,2,3,3,2,1)];sv3
 
-##  <dfb>控制语句</dfb>
+x=rnorm(4);  nm=c("orange", "banana", "apple", "peach");
+names(x)=nm; x ;   # x["banana"]
 
-- 分支
+```
 
+##  数据结构-字符串
+- 字符串操作
+```{r}
+s=c("this is a test string")
+sp=strsplit(s,split=' ');    sp=sp[[1]];
+nchar(sp)
+toupper(substr(sp,1,3))      # tolower()
+# paste (..., sep = " ", collapse = NULL)
+# ?? grep,sub,gsub,regexpr...  
+gsub("s","$",sp)
+```
 
-- 循环
+##  数据结构-矩阵
+- 创建矩阵
+```{r,echo=c(1,2,4)}
+x=1:6;  x
+m=matrix(x,nrow=2,ncol=3);m  #按列存储
+c(paste('m[1]:',m[1]),
+  paste('m[2]:',m[2]),
+  paste('m[3]:',m[3]),
+  paste('m[2,2]:',m[2,2])
+  )
+dim(m)
 
-并行小试
+```
 
+##  数据结构-矩阵
+- 创建矩阵
+```{r,warning=FALSE}
+rbind(1:2,11:15)          #warning输出，提示行或列数不一致
+cbind(1:2,11:14,3:4,5:7)  #短的行或列，自动重复补齐
 
-##  数据分析<dfb>方法</dfb>
-1. 分析与观察
-2. 统计建模
-3. 数据挖掘
-4. 分析工具
+```
 
+##  数据结构-矩阵
+- 矩阵运算
+```{r,warning=FALSE}
+x=c(1,2,3,4);
+m=matrix(x,nrow=2);m
+m %*% m
+# m[c(),c()];  #子矩阵筛选
+# t(); det(); qr(); eigen();...
+```
 
+##  数据结构-矩阵
+- 行列名称
+```{r,warning=FALSE}
+x=1:6;    
+m=matrix(x,nrow=2); 
+colnames(m)=c("c1","c2","c3")
+rownames(m)=c("r1","r2")
+m; 
+m["r1","c3"]
 
-##  参考
-![1]: W.N.Venables,D.M.Smith,R核心开发小组,2006,"R导论"   
-![2]: http://www.biosino.org/R/R-doc/  "biosino"  
+```
 
+##  数据结构-矩阵
+- <dfb>类型变化：矩阵到向量</dfb>
+```{r,warning=FALSE}
+x=1:6;    m=matrix(x,nrow=3);  m ; attributes(m)   # 类型变化引起的错误
+m3=m[3,];                      m3; attributes(m3)  # as.matrix(m3)
 
+```
 
-##  其他
-<s> asd托尔斯泰s </s> 爱是
-![test.png文件](../pic/rlogo.png)    
-[id]: http://example.com/ "Title"   
-Images
-![alt text][id]
+##  数据结构-数组
+- 高维数组
+```{r,warning=FALSE}
+x=1:24;    r=array(x,dim=c(2,3,4)); 
+r[,,1]     #从dim的后向前依次存储
+r[,,4]  
+```
 
+##  数据结构-列表
+- 列表创建和修改  
+```{r,echo=c(1,3,4),warning=FALSE}
+l=list(name="ad",age=18,score=c(80,86,90)) ; l #对象集合，类型不一
+c(paste("l[[1]]:",l[[1]]),
+  paste("l[['age']]:",l[['age']]),
+  paste("l$ag:",l$ag)
+  )
+# l$age=NULL; 依据索引可以对list做相应的"增删改"操作；
+names(l)  # "name"  "age"   "score"
+```
 
+##  数据结构-列表
+- 列表vs向量  
+```{r}
+v=1:5; names(v)=paste("v",1:5,sep=""); v ; #paste灵活生成字符串
+l1=as.list(v);l1$v3                        #as.*隐含内在的转换
+l2=list(v);l2 ;                            #unlist(l1)逆向操作
 
-## Slide with R Code and Output
+```
+
+##  数据结构-因子
+因子由在分类变量基础上，增加其水平信息（频数）构成；  
+理解上可类比于分类变量、名义变量、有序变量。
 
 ```{r}
-summary(cars)
+v=c(rep(10,2),rep(20,3),rep(30,4))
+f=factor(v,levels=c(10,20,30,40));f   #f=factor(v)；#levels(f)返回水平
+str(f) ; unclass(f);     #数据已被重新编码为因子的顺序
 
 ```
-| Tables        | Are           | Cool  |  
-| ------------- |:-------------:| -----:|  
-| col 3 is      | right-aligned | $1600 |  
-| col 2 is      | centered      |   $12 |  
-| zebra stripes | are neat      |    $1 |  
 
-
-## Slide with Plot
-
-```{r, echo=FALSE}
-plot(cars)
+##  数据结构-因子
+因子的使用  
+```{r}
+v=c(rep(10,2),rep(20,3),rep(30,4)); f=factor(v);
+length(f)   #长度还是数据的长度，而不是水平的个数
+table(f)    #因子水平的频数
+tapply(v,f,sum)  #常用操作，分组统计；在模型中也经常用到
 ```
 
-This is an H1
-=============
 
-This is an H2
--------------
+##  数据结构-数据框
+- 数据框，形似矩阵、亦似列表
+- 分量是向量、因子、数值矩阵、列表或者其他数据框 
+- 各分量的行数需相等
+- 字符向量会被强制转换成因子
+```{r}
+data.frame(x=c(5,6,7),a=c("a1","a2","a3"),list(6,'b'),matrix(1:6,nrow=3)) 
+#stringsAsFactors = F
+```
 
-## 这是 H2
+##  数据结构-数据框
+数据框操作
+```{r}
+d1=data.frame(x=c(5,6,7),a=c("a1","a2","a3"),list(6,'b'),matrix(1:6,nrow=3)) 
+d1[1:2,2:3]  #矩阵索引
+d1[d1$x<7,]  #条件筛选，列表索引 d1$x
 
-###### 这是 H6
+attributes(d1)  # names ; row.names ;  class ;
 
-This is [an example](http://example.com/ "Title") inline link.
+```
 
-[This link](http://example.net/) has no title attribute.
+##  数据结构-数据框
+数据框操作
+```{r}
+d1=data.frame(x=c(5,6,7),a=c("a1","a2","a3"),list(6,'b'),matrix(1:6,nrow=3)) 
+cbind(d1$x,d1$X2)  #rbind类似
+merge(data.frame(id=1:3,a="d1"),data.frame(id=1:3,b="d2"))  # by.x="id",by.y="id"
+```
 
 
+##  函数
+```{r}
+vadd <- function(y1, y2,y3=c(2)) {
+  n1=length(y1)
+  n2=length(y2)
+  if (n1==n2){ 
+    return(y1+y2)
+  } else {
+    return("length don't match!")
+  }
+}
+vadd(0:5,10:15)
+vadd(1:10,3:14)
+```
+
+##  控制语句
+- 分支1  
+> if (expr1 ) expr2 else expr3
+```{r}
+x=10
+y = if (x>5)   x else x+1
+z = if (x>100) x else x+1
+c(paste("x:",x),
+  paste("y:",y),
+  paste("z:",z)
+  )
+if (x>5) print("x>5")
+```
+
+
+##  控制语句
+- 分支2  
+```{r}
+x=3
+if (x>5) {
+  print('x>5')
+  } else {
+  print('x<=5')
+  print(rnorm(2))
+  }
+
+```
+
+
+##  控制语句
+- 循环1  
+```{r}
+for (i in seq(1,10,2)) {
+  print(i*i)
+}
+
+```
+
+
+##  控制语句
+- 循环2  
+```{r}
+i=1
+m=c()
+repeat {
+  m[i]=i*5
+  i=i+1
+  if (i>5) break
+}
+m
+
+```
+
+##  控制语句
+- 循环3  
+```{r}
+i=1
+m=c()
+while (i<5) {
+  m[i]=i*i
+  i=i+1
+}
+m
+
+```
+
+##  控制语句
+- 循环4  
+```{r}
+#非向量的循环操作  apply lapply mapply （隐式循环）
+d1=data.frame(x=c(5,6,7),a=c("a1","a2","a3"),list(6,'b')) 
+apply(d1,2,function (s){paste(s,"H",sep = "")})
+
+```
+
+##  控制语句
+- 循环5 （for vs apply）  
+```{r}
+n=1000     # 向量操作类似；但当n增大时，会适得其反;
+system.time({
+  m=matrix(0,n,n);
+  for (i in 1:n) {m[i,]=rnorm(n)}
+})
+system.time({
+  m = sapply(rep(n,n),rnorm)
+})
+
+```
+
+
+## 并行效率 
+- apply vs parallel  
+```{r,eval=FALSE}
+library(parallel)
+n=5000
+# lapply:   3.09 0.03 3.12 
+system.time({
+  m = lapply(rep(n,n),rnorm)
+})
+# parallel: 0.68 0.70 2.87 
+cl <- makeCluster(getOption("cl.cores", 4));
+system.time({
+  m = parLapply(cl, rep(n,n),  rnorm)
+})
+stopCluster(cl);
+# another time count way
+ptm <- proc.time()
+m = lapply(rep(100,100),rnorm)
+proc.time() - ptm
+
+```
+
+##  数据IO
+- 文件<->data.frame  
+
+> 文件内容：babyweight.txt  
+> 阶段  体重	身高  
+> 出生	3.8	52.8  
+> 1月	5	57  
+> 2月	6	60.7  
+> ... ...  
+
+```{r,eval=FALSE}
+fen="./data/babyen.txt"
+fcn="./data/babycn.txt"
+d1=read.table(fen,header=T,sep="\t",encoding="ascii")
+d2=read.table(fcn,header=T,sep="\t",encoding="ascii")
+head(d1,2)
+head(d2,2)
+
+```
+> read.csv  
+> write.table 
+> write.csv
+
+##  数据IO
+- 文件<->vector(list)    
+
+```{r,eval=FALSE}
+fcn="./data/babycn.txt"
+#return a list: [[1]] 阶段; [[2]] 体重; [[3]] 身高
+scan(fcn,what=list("",1,1),skip=1,n=9)
+#return a vector: row followed by next row
+scan(fcn,what=c("",1,1),skip=1)
+```
+> cat  
+> write
+
+##  数据IO
+- 文件<->object   
+
+```{r,eval=FALSE}
+x=rep(2:3,5)
+y=x^2
+d=data.frame(x=x,y=y)
+save(x,y,x,file="./data/savetest.Rdata")
+rm(x,y,d);x
+# error : x does not exist
+load(file="./data/savetest.Rdata")
+d
+# fine: get x,y,d  from the loading file
+
+```
+
+##  数据IO
+- 逐行读入   
+```{r,eval=FALSE}
+fcn="./data/babyen.txt"
+con <- file(fen, "r")
+line=readLines(con,1)
+while( length(line) != 0 ) {
+     print(line)
+     print(strsplit(line,"\t"))
+     # substr  gsub ...
+     line=readLines(con,n=1)
+}
+close(con)
+
+```
+
+##  数据IO
+- MYSQL  
+```{r}
+library(RMySQL)
+db="rdb";u="root";pa="toor";h="127.0.0.1";po=3306;
+conn <- dbConnect(MySQL(), dbname=db, username=u, password=pa,host=h,port=po)
+summary(conn, verbose = TRUE)
+dbDisconnect(conn)
+```
+
+##  数据IO 
+```{r,echo=c(4:6)}
+library(RMySQL)
+db="rdb";u="root";pa="toor";h="127.0.0.1";po=3306;
+conn <- dbConnect(MySQL(), dbname=db, username=u, password=pa,host=h,port=po)
+dbListTables(conn)
+dbListFields(conn, "babyweight")
+d1=dbGetQuery(conn, "SELECT * FROM babyweight limit 1");d1  #dbSendQuery
+dbDisconnect(conn)
+```
+> <dfb>更多数据IO：R Data Import/Export </dfb>
+
+##  参考
+![1]: W.N.Venables,D.M.Smith,R核心开发小组,2006, "R导论"   
+![2]: 陈堰平,邱怡轩,潘岚锋, 2013,《R语言编程艺术》 
 
