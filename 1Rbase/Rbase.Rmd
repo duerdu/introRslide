@@ -57,7 +57,7 @@ css: ../html/0intro.css
 x <- 100          # +-*/ ><= != & | …… 
 s = 'abcdedf'
 assign('t',c(4,56,6))
-ls();rm(x,"s");   #列出对象;删除对象; gc()
+ls();rm(x,"s");   #列出对象;删除对象; rm(list=ls()) ;gc()
 ```
 
 - 执行文件和重定向
@@ -269,7 +269,7 @@ str(f) ; unclass(f);     #数据已被重新编码为因子的顺序
 ##  数据结构-因子
 因子的使用  
 ```{r}
-v=c(rep(10,2),rep(20,3),rep(30,4)); f=factor(v);
+v=c(rep(10,2),rep(20,3),rep(30,4)); f=factor(v);    # gl()
 length(f)   #长度还是数据的长度，而不是水平的个数
 table(f)    #因子水平的频数
 tapply(v,f,sum)  #常用操作，分组统计；在模型中也经常用到
@@ -503,7 +503,7 @@ close(con)
 
 ##  数据IO
 - MYSQL  
-```{r}
+```{r,eval=FALSE}
 library(RMySQL)
 db="rdb";u="root";pa="toor";h="127.0.0.1";po=3306;
 conn <- dbConnect(MySQL(), dbname=db, username=u, password=pa,host=h,port=po)
@@ -512,16 +512,27 @@ dbDisconnect(conn)
 ```
 
 ##  数据IO 
-```{r,echo=c(4:6)}
+```{r,echo=c(4:6),eval=FALSE}
 library(RMySQL)
 db="rdb";u="root";pa="toor";h="127.0.0.1";po=3306;
 conn <- dbConnect(MySQL(), dbname=db, username=u, password=pa,host=h,port=po)
 dbListTables(conn)
 dbListFields(conn, "babyweight")
-d1=dbGetQuery(conn, "SELECT * FROM babyweight limit 1");d1  #dbSendQuery
+d1=dbGetQuery(conn, "SELECT * FROM babyweight limit 1");d1  #dbSendQuery,dbFetch,dbClearResult
 dbDisconnect(conn)
 ```
 > <dfb>更多数据IO：R Data Import/Export </dfb>
+
+
+##  小结 
+- data.frame (stringsAsFactors = F,rbind,cbind)  
+- as.vector(),as.list()
+- seq,rep,paste,strsplit  
+- grep,sub,gsub,regexpr  
+- vector,apply,lapply,tapply,mapply  
+- rm()  
+- help()  
+
 
 ##  参考
 ![1]: W.N.Venables,D.M.Smith,R核心开发小组,2006, "R导论"   

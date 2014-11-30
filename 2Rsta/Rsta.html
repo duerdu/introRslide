@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>第二篇 R分析基础</title>
+  <title>第三篇 R统计分析</title>
 
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -10,7 +10,7 @@
 
 
 
-  <meta name="date" content="2014-11-26" />
+  <meta name="date" content="2014-11-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -26,7 +26,7 @@
     var SLIDE_CONFIG = {
       // Slide settings
       settings: {
-                title: '第二篇 R分析基础',
+                title: '第三篇 R统计分析',
                         useBuilds: true,
         usePrettify: true,
         enableSlideAreas: true,
@@ -102,782 +102,88 @@
       <h1 data-config-title><!-- populated from slide_config.json --></h1>
       <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
       <p data-config-presenter><!-- populated from slide_config.json --></p>
-            <p style="margin-top: 6px; margin-left: -2px;">2014-11-26</p>
+            <p style="margin-top: 6px; margin-left: -2px;">2014-11-30</p>
           </hgroup>
   </slide>
 
 <slide class=''><hgroup><h2>大纲</h2></hgroup><article >
 
 <ul>
-<li><strong>认识R</strong></li>
-<li><strong>基本语法</strong></li>
-<li><strong>数据结构</strong><br/></li>
-<li><strong>函数</strong><br/></li>
-<li><strong>控制语句</strong><br/></li>
-<li><strong>并行效率</strong><br/></li>
-<li><strong>数据IO</strong></li>
+<li><strong>数据操作</strong><br/></li>
+<li><strong>描述统计</strong><br/></li>
+<li><strong>假设检验</strong><br/></li>
+<li><strong>相关分析</strong><br/></li>
+<li><strong>方差分析</strong><br/></li>
+<li><strong>回归分析</strong><br/></li>
+<li><strong>因子分析</strong><br/></li>
+<li><strong>时间序列</strong></li>
 </ul>
 
-<p><dfp6>关于 R 语言的注解：一个数据分析和图形显示的程序设计环境</dfp6><dcit>[1]</dcit></p>
-
-</article></slide><slide class=''><hgroup><h2>认识R</h2></hgroup><article  id="r">
+</article></slide><slide class=''><hgroup><h2>数据操作</h2></hgroup><article >
 
 <ul>
-<li>R/S语言</li>
-<li><p>R环境<br/><dfp> &gt; 命令行<br/>&gt; R CMD BATCH test.R; (nohup Rscript test.R &amp;)<br/>&gt; Rgui<br/>&gt; Rcmdr<br/>&gt; Rstudio<br/>&gt; Rstudio server<br/>&gt; linux<br/>&gt; rexcel/rDCOM<br/>&gt; 其他IDE（eclipse） </dfp></p></li>
-<li><p>R资源<br/><dfp> &gt; cran.r-project.org<br/>&gt; install.packages()<br/>&gt; help(help);help.start();?help; data();<br/>&gt; 环境变量R_PROFILE, R_HOME/etc/Rprofile.site </dfp></p></li>
+<li>数据编辑</li>
 </ul>
 
-</article></slide><slide class=''><hgroup><h2>基本语法</h2></hgroup><article >
+<pre class = 'prettyprint lang-r'>v0=rnorm(10);             # v1=edit(v0)
+m0=sapply(c(2,2),runif)   # m1=edit(m0)
+d0=data.frame(m0)         # d0[2,2]=0; d0$X1[1]=0;</pre>
 
 <ul>
-<li><p>R命令<br/><dfp> &gt; 大小写敏感<br/>&gt; &quot;;&quot;分隔<br/>&gt; &quot;#&quot;注释<br/>&gt; &quot;{}&quot;多命令复合<br/></dfp></p></li>
-<li><p>赋值和运算</p></li>
+<li>自带数据</li>
 </ul>
 
-<pre class = 'prettyprint lang-r'>x &lt;- 100          # +-*/ &gt;&lt;= != &amp; | …… 
-s = &#39;abcdedf&#39;
-assign(&#39;t&#39;,c(4,56,6))
-ls();rm(x,&quot;s&quot;);   #列出对象;删除对象; rm(list=ls()) ;gc()</pre>
+<pre class = 'prettyprint lang-r'>#data()
+data(sleep);tail(sleep,2)</pre>
+
+<pre >##    extra group ID
+## 19   4.6     2  9
+## 20   3.4     2 10</pre>
+
+</article></slide><slide class=''><hgroup><h2>数据操作</h2></hgroup><article  id="-1">
 
 <ul>
-<li>执行文件和重定向</li>
+<li>筛选</li>
 </ul>
 
-<pre class = 'prettyprint lang-r'>source(&quot;commands.R&quot;)
-sink(&quot;record.lis&quot;)
-sink()</pre>
+<pre class = 'prettyprint lang-r'>v0=rnorm(10); v1=v0[v0&gt;0.5]; v1</pre>
 
-</article></slide><slide class=''><hgroup><h2>基本语法-示例</h2></hgroup><article  id="-">
+<pre >## [1] 0.7688216</pre>
 
-<pre class = 'prettyprint lang-r'>f1=function(x,y=2) {
-  z&lt;-3
-  print(x+y+z)
-  }
-f1(1);  f1(10,y=20);  y</pre>
-
-<pre >## [1] 6</pre>
-
-<pre >## [1] 33</pre>
-
-<pre >## Error in eval(expr, envir, enclos): 找不到对象&#39;y&#39;</pre>
-
-<pre class = 'prettyprint lang-r'>f1(100,y&lt;-200); y</pre>
-
-<pre >## [1] 303</pre>
-
-<pre >## [1] 200</pre>
-
-</article></slide><slide class=''><hgroup><h2>数据结构-对象类型</h2></hgroup><article  id="-">
+<pre class = 'prettyprint lang-r'>d0=data.frame(n=1:4,s=rep(c(&quot;aa&quot;,&quot;bb&quot;),2),x=runif(4))
+d1=d0[d0$n&gt;2 &amp; d0$s==&quot;aa&quot;,]</pre>
 
 <ul>
-<li>对象类型<br/><dfp6> 数值型numeric;复数型complex;逻辑型logical; 字符型character;原味型raw; </dfp6></li>
+<li>排序</li>
 </ul>
 
-<pre class = 'prettyprint lang-r'># raw,16进制显示，二进制运算，参考ascii编码
-as.raw(68);</pre>
+<pre class = 'prettyprint lang-r'>v0=round(runif(n=10,min=1,max=20));</pre>
 
-<pre >## [1] 44</pre>
+<pre >## [1] &quot;v0       : 19  ,5  ,10  ,2  ,13  ,9  ,16  ,8  ,13  ,4&quot;
+## [2] &quot;sort(v0) : 2  ,4  ,5  ,8  ,9  ,10  ,13  ,13  ,16  ,19&quot;
+## [3] &quot;order(v0): 4  ,10  ,2  ,8  ,6  ,3  ,5  ,9  ,7  ,1&quot;</pre>
 
-<pre class = 'prettyprint lang-r'>rawToChar(as.raw(68));</pre>
-
-<pre >## [1] &quot;D&quot;</pre>
-
-<pre class = 'prettyprint lang-r'>x &lt;- &quot;123,go,A test string&quot;;
-charToRaw(x)</pre>
-
-<pre >##  [1] 31 32 33 2c 67 6f 2c 41 20 74 65 73 74 20 73 74 72 69 6e 67</pre>
-
-</article></slide><slide class=''><hgroup><h2>数据结构-raw type</h2></hgroup><article  id="-raw-type">
-
-<pre class = 'prettyprint lang-r'>t1&lt;-as.raw(3)  # 0000 0011
-t2&lt;-as.raw(6)  # 0000 0110
-t3&lt;-as.raw(68) # 0100 0100 
-t1&amp;t2;</pre>
-
-<pre >## [1] 02</pre>
-
-<pre class = 'prettyprint lang-r'>t2&amp;t3;</pre>
-
-<pre >## [1] 04</pre>
-
-<pre class = 'prettyprint lang-r'>is.raw(t2&amp;t3)</pre>
-
-<pre >## [1] TRUE</pre>
-
-</article></slide><slide class=''><hgroup><h2>数据结构-向量</h2></hgroup><article  id="-">
+</article></slide><slide class=''><hgroup><h2>数据操作</h2></hgroup><article  id="-2">
 
 <ul>
-<li>创建向量：c()</li>
-<li>向量元素需是相同的对象类型,</li>
+<li><p>数据编辑</p></li>
+<li><p>自带数据</p></li>
 </ul>
 
-<pre class = 'prettyprint lang-r'>v1&lt;-v2&lt;-c(1,2.2,NA,NULL,55);    # is.na();is.nan(0/0);is.null();
-v1[c(0,1,2,100)];               # []下标,从1起始,越界返回NA</pre>
-
-<pre >## [1] 1.0 2.2  NA</pre>
-
-<pre class = 'prettyprint lang-r'>v2[2]&lt;-&#39;er&#39;;v2[c(F,T,F,T,T,T)]; # NA缺失值(占位),NULL为空（不占位）</pre>
-
-<pre >## [1] &quot;er&quot; &quot;55&quot; NA   NA</pre>
-
-<pre class = 'prettyprint lang-r'>paste(&#39;v1:&#39;,mode(v1),&#39;; length(v1):&#39;,length(v1),&#39;; v2:&#39;,mode(v2))</pre>
-
-<pre >## [1] &quot;v1: numeric ; length(v1): 4 ; v2: character&quot;</pre>
-
-</article></slide><slide class=''><hgroup><h2>数据结构-向量运算</h2></hgroup><article  id="-">
+</article></slide><slide class=''><hgroup><h2>数据操作</h2></hgroup><article  id="-3">
 
 <ul>
-<li>算术表达式</li>
+<li><p>数据编辑</p></li>
+<li><p>自带数据</p></li>
 </ul>
 
-<pre class = 'prettyprint lang-r'>v1&lt;-1:5             # v1=c(1:5); v1=c(1,2,3,4,5)
-v2&lt;-seq(10,100,10)
-v1_2=v1*2;
-v1av2=v1+v2;</pre>
+</article></slide><slide class=''><hgroup><h2>## 描述统计</h2></hgroup><article >
 
-<pre >## [1] &quot;v1: 1,2,3,4,5&quot;                        
-## [2] &quot;v2: 10,20,30,40,50,60,70,80,90,100&quot;   
-## [3] &quot;v1_2: 2,4,6,8,10&quot;                     
-## [4] &quot;v1av2: 11,22,33,44,55,61,72,83,94,105&quot;</pre>
-
-<pre class = 'prettyprint lang-r'>rep(v1,2)</pre>
-
-<pre >##  [1] 1 2 3 4 5 1 2 3 4 5</pre>
-
-<ul>
-<li><dfb>矩阵式思维</dfb></li>
-</ul>
-
-</article></slide><slide class=''><hgroup><h2>数据结构-向量运算</h2></hgroup><article  id="--1">
-
-<ul>
-<li><dfb>符号优先级</dfb></li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>n=10;    n:1;</pre>
-
-<pre >##  [1] 10  9  8  7  6  5  4  3  2  1</pre>
-
-<pre class = 'prettyprint lang-r'>15-n:1;  (15-n):1;</pre>
-
-<pre >##  [1]  5  6  7  8  9 10 11 12 13 14</pre>
-
-<pre >## [1] 5 4 3 2 1</pre>
-
-<pre class = 'prettyprint lang-r'>n:1*5</pre>
-
-<pre >##  [1] 50 45 40 35 30 25 20 15 10  5</pre>
-
-</article></slide><slide class=''><hgroup><h2>数据结构-向量运算</h2></hgroup><article  id="--2">
-
-<ul>
-<li>筛选和逻辑</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>x=c(seq(1,10,2),seq(2,10,2)); x</pre>
-
-<pre >##  [1]  1  3  5  7  9  2  4  6  8 10</pre>
-
-<pre class = 'prettyprint lang-r'>x[x&gt;5];    subset(x,x&lt;5);</pre>
-
-<pre >## [1]  7  9  6  8 10</pre>
-
-<pre >## [1] 1 3 2 4</pre>
-
-<pre class = 'prettyprint lang-r'>ifelse(x&gt;5,1,0)</pre>
-
-<pre >##  [1] 0 0 0 1 1 0 0 1 1 1</pre>
-
-<pre >## [1] &quot;any(x&gt;0.5): TRUE&quot; &quot;all(x&gt;0.5): TRUE&quot;</pre>
-
-</article></slide><slide class=''><hgroup><h2>数据结构-字符串</h2></hgroup><article  id="-">
-
-<ul>
-<li>字符串(字符向量)</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>sv=c(&#39;x&#39;,&#39;y&#39;,&#39;z&#39;)
-sv2=paste(sv,1:9,sep=&#39;&#39;,collapse = &#39;;&#39;);sv2</pre>
-
-<pre >## [1] &quot;x1;y2;z3;x4;y5;z6;x7;y8;z9&quot;</pre>
-
-<pre class = 'prettyprint lang-r'>sv3=sv[c(1,2,3,3,2,1)];sv3</pre>
-
-<pre >## [1] &quot;x&quot; &quot;y&quot; &quot;z&quot; &quot;z&quot; &quot;y&quot; &quot;x&quot;</pre>
-
-<pre class = 'prettyprint lang-r'>x=rnorm(4);  nm=c(&quot;orange&quot;, &quot;banana&quot;, &quot;apple&quot;, &quot;peach&quot;);
-names(x)=nm; x ;   # x[&quot;banana&quot;]</pre>
-
-<pre >##     orange     banana      apple      peach 
-##  0.3125930  0.5909374 -1.5797947 -0.6138956</pre>
-
-</article></slide><slide class=''><hgroup><h2>数据结构-字符串</h2></hgroup><article  id="--1">
-
-<ul>
-<li>字符串操作</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>s=c(&quot;this is a test string&quot;)
-sp=strsplit(s,split=&#39; &#39;);    sp=sp[[1]];
-nchar(sp)</pre>
-
-<pre >## [1] 4 2 1 4 6</pre>
-
-<pre class = 'prettyprint lang-r'>toupper(substr(sp,1,3))      # tolower()</pre>
-
-<pre >## [1] &quot;THI&quot; &quot;IS&quot;  &quot;A&quot;   &quot;TES&quot; &quot;STR&quot;</pre>
-
-<pre class = 'prettyprint lang-r'># paste (..., sep = &quot; &quot;, collapse = NULL)
-# ?? grep,sub,gsub,regexpr...  
-gsub(&quot;s&quot;,&quot;$&quot;,sp)</pre>
-
-<pre >## [1] &quot;thi$&quot;   &quot;i$&quot;     &quot;a&quot;      &quot;te$t&quot;   &quot;$tring&quot;</pre>
-
-</article></slide><slide class=''><hgroup><h2>数据结构-矩阵</h2></hgroup><article  id="-">
-
-<ul>
-<li>创建矩阵</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>x=1:6;  x</pre>
-
-<pre >## [1] 1 2 3 4 5 6</pre>
-
-<pre class = 'prettyprint lang-r'>m=matrix(x,nrow=2,ncol=3);m  #按列存储</pre>
-
-<pre >##      [,1] [,2] [,3]
-## [1,]    1    3    5
-## [2,]    2    4    6</pre>
-
-<pre >## [1] &quot;m[1]: 1&quot;   &quot;m[2]: 2&quot;   &quot;m[3]: 3&quot;   &quot;m[2,2]: 4&quot;</pre>
-
-<pre class = 'prettyprint lang-r'>dim(m)</pre>
-
-<pre >## [1] 2 3</pre>
-
-</article></slide><slide class=''><hgroup><h2>数据结构-矩阵</h2></hgroup><article  id="--1">
-
-<ul>
-<li>创建矩阵</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>rbind(1:2,11:15)          #warning输出，提示行或列数不一致</pre>
-
-<pre >##      [,1] [,2] [,3] [,4] [,5]
-## [1,]    1    2    1    2    1
-## [2,]   11   12   13   14   15</pre>
-
-<pre class = 'prettyprint lang-r'>cbind(1:2,11:14,3:4,5:7)  #短的行或列，自动重复补齐</pre>
-
-<pre >##      [,1] [,2] [,3] [,4]
-## [1,]    1   11    3    5
-## [2,]    2   12    4    6
-## [3,]    1   13    3    7
-## [4,]    2   14    4    5</pre>
-
-</article></slide><slide class=''><hgroup><h2>数据结构-矩阵</h2></hgroup><article  id="--2">
-
-<ul>
-<li>矩阵运算</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>x=c(1,2,3,4);
-m=matrix(x,nrow=2);m</pre>
-
-<pre >##      [,1] [,2]
-## [1,]    1    3
-## [2,]    2    4</pre>
-
-<pre class = 'prettyprint lang-r'>m %*% m</pre>
-
-<pre >##      [,1] [,2]
-## [1,]    7   15
-## [2,]   10   22</pre>
-
-<pre class = 'prettyprint lang-r'># m[c(),c()];  #子矩阵筛选
-# t(); det(); qr(); eigen();...</pre>
-
-</article></slide><slide class=''><hgroup><h2>数据结构-矩阵</h2></hgroup><article  id="--3">
-
-<ul>
-<li>行列名称</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>x=1:6;    
-m=matrix(x,nrow=2); 
-colnames(m)=c(&quot;c1&quot;,&quot;c2&quot;,&quot;c3&quot;)
-rownames(m)=c(&quot;r1&quot;,&quot;r2&quot;)
-m; </pre>
-
-<pre >##    c1 c2 c3
-## r1  1  3  5
-## r2  2  4  6</pre>
-
-<pre class = 'prettyprint lang-r'>m[&quot;r1&quot;,&quot;c3&quot;]</pre>
-
-<pre >## [1] 5</pre>
-
-</article></slide><slide class=''><hgroup><h2>数据结构-矩阵</h2></hgroup><article  id="--4">
-
-<ul>
-<li><dfb>类型变化：矩阵到向量</dfb></li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>x=1:6;    m=matrix(x,nrow=3);  m ; attributes(m)   # 类型变化引起的错误</pre>
-
-<pre >##      [,1] [,2]
-## [1,]    1    4
-## [2,]    2    5
-## [3,]    3    6</pre>
-
-<pre >## $dim
-## [1] 3 2</pre>
-
-<pre class = 'prettyprint lang-r'>m3=m[3,];                      m3; attributes(m3)  # as.matrix(m3)</pre>
-
-<pre >## [1] 3 6</pre>
-
-<pre >## NULL</pre>
-
-</article></slide><slide class=''><hgroup><h2>数据结构-数组</h2></hgroup><article  id="-">
-
-<ul>
-<li>高维数组</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>x=1:24;    r=array(x,dim=c(2,3,4)); 
-r[,,1]     #从dim的后向前依次存储</pre>
-
-<pre >##      [,1] [,2] [,3]
-## [1,]    1    3    5
-## [2,]    2    4    6</pre>
-
-<pre class = 'prettyprint lang-r'>r[,,4]  </pre>
-
-<pre >##      [,1] [,2] [,3]
-## [1,]   19   21   23
-## [2,]   20   22   24</pre>
-
-</article></slide><slide class=''><hgroup><h2>数据结构-列表</h2></hgroup><article  id="-">
-
-<ul>
-<li>列表创建和修改</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>l=list(name=&quot;ad&quot;,age=18,score=c(80,86,90)) ; l #对象集合，类型不一</pre>
-
-<pre >## $name
-## [1] &quot;ad&quot;
-## 
-## $age
-## [1] 18
-## 
-## $score
-## [1] 80 86 90</pre>
-
-<pre >## [1] &quot;l[[1]]: ad&quot;     &quot;l[[&#39;age&#39;]]: 18&quot; &quot;l$ag: 18&quot;</pre>
-
-<pre class = 'prettyprint lang-r'># l$age=NULL; 依据索引可以对list做相应的&quot;增删改&quot;操作；
-names(l)  # &quot;name&quot;  &quot;age&quot;   &quot;score&quot;</pre>
-
-<pre >## [1] &quot;name&quot;  &quot;age&quot;   &quot;score&quot;</pre>
-
-</article></slide><slide class=''><hgroup><h2>数据结构-列表</h2></hgroup><article  id="--1">
-
-<ul>
-<li>列表vs向量</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>v=1:5; names(v)=paste(&quot;v&quot;,1:5,sep=&quot;&quot;); v ; #paste灵活生成字符串</pre>
-
-<pre >## v1 v2 v3 v4 v5 
-##  1  2  3  4  5</pre>
-
-<pre class = 'prettyprint lang-r'>l1=as.list(v);l1$v3                        #as.*隐含内在的转换</pre>
-
-<pre >## [1] 3</pre>
-
-<pre class = 'prettyprint lang-r'>l2=list(v);l2 ;                            #unlist(l1)逆向操作</pre>
-
-<pre >## [[1]]
-## v1 v2 v3 v4 v5 
-##  1  2  3  4  5</pre>
-
-</article></slide><slide class=''><hgroup><h2>数据结构-因子</h2></hgroup><article  id="-">
-
-<p>因子由在分类变量基础上，增加其水平信息（频数）构成；<br/>理解上可类比于分类变量、名义变量、有序变量。</p>
-
-<pre class = 'prettyprint lang-r'>v=c(rep(10,2),rep(20,3),rep(30,4))
-f=factor(v,levels=c(10,20,30,40));f   #f=factor(v)；#levels(f)返回水平</pre>
-
-<pre >## [1] 10 10 20 20 20 30 30 30 30
-## Levels: 10 20 30 40</pre>
-
-<pre class = 'prettyprint lang-r'>str(f) ; unclass(f);     #数据已被重新编码为因子的顺序</pre>
-
-<pre >##  Factor w/ 4 levels &quot;10&quot;,&quot;20&quot;,&quot;30&quot;,..: 1 1 2 2 2 3 3 3 3</pre>
-
-<pre >## [1] 1 1 2 2 2 3 3 3 3
-## attr(,&quot;levels&quot;)
-## [1] &quot;10&quot; &quot;20&quot; &quot;30&quot; &quot;40&quot;</pre>
-
-</article></slide><slide class=''><hgroup><h2>数据结构-因子</h2></hgroup><article  id="--1">
-
-<p>因子的使用</p>
-
-<pre class = 'prettyprint lang-r'>v=c(rep(10,2),rep(20,3),rep(30,4)); f=factor(v);
-length(f)   #长度还是数据的长度，而不是水平的个数</pre>
-
-<pre >## [1] 9</pre>
-
-<pre class = 'prettyprint lang-r'>table(f)    #因子水平的频数</pre>
-
-<pre >## f
-## 10 20 30 
-##  2  3  4</pre>
-
-<pre class = 'prettyprint lang-r'>tapply(v,f,sum)  #常用操作，分组统计；在模型中也经常用到</pre>
-
-<pre >##  10  20  30 
-##  20  60 120</pre>
-
-</article></slide><slide class=''><hgroup><h2>数据结构-数据框</h2></hgroup><article  id="-">
-
-<ul>
-<li>数据框，形似矩阵、亦似列表</li>
-<li>分量是向量、因子、数值矩阵、列表或者其他数据框</li>
-<li>各分量的行数需相等</li>
-<li>字符向量会被强制转换成因子</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>data.frame(x=c(5,6,7),a=c(&quot;a1&quot;,&quot;a2&quot;,&quot;a3&quot;),list(6,&#39;b&#39;),matrix(1:6,nrow=3)) </pre>
-
-<pre >##   x  a X6 X.b. X1 X2
-## 1 5 a1  6    b  1  4
-## 2 6 a2  6    b  2  5
-## 3 7 a3  6    b  3  6</pre>
-
-<pre class = 'prettyprint lang-r'>#stringsAsFactors = F</pre>
-
-</article></slide><slide class=''><hgroup><h2>数据结构-数据框</h2></hgroup><article  id="--1">
-
-<p>数据框操作</p>
-
-<pre class = 'prettyprint lang-r'>d1=data.frame(x=c(5,6,7),a=c(&quot;a1&quot;,&quot;a2&quot;,&quot;a3&quot;),list(6,&#39;b&#39;),matrix(1:6,nrow=3)) 
-d1[1:2,2:3]  #矩阵索引</pre>
-
-<pre >##    a X6
-## 1 a1  6
-## 2 a2  6</pre>
-
-<pre class = 'prettyprint lang-r'>d1[d1$x&lt;7,]  #条件筛选，列表索引 d1$x</pre>
-
-<pre >##   x  a X6 X.b. X1 X2
-## 1 5 a1  6    b  1  4
-## 2 6 a2  6    b  2  5</pre>
-
-<pre class = 'prettyprint lang-r'>attributes(d1)  # names ; row.names ;  class ;</pre>
-
-<pre >## $names
-## [1] &quot;x&quot;    &quot;a&quot;    &quot;X6&quot;   &quot;X.b.&quot; &quot;X1&quot;   &quot;X2&quot;  
-## 
-## $row.names
-## [1] 1 2 3
-## 
-## $class
-## [1] &quot;data.frame&quot;</pre>
-
-</article></slide><slide class=''><hgroup><h2>数据结构-数据框</h2></hgroup><article  id="--2">
-
-<p>数据框操作</p>
-
-<pre class = 'prettyprint lang-r'>d1=data.frame(x=c(5,6,7),a=c(&quot;a1&quot;,&quot;a2&quot;,&quot;a3&quot;),list(6,&#39;b&#39;),matrix(1:6,nrow=3)) 
-cbind(d1$x,d1$X2)  #rbind类似</pre>
-
-<pre >##      [,1] [,2]
-## [1,]    5    4
-## [2,]    6    5
-## [3,]    7    6</pre>
-
-<pre class = 'prettyprint lang-r'>merge(data.frame(id=1:3,a=&quot;d1&quot;),data.frame(id=1:3,b=&quot;d2&quot;))  # by.x=&quot;id&quot;,by.y=&quot;id&quot;</pre>
-
-<pre >##   id  a  b
-## 1  1 d1 d2
-## 2  2 d1 d2
-## 3  3 d1 d2</pre>
-
-</article></slide><slide class=''><hgroup><h2>函数</h2></hgroup><article >
-
-<pre class = 'prettyprint lang-r'>vadd &lt;- function(y1, y2,y3=c(2)) {
-  n1=length(y1)
-  n2=length(y2)
-  if (n1==n2){ 
-    return(y1+y2)
-  } else {
-    return(&quot;length don&#39;t match!&quot;)
-  }
-}
-vadd(0:5,10:15)</pre>
-
-<pre >## [1] 10 12 14 16 18 20</pre>
-
-<pre class = 'prettyprint lang-r'>vadd(1:10,3:14)</pre>
-
-<pre >## [1] &quot;length don&#39;t match!&quot;</pre>
-
-</article></slide><slide class=''><hgroup><h2>控制语句</h2></hgroup><article >
-
-<ul>
-<li>分支1<br/>&gt; if (expr1 ) expr2 else expr3</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>x=10
-y = if (x&gt;5)   x else x+1
-z = if (x&gt;100) x else x+1
-c(paste(&quot;x:&quot;,x),
-  paste(&quot;y:&quot;,y),
-  paste(&quot;z:&quot;,z)
-  )</pre>
-
-<pre >## [1] &quot;x: 10&quot; &quot;y: 10&quot; &quot;z: 11&quot;</pre>
-
-<pre class = 'prettyprint lang-r'>if (x&gt;5) print(&quot;x&gt;5&quot;)</pre>
-
-<pre >## [1] &quot;x&gt;5&quot;</pre>
-
-</article></slide><slide class=''><hgroup><h2>控制语句</h2></hgroup><article  id="-1">
-
-<ul>
-<li>分支2</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>x=3
-if (x&gt;5) {
-  print(&#39;x&gt;5&#39;)
-  } else {
-  print(&#39;x&lt;=5&#39;)
-  print(rnorm(2))
-  }</pre>
-
-<pre >## [1] &quot;x&lt;=5&quot;
-## [1] 1.030311 1.183663</pre>
-
-</article></slide><slide class=''><hgroup><h2>控制语句</h2></hgroup><article  id="-2">
-
-<ul>
-<li>循环1</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>for (i in seq(1,10,2)) {
-  print(i*i)
-}</pre>
-
-<pre >## [1] 1
-## [1] 9
-## [1] 25
-## [1] 49
-## [1] 81</pre>
-
-</article></slide><slide class=''><hgroup><h2>控制语句</h2></hgroup><article  id="-3">
-
-<ul>
-<li>循环2</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>i=1
-m=c()
-repeat {
-  m[i]=i*5
-  i=i+1
-  if (i&gt;5) break
-}
-m</pre>
-
-<pre >## [1]  5 10 15 20 25</pre>
-
-</article></slide><slide class=''><hgroup><h2>控制语句</h2></hgroup><article  id="-4">
-
-<ul>
-<li>循环3</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>i=1
-m=c()
-while (i&lt;5) {
-  m[i]=i*i
-  i=i+1
-}
-m</pre>
-
-<pre >## [1]  1  4  9 16</pre>
-
-</article></slide><slide class=''><hgroup><h2>控制语句</h2></hgroup><article  id="-5">
-
-<ul>
-<li>循环4</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>#非向量的循环操作  apply lapply mapply （隐式循环）
-d1=data.frame(x=c(5,6,7),a=c(&quot;a1&quot;,&quot;a2&quot;,&quot;a3&quot;),list(6,&#39;b&#39;)) 
-apply(d1,2,function (s){paste(s,&quot;H&quot;,sep = &quot;&quot;)})</pre>
-
-<pre >##      x    a     X6   X.b.
-## [1,] &quot;5H&quot; &quot;a1H&quot; &quot;6H&quot; &quot;bH&quot;
-## [2,] &quot;6H&quot; &quot;a2H&quot; &quot;6H&quot; &quot;bH&quot;
-## [3,] &quot;7H&quot; &quot;a3H&quot; &quot;6H&quot; &quot;bH&quot;</pre>
-
-</article></slide><slide class=''><hgroup><h2>控制语句</h2></hgroup><article  id="-6">
-
-<ul>
-<li>循环5 （for vs apply）</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>n=1000     # 向量操作类似；但当n增大时，会适得其反;
-system.time({
-  m=matrix(0,n,n);
-  for (i in 1:n) {m[i,]=rnorm(n)}
-})</pre>
-
-<pre >##    user  system elapsed 
-##    0.21    0.00    0.21</pre>
-
-<pre class = 'prettyprint lang-r'>system.time({
-  m = sapply(rep(n,n),rnorm)
-})</pre>
-
-<pre >##    user  system elapsed 
-##    0.22    0.00    0.22</pre>
-
-</article></slide><slide class=''><hgroup><h2>并行效率</h2></hgroup><article >
-
-<ul>
-<li>apply vs parallel</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>library(parallel)
-n=5000
-# lapply:   3.09 0.03 3.12 
-system.time({
-  m = lapply(rep(n,n),rnorm)
-})
-# parallel: 0.68 0.70 2.87 
-cl &lt;- makeCluster(getOption(&quot;cl.cores&quot;, 4));
-system.time({
-  m = parLapply(cl, rep(n,n),  rnorm)
-})
-stopCluster(cl);
-# another time count way
-ptm &lt;- proc.time()
-m = lapply(rep(100,100),rnorm)
-proc.time() - ptm</pre>
-
-</article></slide><slide class=''><hgroup><h2>数据IO</h2></hgroup><article  id="io">
-
-<ul>
-<li>文件&lt;-&gt;data.frame</li>
-</ul>
-
-<blockquote>
-<p>文件内容：babyweight.txt<br/>阶段 体重 身高<br/>出生 3.8 52.8<br/>1月 5 57<br/>2月 6 60.7<br/>&#8230; &#8230;</p>
-</blockquote>
-
-<pre class = 'prettyprint lang-r'>fen=&quot;./data/babyen.txt&quot;
-fcn=&quot;./data/babycn.txt&quot;
-d1=read.table(fen,header=T,sep=&quot;\t&quot;,encoding=&quot;ascii&quot;)
-d2=read.table(fcn,header=T,sep=&quot;\t&quot;,encoding=&quot;ascii&quot;)
-head(d1,2)
-head(d2,2)</pre>
-
-<blockquote>
-<p>read.csv<br/>write.table write.csv</p>
-</blockquote>
-
-</article></slide><slide class=''><hgroup><h2>数据IO</h2></hgroup><article  id="io-1">
-
-<ul>
-<li>文件&lt;-&gt;vector(list)</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>fcn=&quot;./data/babycn.txt&quot;
-#return a list: [[1]] 阶段; [[2]] 体重; [[3]] 身高
-scan(fcn,what=list(&quot;&quot;,1,1),skip=1,n=9)
-#return a vector: row followed by next row
-scan(fcn,what=c(&quot;&quot;,1,1),skip=1)</pre>
-
-<blockquote>
-<p>cat<br/>write</p>
-</blockquote>
-
-</article></slide><slide class=''><hgroup><h2>数据IO</h2></hgroup><article  id="io-2">
-
-<ul>
-<li>文件&lt;-&gt;object</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>x=rep(2:3,5)
-y=x^2
-d=data.frame(x=x,y=y)
-save(x,y,x,file=&quot;./data/savetest.Rdata&quot;)
-rm(x,y,d);x
-# error : x does not exist
-load(file=&quot;./data/savetest.Rdata&quot;)
-d
-# fine: get x,y,d  from the loading file</pre>
-
-</article></slide><slide class=''><hgroup><h2>数据IO</h2></hgroup><article  id="io-3">
-
-<ul>
-<li>逐行读入</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>fcn=&quot;./data/babyen.txt&quot;
-con &lt;- file(fen, &quot;r&quot;)
-line=readLines(con,1)
-while( length(line) != 0 ) {
-     print(line)
-     print(strsplit(line,&quot;\t&quot;))
-     # substr  gsub ...
-     line=readLines(con,n=1)
-}
-close(con)</pre>
-
-</article></slide><slide class=''><hgroup><h2>数据IO</h2></hgroup><article  id="io-4">
-
-<ul>
-<li>MYSQL</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>library(RMySQL)
-db=&quot;rdb&quot;;u=&quot;root&quot;;pa=&quot;toor&quot;;h=&quot;127.0.0.1&quot;;po=3306;
-conn &lt;- dbConnect(MySQL(), dbname=db, username=u, password=pa,host=h,port=po)
-summary(conn, verbose = TRUE)
-dbDisconnect(conn)</pre>
-
-</article></slide><slide class=''><hgroup><h2>数据IO</h2></hgroup><article  id="io-5">
-
-<pre class = 'prettyprint lang-r'>dbListTables(conn)
-dbListFields(conn, &quot;babyweight&quot;)
-d1=dbGetQuery(conn, &quot;SELECT * FROM babyweight limit 1&quot;);d1  #dbSendQuery,dbFetch,dbClearResult</pre>
-
-<blockquote>
-<p><dfb>更多数据IO：R Data Import/Export </dfb></p>
-</blockquote>
-
-</article></slide><slide class=''><hgroup><h2>小结</h2></hgroup><article >
-
-<ul>
-<li>data.frame (stringsAsFactors = F,rbind,cbind)<br/></li>
-<li>seq,rep,paste,strsplit<br/></li>
-<li>grep,sub,gsub,regexpr<br/></li>
-<li>vector,apply,lapply,tapply,mapply<br/></li>
-<li>rm()<br/></li>
-<li>help()</li>
-</ul>
+<p>概率分布</p>
 
 </article></slide><slide class=''><hgroup><h2>参考</h2></hgroup><article >
 
-<p>[1]: W.N.Venables,D.M.Smith,R核心开发小组,2006, &quot;R导论&quot;<br/>[2]: 陈堰平,邱怡轩,潘岚锋, 2013,《R语言编程艺术》</p></article></slide>
+<p>[1]: 毛岭峰,2011,&quot;R语言基础&quot;<br/>[2]: 徐俊晓,2012,&quot;统计学与R读书笔记(第六版)&quot;</p></article></slide>
 
 
   <slide class="backdrop"></slide>

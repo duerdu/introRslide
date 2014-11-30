@@ -1,0 +1,87 @@
+---
+title: "第三篇 R统计分析"
+author: "beitta#微信"
+date: "2014-11-30"
+output:  ioslides_presentation
+logo: ../pic/rlogo.png
+css: ../html/0intro.css
+
+---
+
+## 大纲
+-  **数据操作**  
+-  **描述统计**    
+-  **假设检验**  
+-  **相关分析**  
+-  **方差分析**   
+-  **回归分析**   
+-  **因子分析**   
+-  **时间序列**   
+
+
+##  数据操作
+- 数据编辑  
+```{r}
+v0=rnorm(10);             # v1=edit(v0)
+m0=sapply(c(2,2),runif)   # m1=edit(m0)
+d0=data.frame(m0)         # d0[2,2]=0; d0$X1[1]=0;
+```
+- 自带数据  
+```{r}
+#data()
+data(sleep);tail(sleep,2)
+
+```
+
+##  数据操作
+- 筛选  
+```{r}
+v0=rnorm(10); v1=v0[v0>0.5]; v1
+d0=data.frame(n=1:4,s=rep(c("aa","bb"),2),x=runif(4))
+d1=d0[d0$n>2 & d0$s=="aa",]
+```
+- 排序  
+```{r,echo=1}
+v0=round(runif(n=10,min=1,max=20));   # v0[order(v0)]==sort[v0]
+c(paste('v0       :',paste(v0,collapse = " ,")),
+  paste('sort(v0) :',paste(sort(v0),collapse = " ,")),
+  paste('order(v0):',paste(order(v0),collapse = " ,"))
+  )
+```
+
+##  数据操作
+- 排序2  
+```{r}
+d0=round(sapply(rep(5,3),runif)*20);col.names(d0)=c("x","y","x");
+ord=order(d0$)
+
+```
+- 自带数据  
+```{r}
+
+
+```
+
+##  数据操作
+- 数据编辑  
+```{r}
+
+```
+- 自带数据  
+```{r}
+
+
+```
+
+
+
+##  描述统计
+-   
+
+概率分布
+
+
+##  参考
+![1]: 毛岭峰,2011,"R语言基础"   
+![2]: 徐俊晓,2012,"统计学与R读书笔记(第六版)"
+
