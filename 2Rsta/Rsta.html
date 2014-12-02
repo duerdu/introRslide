@@ -148,7 +148,7 @@ data(sleep);tail(sleep,2)</pre>
 
 <pre class = 'prettyprint lang-r'>v0=rnorm(10); v1=v0[v0&gt;0.5]; v1</pre>
 
-<pre >## [1] 0.7688216</pre>
+<pre >## [1] 1.3685467 0.8229593</pre>
 
 <pre class = 'prettyprint lang-r'>d0=data.frame(n=1:4,s=rep(c(&quot;aa&quot;,&quot;bb&quot;),2),x=runif(4))
 d1=d0[d0$n&gt;2 &amp; d0$s==&quot;aa&quot;,]</pre>
@@ -157,17 +157,39 @@ d1=d0[d0$n&gt;2 &amp; d0$s==&quot;aa&quot;,]</pre>
 <li>排序</li>
 </ul>
 
-<pre class = 'prettyprint lang-r'>v0=round(runif(n=10,min=1,max=20));</pre>
+<pre class = 'prettyprint lang-r'>v0=round(runif(n=10,min=1,max=20));   # v0[order(v0)]==sort[v0]</pre>
 
-<pre >## [1] &quot;v0       : 19  ,5  ,10  ,2  ,13  ,9  ,16  ,8  ,13  ,4&quot;
-## [2] &quot;sort(v0) : 2  ,4  ,5  ,8  ,9  ,10  ,13  ,13  ,16  ,19&quot;
-## [3] &quot;order(v0): 4  ,10  ,2  ,8  ,6  ,3  ,5  ,9  ,7  ,1&quot;</pre>
+<pre >## [1] &quot;v0       : 12 ,2 ,13 ,14 ,8 ,3 ,4 ,17 ,12 ,5&quot;
+## [2] &quot;sort(v0) : 2 ,3 ,4 ,5 ,8 ,12 ,12 ,13 ,14 ,17&quot;
+## [3] &quot;order(v0): 2 ,6 ,7 ,10 ,5 ,1 ,9 ,3 ,4 ,8&quot;</pre>
 
 </article></slide><slide class=''><hgroup><h2>数据操作</h2></hgroup><article  id="-2">
 
 <ul>
-<li><p>数据编辑</p></li>
-<li><p>自带数据</p></li>
+<li>排序2</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>d0=round(sapply(rep(5,3),runif)*20);d0=data.frame(d0);
+colnames(d0)=c(&quot;x&quot;,&quot;y&quot;,&quot;z&quot;);d0</pre>
+
+<pre >##    x  y  z
+## 1 19  3 17
+## 2 17 14  5
+## 3 19  9  1
+## 4  3  0 16
+## 5 16 11 12</pre>
+
+<pre class = 'prettyprint lang-r'>ord=order(d0$z);d1=d0[ord,];d1</pre>
+
+<pre >##    x  y  z
+## 3 19  9  1
+## 2 17 14  5
+## 5 16 11 12
+## 4  3  0 16
+## 1 19  3 17</pre>
+
+<ul>
+<li>自带数据</li>
 </ul>
 
 </article></slide><slide class=''><hgroup><h2>数据操作</h2></hgroup><article  id="-3">

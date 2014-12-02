@@ -42,8 +42,8 @@ d1=d0[d0$n>2 & d0$s=="aa",]
 ```
 - 排序  
 ```{r,echo=1}
-v0=round(runif(n=10,min=1,max=20));   # v0[order(v0)]==sort[v0]
-c(paste('v0       :',paste(v0,collapse = " ,")),
+v0=round(runif(n=10,min=1,max=20));               # v0[order(v0)]==sort[v0]
+c(paste('v0       :',paste(v0,collapse = " ,")),  # decreasing = FALSE
   paste('sort(v0) :',paste(sort(v0),collapse = " ,")),
   paste('order(v0):',paste(order(v0),collapse = " ,"))
   )
@@ -52,15 +52,23 @@ c(paste('v0       :',paste(v0,collapse = " ,")),
 ##  数据操作
 - 排序2  
 ```{r}
-d0=round(sapply(rep(5,3),runif)*20);col.names(d0)=c("x","y","x");
-ord=order(d0$)
+d0=round(sapply(rep(5,3),runif)*20);d0=data.frame(d0);
+colnames(d0)=c("x","y","z");d0
+ord=order(d0$x,-d0$y);      d1=d0[ord,];d1
 
 ```
-- 自带数据  
-```{r}
+
+##  描述统计
+- 基本统计量  
+'''
 
 
-```
+
+'''
+
+
+
+
 
 ##  数据操作
 - 数据编辑  
