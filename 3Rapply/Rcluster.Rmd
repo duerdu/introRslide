@@ -1,0 +1,278 @@
+---
+title: "第四篇 R聚类分析"
+author: "beitta#微信"
+date: "2014-12-03"
+output:  ioslides_presentation
+logo: ../pic/rlogo.png
+css: ../html/0intro.css
+
+---
+
+## 大纲
+-  **样本模拟**  
+-  **K-means聚类**    
+-  **层次聚类**  
+-  **其他**    
+
+
+##  样本模拟  
+- 界限分明的基本分类样本  
+```{r,echo=FALSE,fig.width=8,fig.height=6}
+x=rnorm(1500,mean=25,sd=4.5);y=rnorm(1500,mean=16,sd=4.5);
+dfnormal=data.frame(cc=1,x=x,y=y);
+x=runif(400,min=2,max=13); y=runif(400,min=15,max=24);
+dfnormal=rbind(dfnormal,data.frame(cc=2,x=x,y=y));
+x=rnorm(200,mean=8,sd=1.5);y=rnorm(200,mean=8,sd=1.5);
+dfnormal=rbind(dfnormal,data.frame(cc=3,x=x,y=y));
+
+#plot(dfnormal$x,dfnormal$y,col=dfnormal$cc)
+plot(y~x,col=cc,dfnormal)
+
+```
+
+##  样本模拟  
+- 界限分明的基本分类样本  
+```{r,eval=FALSE}
+x=rnorm(1500,mean=25,sd=4.5);
+y=rnorm(1500,mean=16,sd=4.5);
+dfnormal=data.frame(cc=1,x=x,y=y);
+
+x=runif(400,min=2,max=13); 
+y=runif(400,min=15,max=24);
+dfnormal=rbind(dfnormal,data.frame(cc=2,x=x,y=y));
+
+x=rnorm(200,mean=8,sd=1.5);
+y=rnorm(200,mean=8,sd=1.5);
+dfnormal=rbind(dfnormal,data.frame(cc=3,x=x,y=y));
+
+#plot(dfnormal$x,dfnormal$y,col=dfnormal$cc)
+plot(y~x,col=cc,dfnormal)
+
+```
+
+##  样本模拟  
+- 不规则的甜甜圈样本   
+```{r,echo=FALSE,fig.width=8,fig.height=6}
+getcircle <- function(np,np2,cc,r,nsd){  #np=800;np2=100;r=25,nsd=2
+  x=c(runif(np,min=-r,max=r),runif(np2,min=-r,max=-r+1),runif(np2,min=r-1,max=r))
+  y=sign(rnorm(np+np2*2))*sqrt(r^2-x^2)+rnorm(np+np2*2,mean=2,sd=nsd);
+  x=x+rnorm(np+np2*2,mean=2,sd=nsd);
+  return(data.frame(cc=cc,x=x,y=y))
+}
+dfcircle=getcircle(800,100,1,25,2)
+dfcircle=rbind(dfcircle,getcircle(300,50,2,13,1.6))
+dfcircle=rbind(dfcircle,getcircle(50,10,3,3,1))
+#plot(dfcircle$x,dfcircle$y,col=factor(dfcircle$cc))
+plot(y~x,col=factor(cc),dfcircle)
+
+```
+
+##  样本模拟  
+- 不规则的甜甜圈样本   
+```{r,eval=FALSE}
+getcircle <- function(np,np2,cc,r,nsd){  #np=800;np2=100;r=25,nsd=2
+  x=c(runif(np,min=-r,max=r),
+      runif(np2,min=-r,max=-r+1),
+      runif(np2,min=r-1,max=r))
+  y=sign(rnorm(np+np2*2))*sqrt(r^2-x^2)+rnorm(np+np2*2,mean=2,sd=nsd);
+  x=x+rnorm(np+np2*2,mean=2,sd=nsd);
+  return(data.frame(cc=cc,x=x,y=y))
+}
+dfcircle=getcircle(800,100,1,25,2)
+dfcircle=rbind(dfcircle,getcircle(300,50,2,13,1.6))
+dfcircle=rbind(dfcircle,getcircle(50,10,3,3,1))
+
+#plot(dfcircle$x,dfcircle$y,col=factor(dfcircle$cc))
+plot(y~x,col=factor(cc),dfcircle)
+
+```
+
+##  kmeans聚类
+- 规则样本    
+```{r,eval=FALSE}
+#清空原分类
+mdata=dfnormal
+mdata$cc=NULL
+
+#执行kmeans
+cc=kmeans(mdata,3)
+ccout=fitted(cc)
+
+#查看聚类结果
+table(dfnormal$cc, cc$cluster)
+#  1  2  3  
+#1  
+#2  
+#3  
+plot(y~x,col=rownames(ccout),dfnormal)
+
+```
+
+##  kmeans聚类
+- 规则样本    
+```{r,echo=FALSE,fig.width=8,fig.height=6}
+#清空原分类
+mdata=dfnormal
+mdata$cc=NULL
+
+#执行kmeans
+cc=kmeans(mdata,3)
+ccout=fitted(cc)
+
+#查看聚类结果
+#table(dfnormal$cc, cc$cluster)
+plot(y~x,col=rownames(ccout),dfnormal)
+
+```
+
+
+##  kmeans聚类
+- 圈圈样本    
+```{r,eval=FALSE}
+#清空原分类
+mdata=dfcircle
+mdata$cc=NULL
+
+#执行kmeans
+cc=kmeans(mdata,3)
+ccout=fitted(cc)
+
+#查看聚类结果
+table(dfcircle, cc$cluster)
+#  1  2  3  
+#1  
+#2  
+#3  
+plot(y~x,col=rownames(ccout),dfcircle)
+
+```
+
+##  kmeans聚类
+- 圈圈样本    
+```{r,echo=FALSE,fig.width=8,fig.height=6}
+#清空原分类
+mdata=dfcircle
+mdata$cc=NULL
+#执行kmeans
+cc=kmeans(mdata,3)
+ccout=fitted(cc)
+#查看聚类结果
+#table(dfcircle, cc$cluster)
+plot(y~x,col=rownames(ccout),dfcircle)
+
+```
+
+
+
+
+##  层次聚类
+- 规则样本    
+```{r,eval=FALSE}
+#清空原分类
+mdata=dfnormal
+mdata$cc=NULL
+
+#执行hclust
+hc = hclust(dist(mdata), "ave")
+plot(hc)
+
+#分类
+ccout = cutree(hc, k = 5)
+plot(y~x,col=ccout,dfnormal)
+
+```
+
+##  层次聚类
+- 规则样本    
+```{r,echo=FALSE,fig.width=8,fig.height=6}
+mdata=dfnormal
+mdata$cc=NULL
+#执行hclust
+hc = hclust(dist(mdata), "ave")
+#plot(hc)
+#分类
+ccout = cutree(hc, k = 5)
+plot(y~x,col=ccout,dfnormal)
+
+
+```
+
+##  层次聚类
+- 规则样本(聚类树)    
+```{r,echo=TRUE,fig.width=8,fig.height=6}
+plot(hc)
+
+```
+
+##  层次聚类
+- 规则样本(字符串结构的聚类树)    
+- dendrogram 更多功能  
+```{r,echo=TRUE,fig.width=8,fig.height=6}
+dend1 = as.dendrogram(hc)
+str(dend1, max = 2)
+
+```
+
+
+##  层次聚类
+- 圈圈样本    
+```{r,eval=FALSE}
+#清空原分类
+mdata=dfcircle
+mdata$cc=NULL
+
+#执行hclust
+hc = hclust(dist(mdata), "ave")
+plot(hc)
+
+#分类
+ccout = cutree(hc, k = 5)
+plot(y~x,col=ccout,dfcircle)
+
+```
+
+##  层次聚类
+- 圈圈样本
+```{r,echo=FALSE,fig.width=8,fig.height=6}
+mdata=dfcircle
+mdata$cc=NULL
+#执行hclust
+hc = hclust(dist(mdata), "ave")
+#plot(hc)
+#分类
+ccout = cutree(hc, k = 5)
+plot(y~x,col=ccout,dfcircle)
+
+
+```
+
+##  层次聚类
+- 圈圈样本(神奇的圈圈)  
+```{r,echo=4,fig.width=8,fig.height=6}
+mdata=dfcircle
+mdata$cc=NULL
+#执行hclust, single算法
+hc = hclust(dist(mdata), "single")
+ccout = cutree(hc, k = 5)
+#把圈圈的间距加大点？  
+plot(y~x,col=ccout,dfcircle)
+
+```
+
+
+
+##  其他  
+
+- 更多参数  
+- 更多算法  
+http://cran.r-project.org/web/views/Cluster.html
+- 致谢  
+这里给出的只是一系列聚类算法实践的开始2个，后续原文做了很多比较，可移步[数据海洋](http://hi.baidu.com/sky88088)。   
+另，参考2最近给出了更多分类算法的比较，值得研究下。
+
+
+
+##  参考
+![1]: 数据之城,2012,"聚类算法实践",http://hi.baidu.com/sky88088   
+![2]: Manuel Fernández-Delgado,Eva Cernadas,etc,2014,"Do we Need Hundreds of Classifiers to Solve Real World Classification Problems?",http://jmlr.org/papers/v15/delgado14a.html
+
