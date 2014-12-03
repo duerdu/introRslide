@@ -35,24 +35,24 @@ css: ../html/0intro.css
 
 样本量
 
-getSymbols("^SSEC")
-tail(SSEC)
-plot(filter(SSEC$SSEC.Open/12,rep(1,12)))
+http://www.leiphone.com/news/201406/s-big-data-rethinking.html  
+http://www.itongji.cn/article/0Q926042013.html  
 
-read.csv("../data/babyweight.txt", header = TRUE, sep = "\t")
-
-身高与股价的相关性
+美国大选的抽样预测  
 
 
 ##  数据<dfb>分析</dfb>方法
-- 
-- Bullet 2
-辛普森悖论
-相关性假象
-换个视角（圈圈图）
+数据只有经过合理的分析，使用合适的方法，才可能得到较为符合实际的结论。
+<dfb>
+   然而，事实是，对于无处不在的数据，只要用上一种方法，就能得到一个结论。  
+<dfb>
+下面介绍几个分析的角度，告诉您几个从客观数据到主观推断的风险。  
+- 换个视角（圈圈图）
+- 相关性假象
+- 辛普森悖论
 
 ##  数据<dfb>分析</dfb>方法
-
+- 噪音大过信息，一团糟的数据中规律在哪儿  
 ```{r,echo=FALSE,warning=FALSE}
 library(MSG)
 data(BinormCircle)
@@ -64,11 +64,57 @@ smoothScatter(BinormCircle)
 ```
 
 ##  数据<dfb>分析</dfb>方法
-观察视角：改变点的大小+放大
+一个简单的方法，改变下观察视角：点的大小+放大
 ```{r}
 par(mfrow = c(1, 1))
 plot(BinormCircle,pch=19,cex=0.01)
 ```
+
+##  数据<dfb>分析</dfb>方法
+- 普遍的"相关性"   
+```{r,echo=c(5,6)}
+# 小孩的身高体重数据
+fen="./data/babyen.txt";fcn="./data/babycn.txt";
+d1=read.table(fen,header=T,sep="\t",encoding="ascii");#head(d1,2)
+d2=read.table(fcn,header=T,sep="\t",encoding="ascii");#head(d2,2)
+par(mfrow = c(1, 2))
+plot(身高~体重,d2)
+plot(身高~体重,d2);text(d2[,2],d2[,3],d2[,1])
+par(mfrow = c(1, 1))
+
+```
+
+##  数据<dfb>分析</dfb>方法
+- 普遍的"相关性"   
+```{r,warning=FALSE}
+# 上证综指数
+library(quantmod)
+getSymbols("^SSEC");SSEC=data.frame(SSEC)
+SSEC$t=rownames(SSEC);tail(SSEC)
+#plot(filter(SSEC$SSEC.Open/12,rep(1,12)))
+
+```
+##  数据<dfb>分析</dfb>方法
+- 普遍的"相关性"   
+```{r,warning=FALSE}
+library(plotrix)
+n=nrow(SSEC);x=1:n;y1=SSEC$SSEC.Volum;y2=SSEC$SSEC.Close;
+twoord.plot(x,y1,x,y2,xlim=c(0,n),lylim=c(0,200000),rylim=c(2000,6000), lcol=4,rcol=2,xlab="name",ylab="volume",rylab="close",type=c("bar","b"),xticklab=SSEC$t,halfwidth=0.2)
+
+```
+
+##  数据<dfb>分析</dfb>方法
+- 普遍的"相关性"   
+```{r,warning=FALSE}
+
+
+
+```
+
+
+身高与股价的相关性
+
+
 
 ##  数据分析<dfb>方法</dfb>
 1. 分析与观察
@@ -115,51 +161,11 @@ Tableau
 
 
 ##  参考
-[1]:谢益辉,2010,"统计图形和模拟视角下的模型理论解析".
+[1]:谢益辉,2010,"统计图形和模拟视角下的模型理论解析".  
+[2]:达莱尔,廖颖林译,2002,《统计陷阱》.  
+[3]:耿直,2009,"如何从生命科学研究数据中挖掘因果关系和评价因果作用？"  
+[4]:刘德寰,李雪莲,2013,"大数据的风险和现存问题"  
 
-
-
-##  其他
-<s> asd托尔斯泰s </s> 爱是
-![test.png文件](../pic/rlogo.png)  
-[id]: http://example.com/ "Title"
-Images
-![alt text][id]
-
-
-
-## Slide with R Code and Output
-
-```{r}
-summary(cars)
-
-```
-| Tables        | Are           | Cool  |  
-| ------------- |:-------------:| -----:|  
-| col 3 is      | right-aligned | $1600 |  
-| col 2 is      | centered      |   $12 |  
-| zebra stripes | are neat      |    $1 |  
-
-
-## Slide with Plot
-
-```{r, echo=FALSE}
-plot(cars)
-```
-
-This is an H1
-=============
-
-This is an H2
--------------
-
-## 这是 H2
-
-###### 这是 H6
-
-This is [an example](http://example.com/ "Title") inline link.
-
-[This link](http://example.net/) has no title attribute.
 
 
 
