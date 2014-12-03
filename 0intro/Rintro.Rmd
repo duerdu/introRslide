@@ -30,37 +30,64 @@ css: ../html/0intro.css
 
 ##  <dfb>数据</dfb>分析方法
 - 数据量级
-- 数据内容
-- 数据来源
+- 抽样分析
+- 认识数据
 
-样本量
+[大数据的九点思考,刘德寰](http://www.emarketing.net.cn/magazine/adetail.jsp?aid=2381) 
 
-http://www.leiphone.com/news/201406/s-big-data-rethinking.html  
-http://www.itongji.cn/article/0Q926042013.html  
+##  <dfb>数据</dfb>分析方法
+- 数据量级
+<dfp6>  
+天气、地震、量子物理、基因等，都是大数据；    
+任何一个网站的数据都是人们互联网行为数据的很小的一个子集；  
+人们面对的是信息过载，有效信息筛选的问题； 
+</dfp6>  
 
-美国大选的抽样预测  
+![bdata](../pic/bdata.PNG)  
 
+##  <dfb>数据</dfb>分析方法
+- 抽样分析
+<dfp6>  
+数据量的大幅增加会造成结果的不准确，来源不同的信息混杂会加大数据的混乱程度；    
+抽样是简化问题，发现规律的有效方法之一；  
+- 美国大选  
+永久的课题，始于1936，盖洛普5万随机抽样vs《文学摘要》250万问卷，罗斯福vs蓝顿.  
+2012,538模型,Nate Silver.  
+</dfp6> 
+![nate](../pic/nate.PNG)  
+[538美国大选预测模型](http://site.douban.com/146782/widget/notes/15517178/note/321469585/)
+
+
+##  <dfb>数据</dfb>分析方法
+- 认识数据  
+  * 数据是客观的  
+  * 规律是多样的  
+  * 认识是主观的  
+  * 从认识自己开始  
 
 ##  数据<dfb>分析</dfb>方法
-数据只有经过合理的分析，使用合适的方法，才可能得到较为符合实际的结论。
-<dfb>
+数据只有经过合理的分析，使用合适的方法，才可能得到较为符合实际的结论。  
+<dfb>  
    然而，事实是，对于无处不在的数据，只要用上一种方法，就能得到一个结论。  
-<dfb>
+</dfb>  
 下面介绍几个分析的角度，告诉您几个从客观数据到主观推断的风险。  
-- 换个视角（圈圈图）
-- 相关性假象
-- 辛普森悖论
+- 换个视角（圈圈图）  
+- 相关性假象  
+- 一步到位的分析  
+- 辛普森悖论  
 
 ##  数据<dfb>分析</dfb>方法
 - 噪音大过信息，一团糟的数据中规律在哪儿  
 ```{r,echo=FALSE,warning=FALSE}
 library(MSG)
 data(BinormCircle)
+
 ```
 ```{r,echo=TRUE,warning=FALSE,message=FALSE}
 par(mfrow = c(1, 2), ann = FALSE)
 plot(BinormCircle)
 smoothScatter(BinormCircle)
+
 ```
 
 ##  数据<dfb>分析</dfb>方法
@@ -72,21 +99,27 @@ plot(BinormCircle,pch=19,cex=0.01)
 
 ##  数据<dfb>分析</dfb>方法
 - 普遍的"相关性"   
-```{r,echo=c(5,6)}
-# 小孩的身高体重数据
-fen="./data/babyen.txt";fcn="./data/babycn.txt";
+```{r,echo=4,warning=FALSE}
+# 小孩的身高体重数据  
+fen="../data/babyen.txt";fcn="../data/babycn.txt";
 d1=read.table(fen,header=T,sep="\t",encoding="ascii");#head(d1,2)
 d2=read.table(fcn,header=T,sep="\t",encoding="ascii");#head(d2,2)
-par(mfrow = c(1, 2))
 plot(身高~体重,d2)
-plot(身高~体重,d2);text(d2[,2],d2[,3],d2[,1])
-par(mfrow = c(1, 1))
 
 ```
 
 ##  数据<dfb>分析</dfb>方法
 - 普遍的"相关性"   
-```{r,warning=FALSE}
+```{r,echo=2,warning=FALSE}
+# 小孩的身高体重数据
+par(new=T)
+plot(身高~体重,d2);text(d2[,2],d2[,3],d2[,1])
+
+```
+
+##  数据<dfb>分析</dfb>方法
+- 普遍的"相关性"   
+```{r,warning=FALSE,message=FALSE}
 # 上证综指数
 library(quantmod)
 getSymbols("^SSEC");SSEC=data.frame(SSEC)
@@ -95,25 +128,59 @@ SSEC$t=rownames(SSEC);tail(SSEC)
 
 ```
 ##  数据<dfb>分析</dfb>方法
-- 普遍的"相关性"   
-```{r,warning=FALSE}
+- 普遍的"相关性"--身高体重与股价    
+```{r,echo=c(1,2,5),warning=FALSE}
 library(plotrix)
 n=nrow(SSEC);x=1:n;y1=SSEC$SSEC.Volum;y2=SSEC$SSEC.Close;
-twoord.plot(x,y1,x,y2,xlim=c(0,n),lylim=c(0,200000),rylim=c(2000,6000), lcol=4,rcol=2,xlab="name",ylab="volume",rylab="close",type=c("bar","b"),xticklab=SSEC$t,halfwidth=0.2)
+twoord.plot(x,y1,x,y2,xlim=c(0,n),lylim=c(0,300000),rylim=c(2000,6000), lcol=4,rcol=2,xlab="name",ylab="volume",rylab="close",type=c("bar","b"),xticklab=SSEC$t,halfwidth=0.2)
+par(new=T,mar=c(5,8,8,10))
+plot(身高~体重,d2,axes=F,col="blue",pch=19,type='b',cex=2,xlab='',ylab='')
 
 ```
 
 ##  数据<dfb>分析</dfb>方法
-- 普遍的"相关性"   
-```{r,warning=FALSE}
-
-
+- 一步到位的分析（很相关）   
+```{r,echo=c(4,5),warning=FALSE}
+x = seq(0,4, length = 100)
+z = rep(0:4, each   = 20)
+y = -x + z + rnorm(100, 0, 0.2)
+plot(x, y)
+abline(lm(y ~ x), col = "red")
 
 ```
 
+##  数据<dfb>分析</dfb>方法
+- 一步到位的分析（逆袭--控制变量）   
+```{r,warning=FALSE}
+plot(x, y, pch = z, col = rainbow(5)[z + 1])
+for (i in z) abline(lm(y ~ x, subset = z == i), col = "darkgray")
 
-身高与股价的相关性
+```
 
+##  数据<dfb>分析</dfb>方法
++-------+------+------+
+| 统计  |  有效| 无效 |
++-------+------+------+
+| 新药  | 80   | 120  |
++-------+------+------+
+| 安慰剂| 100  | 100  |   
++-------+------+------+     
+RD = 80/200-100/200= -0.1  
+```
+| 性别 |   男性  |   女性  |  
+| ---- | -- | -- | -- | -- | 
+|      |有效|无效|有效|无效|  
+| ---- | -- | -- | -- | -- |   
+| 新药 | 35 |15  |45  |105 |  RD男 = 35/50-90/150= 0.1  
+|安慰剂| 90 |60  |10  |40  |  RD女 = 45/150-10/50= 0.1  
+```
+
+- 辛普森悖论  
+
+
+##  数据<dfb>分析</dfb>方法
+- 辛普森悖论2  
+![thanks](../pic/simpson.PNG) 
 
 
 ##  数据分析<dfb>方法</dfb>
