@@ -310,7 +310,7 @@ sv2=paste(sv,1:9,sep=&#39;&#39;,collapse = &#39;;&#39;);sv2</pre>
 names(x)=nm; x ;   # x[&quot;banana&quot;]</pre>
 
 <pre >##     orange     banana      apple      peach 
-##  0.3125930  0.5909374 -1.5797947 -0.6138956</pre>
+## -0.1193902  0.8106431  1.7584664  0.2799374</pre>
 
 </article></slide><slide class=''><hgroup><h2>数据结构-字符串</h2></hgroup><article  id="--1">
 
@@ -526,7 +526,7 @@ f=factor(v,levels=c(10,20,30,40));f   #f=factor(v)；#levels(f)返回水平</pre
 
 <p>因子的使用</p>
 
-<pre class = 'prettyprint lang-r'>v=c(rep(10,2),rep(20,3),rep(30,4)); f=factor(v);
+<pre class = 'prettyprint lang-r'>v=c(rep(10,2),rep(20,3),rep(30,4)); f=factor(v);    # gl()
 length(f)   #长度还是数据的长度，而不是水平的个数</pre>
 
 <pre >## [1] 9</pre>
@@ -661,7 +661,7 @@ if (x&gt;5) {
   }</pre>
 
 <pre >## [1] &quot;x&lt;=5&quot;
-## [1] 1.030311 1.183663</pre>
+## [1]  0.9242733 -0.3957852</pre>
 
 </article></slide><slide class=''><hgroup><h2>控制语句</h2></hgroup><article  id="-2">
 
@@ -740,14 +740,14 @@ system.time({
 })</pre>
 
 <pre >##    user  system elapsed 
-##    0.21    0.00    0.21</pre>
+##    0.19    0.00    0.18</pre>
 
 <pre class = 'prettyprint lang-r'>system.time({
   m = sapply(rep(n,n),rnorm)
 })</pre>
 
 <pre >##    user  system elapsed 
-##    0.22    0.00    0.22</pre>
+##     0.2     0.0     0.2</pre>
 
 </article></slide><slide class=''><hgroup><h2>并行效率</h2></hgroup><article >
 
@@ -868,6 +868,7 @@ d1=dbGetQuery(conn, &quot;SELECT * FROM babyweight limit 1&quot;);d1  #dbSendQue
 
 <ul>
 <li>data.frame (stringsAsFactors = F,rbind,cbind)<br/></li>
+<li>as.vector(),as.list()</li>
 <li>seq,rep,paste,strsplit<br/></li>
 <li>grep,sub,gsub,regexpr<br/></li>
 <li>vector,apply,lapply,tapply,mapply<br/></li>

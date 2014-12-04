@@ -51,26 +51,26 @@ css: ../html/0intro.css
 数据量的大幅增加会造成结果的不准确，来源不同的信息混杂会加大数据的混乱程度；    
 抽样是简化问题，发现规律的有效方法之一；  
 - 美国大选  
-永久的课题，始于1936，盖洛普5万随机抽样vs《文学摘要》250万问卷，罗斯福vs蓝顿.  
-2012,538模型,Nate Silver.  
+永久的课题，始于1936，盖洛普5万随机抽样vs《文学摘要》250万问卷，罗斯福vs蓝顿.(都是样本)  
+2012,538模型,Nate Silver.    
 </dfp6> 
+
 ![nate](../pic/nate.PNG)  
 [538美国大选预测模型](http://site.douban.com/146782/widget/notes/15517178/note/321469585/)
 
-
 ##  <dfb>数据</dfb>分析方法
 - 认识数据  
-  * 数据是客观的  
-  * 规律是多样的  
-  * 认识是主观的  
-  * 从认识自己开始  
+  ** 数据是不是客观的  
+  ** 规律多样都靠谱么  
+  ** 认识是主观的  
+  ** 面对数据：从认识自己开始  
 
 ##  数据<dfb>分析</dfb>方法
 数据只有经过合理的分析，使用合适的方法，才可能得到较为符合实际的结论。  
 <dfb>  
    然而，事实是，对于无处不在的数据，只要用上一种方法，就能得到一个结论。  
 </dfb>  
-下面介绍几个分析的角度，告诉您几个从客观数据到主观推断的风险。  
+下面介绍几个分析角度，描述几个从客观数据到主观推断的风险。  
 - 换个视角（圈圈图）  
 - 相关性假象  
 - 一步到位的分析  
@@ -99,7 +99,7 @@ plot(BinormCircle,pch=19,cex=0.01)
 
 ##  数据<dfb>分析</dfb>方法
 - 普遍的"相关性"   
-```{r,echo=4,warning=FALSE}
+```{r,echo=5,warning=FALSE}  
 # 小孩的身高体重数据  
 fen="../data/babyen.txt";fcn="../data/babycn.txt";
 d1=read.table(fen,header=T,sep="\t",encoding="ascii");#head(d1,2)
@@ -110,18 +110,19 @@ plot(身高~体重,d2)
 
 ##  数据<dfb>分析</dfb>方法
 - 普遍的"相关性"   
-```{r,echo=2,warning=FALSE}
+```{r,echo=3,warning=FALSE}
 # 小孩的身高体重数据
 par(new=T)
-plot(身高~体重,d2);text(d2[,2],d2[,3],d2[,1])
+plot(身高~体重,d2);text(d2[,2],d2[,3],d2[,1]);
 
 ```
 
 ##  数据<dfb>分析</dfb>方法
 - 普遍的"相关性"   
-```{r,warning=FALSE,message=FALSE}
+```{r,echo=c(1,4,5),warning=FALSE,message=FALSE}
 # 上证综指数
 library(quantmod)
+options("getSymbols.warning4.0"=FALSE)
 getSymbols("^SSEC");SSEC=data.frame(SSEC)
 SSEC$t=rownames(SSEC);tail(SSEC)
 #plot(filter(SSEC$SSEC.Open/12,rep(1,12)))
@@ -129,7 +130,7 @@ SSEC$t=rownames(SSEC);tail(SSEC)
 ```
 ##  数据<dfb>分析</dfb>方法
 - 普遍的"相关性"--身高体重与股价    
-```{r,echo=c(1,2,5),warning=FALSE}
+```{r,echo=c(2,3,5),warning=FALSE}
 library(plotrix)
 n=nrow(SSEC);x=1:n;y1=SSEC$SSEC.Volum;y2=SSEC$SSEC.Close;
 twoord.plot(x,y1,x,y2,xlim=c(0,n),lylim=c(0,300000),rylim=c(2000,6000), lcol=4,rcol=2,xlab="name",ylab="volume",rylab="close",type=c("bar","b"),xticklab=SSEC$t,halfwidth=0.2)
@@ -157,15 +158,17 @@ for (i in z) abline(lm(y ~ x, subset = z == i), col = "darkgray")
 
 ```
 
-##  数据<dfb>分析</dfb>方法
-+-------+------+------+
-| 统计  |  有效| 无效 |
-+-------+------+------+
-| 新药  | 80   | 120  |
-+-------+------+------+
-| 安慰剂| 100  | 100  |   
-+-------+------+------+     
-RD = 80/200-100/200= -0.1  
+##  数据<dfb>分析</dfb>方法  
+
++-------+------+------+  
+| 统计  |  有效| 无效 |  
++-------+------+------+  
+| 新药  | 80   | 120  |  
++-------+------+------+  
+| 安慰剂| 100  | 100  |  
++-------+------+------+  
+RD = 80/200-100/200= -0.1     
+
 ```
 | 性别 |   男性  |   女性  |  
 | ---- | -- | -- | -- | -- | 
@@ -180,7 +183,7 @@ RD = 80/200-100/200= -0.1
 
 ##  数据<dfb>分析</dfb>方法
 - 辛普森悖论2  
-![thanks](../pic/simpson.PNG) 
+![simpson](../pic/simpson.PNG) 
 
 
 ##  数据分析<dfb>方法</dfb>
@@ -191,48 +194,67 @@ RD = 80/200-100/200= -0.1
 
 
 ##  方法--1.分析与观察
+最常用的图形  
+```{r}
+par(mfrow = c(1, 3));
+hist(rnorm(100),col='blue');plot(rnorm(20),col='red');
+plot(seq(1,10)+runif(10,min=0,max=15),type='b',col='green')
 
-最常用的图形
-excel统计分析
-Tableau
+```
+
+##  方法--1.分析与观察
+最常用的工具    
+[excel图表](http://image.baidu.com/i?tn=baiduimage&ipn=r&ct=201326592&cl=2&lm=-1&st=-1&fm=index&fr=&sf=1&fmq=&pv=&ic=0&nc=1&z=&se=1&showtab=0&fb=0&width=&height=&face=0&istype=2&ie=utf-8&word=excel+%E5%9B%BE%E8%A1%A8&oq=excel+%E5%9B%BE%E8%A1%A8&rsp=-1)  
+![baidu](index.baidu.com)  
+![taobao](shu.taobao.com)  
+
+##  方法--1.分析与观察
+复杂的图形  
+![圆盘](../pic/yuan.PNG) 
+
+##  方法--1.分析与观察
+复杂的图形-艺术与设计  
+![JD信息图](../pic/2012jd.jpg) 
 
 ##  方法--2.统计建模
-
-最常用的图形
-excel统计分析
-Tableau
+- 抽样  
+- 假设  
+- 估计  
+- 理论 
 
 ##  方法--3.数据挖掘
-
-最常用的图形
-excel统计分析
-Tableau
+- 输入  
+- 算法  
+- 输出  
+- 评估  
+- 工程  
 
 ##  方法--4.分析工具
-
-最常用的图形
-excel统计分析
-Tableau
-
+Magic Quadrant for Business Intelligence and Analytics Platforms. by [gartner](http://www.gartner.com/technology/reprints.do?id=1-1QLGACN&ct=140210&st=sb)  
+![gartner](../pic/bigartner.png)  
+excel,
+SPSS,
+SAS,
+matlab,
+R,
+weka,
+python,
+sql,hadoop,storm,spark,
+... ...
 
 ## 数据>分析>方法--小结
 
-数据敏感性+分析师
-统计建模
-数据挖掘
-代码流+工具流
-
+* 兴趣+观察+分析    
+* 统计建模  
+* 数据挖掘  
+* 代码流  
+* 工具流  
 
 因地制宜，发挥所长。
 
-
-
-##  参考
-[1]:谢益辉,2010,"统计图形和模拟视角下的模型理论解析".  
-[2]:达莱尔,廖颖林译,2002,《统计陷阱》.  
-[3]:耿直,2009,"如何从生命科学研究数据中挖掘因果关系和评价因果作用？"  
-[4]:刘德寰,李雪莲,2013,"大数据的风险和现存问题"  
-
-
-
+## 参考
+![1]:谢益辉,2010,"统计图形和模拟视角下的模型理论解析".  
+![2]:达莱尔,廖颖林译,2002,《统计陷阱》.  
+![3]:耿直,2009,"如何从生命科学研究数据中挖掘因果关系和评价因果作用？"  
+![4]:刘德寰,李雪莲,2013,"大数据的风险和现存问题"  
 
