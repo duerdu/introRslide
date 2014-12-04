@@ -1,6 +1,6 @@
 ---
 title: "第一篇 数据与分析"
-author: "杜强, beitta#微信, litstro#微博"
+author: "杜强, beitta#微信, ddqquu#qq.com"
 date: "2014-11-20"
 output:  ioslides_presentation
 logo: ../pic/rlogo.png
@@ -120,12 +120,12 @@ plot(身高~体重,d2);text(d2[,2],d2[,3],d2[,1]);
 ##  数据<dfb>分析</dfb>方法
 - 普遍的"相关性"   
 ```{r,echo=c(1,4,5),warning=FALSE,message=FALSE}
-# 上证综指数
+# 上证综指
 library(quantmod)
 options("getSymbols.warning4.0"=FALSE)
-#getSymbols("^SSEC");SSEC=data.frame(SSEC)
-#SSEC$t=rownames(SSEC);tail(SSEC)
-SSEC=data.frame(SSEC.volume=rnorm(30)+10000,SSEC.close=rnorm(30)+4000)
+getSymbols("^SSEC");SSEC=data.frame(SSEC)
+SSEC$t=rownames(SSEC);tail(SSEC)
+#SSEC=data.frame(SSEC.volume=rnorm(30)+10000,SSEC.close=rnorm(30)+4000)
 #plot(filter(SSEC$SSEC.Open/12,rep(1,12)))
 
 ```
@@ -204,17 +204,17 @@ plot(seq(1,10)+runif(10,min=0,max=15),type='b',col='green')
 ```
 
 ##  方法--1.分析与观察
-最常用的工具    
+最常用的图形    
 [excel图表](http://image.baidu.com/i?tn=baiduimage&ipn=r&ct=201326592&cl=2&lm=-1&st=-1&fm=index&fr=&sf=1&fmq=&pv=&ic=0&nc=1&z=&se=1&showtab=0&fb=0&width=&height=&face=0&istype=2&ie=utf-8&word=excel+%E5%9B%BE%E8%A1%A8&oq=excel+%E5%9B%BE%E8%A1%A8&rsp=-1)  
-![baidu](index.baidu.com)  
-![taobao](shu.taobao.com)  
+[百度指数](index.baidu.com)  
+[淘宝指数](shu.taobao.com)  
 
 ##  方法--1.分析与观察
 复杂的图形  
 ![圆盘](../pic/yuan.PNG) 
 
 ##  方法--1.分析与观察
-复杂的图形-艺术与设计  
+复杂的图形-艺术与设计,[京东数据汇](http://2012.jd.com/) 
 ![JD信息图](../pic/2012jd.jpg) 
 
 ##  方法--2.统计建模

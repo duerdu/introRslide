@@ -1,6 +1,6 @@
 ---
 title: "第三篇 R统计分析"
-author: "杜强, beitta#微信, litstro#微博"
+author: "杜强, beitta#微信,ddqquu#qq.com"
 date: "2014-11-30"
 output:  ioslides_presentation
 logo: ../pic/rlogo.png
@@ -219,7 +219,7 @@ M;Xsq=chisq.test(M);Xsq  # Prints test summary
 
 ##  假设检验
 - 列联表/卡方检验   
-```{r,echo=c(4,5)}
+```{r}
 Xsq$observed
 Xsq$expected  
 ```
@@ -258,8 +258,8 @@ cor.test(dist,speed)
 
 ##  相关分析  
 - 相关系数的检验(t统计量的计算)     
-公式：$t=r*sqrt(n-2)/sqrt(1-r^2)$
 公式：$t=r*sqrt(n-2)/sqrt(1-r^2)$  
+$$t=r*sqrt(n-2)/sqrt(1-r^2)$$  
 ```{r}
 r*sqrt(length(dist)-2)/sqrt(1-r^2)
 
