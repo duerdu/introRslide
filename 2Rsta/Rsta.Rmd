@@ -1,6 +1,6 @@
 ---
 title: "第三篇 R统计分析"
-author: "beitta#微信"
+author: "杜强, beitta#微信, litstro#微博"
 date: "2014-11-30"
 output:  ioslides_presentation
 logo: ../pic/rlogo.png

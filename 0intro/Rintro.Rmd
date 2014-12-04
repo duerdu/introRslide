@@ -1,6 +1,6 @@
 ---
 title: "第一篇 数据与分析"
-author: "beitta#微信"
+author: "杜强, beitta#微信, litstro#微博"
 date: "2014-11-20"
 output:  ioslides_presentation
 logo: ../pic/rlogo.png
@@ -123,8 +123,9 @@ plot(身高~体重,d2);text(d2[,2],d2[,3],d2[,1]);
 # 上证综指数
 library(quantmod)
 options("getSymbols.warning4.0"=FALSE)
-getSymbols("^SSEC");SSEC=data.frame(SSEC)
-SSEC$t=rownames(SSEC);tail(SSEC)
+#getSymbols("^SSEC");SSEC=data.frame(SSEC)
+#SSEC$t=rownames(SSEC);tail(SSEC)
+SSEC=data.frame(SSEC.volume=rnorm(30)+10000,SSEC.close=rnorm(30)+4000)
 #plot(filter(SSEC$SSEC.Open/12,rep(1,12)))
 
 ```
@@ -230,17 +231,19 @@ plot(seq(1,10)+runif(10,min=0,max=15),type='b',col='green')
 - 工程  
 
 ##  方法--4.分析工具
-Magic Quadrant for Business Intelligence and Analytics Platforms. by [gartner](http://www.gartner.com/technology/reprints.do?id=1-1QLGACN&ct=140210&st=sb)  
+Magic Quadrant for BI and Analytics Platforms. by [gartner](http://www.gartner.com/technology/reprints.do?id=1-1QLGACN&ct=140210&st=sb)  
 ![gartner](../pic/bigartner.png)  
-excel,
-SPSS,
-SAS,
-matlab,
-R,
-weka,
-python,
-sql,hadoop,storm,spark,
-... ...
+
+##  方法--4.分析工具
+excel,  
+SPSS,  
+SAS,  
+matlab,  
+R,  
+weka,  
+python,  
+sql,hadoop,storm,spark,  
+... ...  
 
 ## 数据>分析>方法--小结
 

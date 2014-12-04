@@ -1,6 +1,6 @@
 ---
 title: "第二篇 R分析基础"
-author: "beitta#微信"
+author: "杜强, beitta#微信, litstro#微博"
 date: "2014-11-26"
 output:  ioslides_presentation
 logo: ../pic/rlogo.png

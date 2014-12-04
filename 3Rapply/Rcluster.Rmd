@@ -1,6 +1,6 @@
 ---
 title: "第四篇 R聚类分析"
-author: "beitta#微信"
+author: "杜强, beitta#微信, litstro#微博"
 date: "2014-12-03"
 output:  ioslides_presentation
 logo: ../pic/rlogo.png
