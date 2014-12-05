@@ -32,8 +32,16 @@ css: ../html/0intro.css
 - 数据量级
 - 抽样分析
 - 认识数据
-
 [大数据的九点思考,刘德寰](http://www.emarketing.net.cn/magazine/adetail.jsp?aid=2381) 
+
+pkg=c('rmarkdown',
+      'knitr',
+      'MSG',
+      'plotrix',
+      'parallel',
+      'RMySQL'
+  )
+install.packages(pkg)
 
 ##  <dfb>数据</dfb>分析方法
 - 数据量级
