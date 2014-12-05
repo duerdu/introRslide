@@ -40,7 +40,7 @@ pkg=c('rmarkdown',
       'plotrix',
       'parallel',
       'RMySQL'
-  )
+  );  
 install.packages(pkg)
 
 ##  <dfb>数据</dfb>分析方法
