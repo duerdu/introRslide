@@ -96,7 +96,7 @@ mdata=dfnormal
 mdata$cc=NULL
 
 #执行kmeans
-cc=kmeans(mdata,3)
+cc=kmeans(mdata,5)
 ccout=fitted(cc)
 
 #查看聚类结果
@@ -192,7 +192,7 @@ mdata$cc=NULL
 hc = hclust(dist(mdata), "ave")
 #plot(hc)
 #分类
-ccout = cutree(hc, k = 5)
+ccout = cutree(hc, k = 10)
 plot(y~x,col=ccout,dfnormal)
 
 
@@ -227,7 +227,7 @@ hc = hclust(dist(mdata), "ave")
 plot(hc)
 
 #分类
-ccout = cutree(hc, k = 5)
+ccout = cutree(hc, k = 3)
 plot(y~x,col=ccout,dfcircle)
 
 ```
