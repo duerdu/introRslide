@@ -3,11 +3,11 @@
 Replace with Main Title
 =======================
 
-### Your Name
+### 小强
 
 ### `r as.character(Sys.Date())`
 
-```{r echo=FALSE}
+```{r echo=TRUE}
 # include this code chunk as-is to set options
 knitr::opts_chunk$set(comment=NA, prompt=TRUE, out.width=750, fig.height=8, fig.width=8)
 library(Rcmdr)
