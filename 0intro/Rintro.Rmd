@@ -1,7 +1,7 @@
 ---
 title: "第一篇 数据与分析"
 author: "杜强, beitta#微信, ddqquu#qq.com"
-date: "2014-11-20"
+date: "2015-06-08"
 output:  ioslides_presentation
 logo: ../pic/rlogo.png
 css: ../html/0intro.css
@@ -64,7 +64,8 @@ install.packages(pkg)
 </dfp6> 
 
 ![nate](../pic/nate.PNG)  
-[538美国大选预测模型](http://site.douban.com/146782/widget/notes/15517178/note/321469585/)
+[538美国大选预测模型](http://site.douban.com/146782/widget/notes/15517178/note/321469585/)  
+[538更新](http://fivethirtyeight.com/features/how-the-fivethirtyeight-senate-forecast-model-works/)
 
 ##  <dfb>数据</dfb>分析方法
 - 认识数据  
@@ -214,8 +215,8 @@ plot(seq(1,10)+runif(10,min=0,max=15),type='b',col='green')
 ##  方法--1.分析与观察
 最常用的图形    
 [excel图表](http://image.baidu.com/i?tn=baiduimage&ipn=r&ct=201326592&cl=2&lm=-1&st=-1&fm=index&fr=&sf=1&fmq=&pv=&ic=0&nc=1&z=&se=1&showtab=0&fb=0&width=&height=&face=0&istype=2&ie=utf-8&word=excel+%E5%9B%BE%E8%A1%A8&oq=excel+%E5%9B%BE%E8%A1%A8&rsp=-1)  
-[百度指数](index.baidu.com)  
-[淘宝指数](shu.taobao.com)  
+[百度指数](http://index.baidu.com)  
+[淘宝指数](http://shu.taobao.com)  
 
 ##  方法--1.分析与观察
 复杂的图形  
@@ -239,8 +240,14 @@ plot(seq(1,10)+runif(10,min=0,max=15),type='b',col='green')
 - 工程  
 
 ##  方法--4.分析工具
-Magic Quadrant for BI and Analytics Platforms. by [gartner](http://www.gartner.com/technology/reprints.do?id=1-1QLGACN&ct=140210&st=sb)  
-![gartner](../pic/bigartner.png)  
+Gartner：Magic Quadrant for...   by [gartner Analytics](http://www.gartner.com/technology/reprints.do?id=1-2AHPOU0&ct=150225&st=sb)  
+![gartner](../pic/GanrtnerAnalyze2015.png)  
+
+
+##  方法--4.分析工具
+Gartner：Magic Quadrant for...   by [gartner BI](http://www.gartner.com/technology/reprints.do?id=1-2AJGAKH&ct=150225&st=sb)   
+![gartner](../pic/GanrtnerBI2015.png)  
+
 
 ##  方法--4.分析工具
 excel,  
