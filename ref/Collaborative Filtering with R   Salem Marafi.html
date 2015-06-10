@@ -1,0 +1,1386 @@
+<!doctype html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en-US"> <![endif]-->
+<!-- Consider adding an manifest.appcache: h5bp.com/d/Offline -->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<head>
+
+<meta charset="UTF-8">
+
+<!-- Mobile View -->
+<meta name="viewport" content="width=device-width">
+
+<title>  Collaborative Filtering with R : Salem Marafi</title>
+<link rel="Shortcut Icon" href="http://www.salemmarafi.com/wp-content/themes/organic_tumble/images/favicon.ico" type="image/x-icon">
+
+<link rel="stylesheet" href="http://www.salemmarafi.com/wp-content/themes/organic_tumble/style.css">
+<link rel="stylesheet" href="http://www.salemmarafi.com/wp-content/themes/organic_tumble/style-mobile.css">
+<link rel="stylesheet" href="http://www.salemmarafi.com/wp-content/themes/organic_tumble/style-icons.css">
+<style type="text/css" media="screen">
+
+body {
+-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;}
+
+.btn:hover, .reply a:hover, #searchsubmit:hover, #prevLink a:hover, #nextLink a:hover, 
+#submit:hover, #comments #respond input#submit:hover, .flex-direction-nav .flex-prev:hover, #load-posts a:hover,
+.flex-direction-nav .flex-next:hover, .gallery img:hover, .container .gform_wrapper input.button:hover {
+background-color: #1e73be;border-color: #1e73be;}
+
+.container a, .container a:link, .container a:visited {
+color: #1e73be;}
+
+.sidebar ul.menu li a, .sidebar ul.menu li a:visited, .sidebar ul.menu li a:link {
+color: #1e73be !important;}
+
+.container a:hover, .container a:focus, .container a:active {
+color: #1e73be;}
+
+h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover,
+.sidebar ul.menu li a:hover, .sidebar ul.menu li a:active, .sidebar ul.menu li a:focus,
+.sidebar ul.menu .current_page_item a, .sidebar ul.menu .current-menu-item a,
+.archive-result.format-link .headline a:hover {
+color: #1e73be !important;}
+</style>
+<link rel="alternate" type="application/rss+xml" title="Salem Marafi Feed" href="http://www.salemmarafi.com/feed/">
+<link rel="pingback" href="http://www.salemmarafi.com/xmlrpc.php">
+
+
+<!-- KISSmetrics tracking snippet -->
+<script type="text/javascript">var _kmq = _kmq || [];
+var _kmk = _kmk || '40b144985fd7b78c948fca3c066dcbc0596bfa1e';
+function _kms(u){
+  setTimeout(function(){
+    var d = document, f = d.getElementsByTagName('script')[0],
+    s = d.createElement('script');
+    s.type = 'text/javascript'; s.async = true; s.src = u;
+    f.parentNode.insertBefore(s, f);
+  }, 1);
+}
+_kms('//i.kissmetrics.com/i.js');
+_kms('//doug1izaerwt3.cloudfront.net/' + _kmk + '.1.js');
+</script>
+
+
+<link rel="alternate" type="application/rss+xml" title="Salem Marafi &raquo; Feed" href="http://www.salemmarafi.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Salem Marafi &raquo; Comments Feed" href="http://www.salemmarafi.com/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Salem Marafi &raquo; Collaborative Filtering with R Comments Feed" href="http://www.salemmarafi.com/code/collaborative-filtering-r/feed/" />
+<link rel='stylesheet' id='dashicons-css'  href='http://www.salemmarafi.com/wp-includes/css/dashicons.min.css?ver=4.1.5' type='text/css' media='all' />
+<link rel='stylesheet' id='thickbox-css'  href='http://www.salemmarafi.com/wp-includes/js/thickbox/thickbox.css?ver=4.1.5' type='text/css' media='all' />
+<link rel='stylesheet' id='ccslider_css-css'  href='http://www.salemmarafi.com/wp-content/plugins/CCSlider/css/ccslider.css?ver=3.0.1' type='text/css' media='all' />
+<link rel='stylesheet' id='contact-form-7-css'  href='http://www.salemmarafi.com/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=4.1.1' type='text/css' media='all' />
+<link rel='stylesheet' id='wp-syntax-css-css'  href='http://www.salemmarafi.com/wp-content/plugins/wp-syntax/css/wp-syntax.css?ver=1.0' type='text/css' media='all' />
+<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js?ver=1.7.2'></script>
+<script type='text/javascript' src='http://www.salemmarafi.com/wp-content/themes/organic_tumble/js/retina.js?ver=4.1.5'></script>
+<script type='text/javascript' src='http://www.salemmarafi.com/wp-content/plugins/google-analyticator/external-tracking.min.js?ver=6.4.8'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.salemmarafi.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.salemmarafi.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Kuwait Stock Exchange P/E with R' href='http://www.salemmarafi.com/code/kuwaitse-pe-ratio-r/' />
+<link rel='next' title='Customer Segmentation: Excel and R' href='http://www.salemmarafi.com/code/customer-segmentation-excel-and-r/' />
+<meta name="generator" content="WordPress 4.1.5" />
+<link rel='canonical' href='http://www.salemmarafi.com/code/collaborative-filtering-r/' />
+<link rel='shortlink' href='http://www.salemmarafi.com/?p=6292' />
+	<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
+<!-- Google Analytics Tracking by Google Analyticator 6.4.8: http://www.videousermanuals.com/google-analyticator/ -->
+<script type="text/javascript">
+    var analyticsFileTypes = ['jpg',' pdf',' mpg',' mp3',' mp4',' zip',' xls',' xlsx',' doc'];
+    var analyticsSnippet = 'disabled';
+    var analyticsEventTracking = 'enabled';
+</script>
+<script type="text/javascript">
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-588895-2', 'auto');
+ 
+	ga('send', 'pageview');
+</script>
+
+<!-- Social -->
+<script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+<script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>
+
+<!-- Google Fonts -->
+<link href='http://fonts.googleapis.com/css?family=Lobster+Two:700,700italic' rel='stylesheet' type='text/css'>
+
+<script type="text/javascript"> 
+	var $j = jQuery.noConflict();
+	$j(document).ready(function() { 
+	    $j('.menu').superfish({
+	    	delay: 200,
+	    	animation: {opacity:'show'},
+	    	speed: 'fast',
+	    	autoArrows: true,
+	    	dropShadows: false
+	    }); 
+	}); 
+</script>
+
+<script type="text/javascript">
+	var $j = jQuery.noConflict();
+	$j(window).load(function() { 
+		// Call fitVid before FlexSlider initializes, so the proper initial height can be retrieved.
+		$j('.flexslider').fitVids().flexslider({
+			slideshowSpeed: 10000,
+			animationDuration	: 400,
+			animation: 'fade',
+			video: true,
+			useCSS: false,
+			animationLoop: true,
+			smoothHeight: true
+		});
+	});
+</script>
+
+<script type="text/javascript">
+	var $j = jQuery.noConflict();
+	$j(document).ready(function($) {
+		$j(".scroll").click(function(event){		
+			event.preventDefault();
+			$j('html,body').animate({scrollTop:$(this.hash).offset().top}, 500);
+		});
+	});
+</script>
+
+<script>
+	var $j = jQuery.noConflict();
+	$j(document).ready(function(){
+	    $j(".feature-vid").fitVids();
+	});
+</script>
+
+<!-- Make Social Buttons Load in Ajax -->
+<script type="text/javascript">
+	var $j = jQuery.noConflict();
+	$j(document).ajaxComplete(function() {
+		gapi.plusone.go();
+		twttr.widgets.load();
+		try {
+			FB.XFBML.parse();
+		}catch(ex){}
+	});
+</script>
+
+</head>
+
+<body class="single single-post postid-6292 single-format-standard">
+
+<script>
+//<![CDATA[
+(function(d, s, id) {
+    document.write('<div id="fb-root"></div>');
+    var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=246727095428680";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+//]]>
+</script>
+
+<div id="navigation">
+	<div class="row">
+	
+    	<div class="menu"><ul id="menu-menu" class="menu"><li id="menu-item-236" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-236"><a href="http://www.salemmarafi.com/resume/">Resume</a></li>
+<li id="menu-item-237" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-237"><a href="http://www.salemmarafi.com/contact/">Contact</a></li>
+<li id="menu-item-6265" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-6265"><a href="http://www.r-bloggers.com">R-Bloggers</a></li>
+</ul></div>    	
+    	    	<ul class="social-icons">
+    		    			<li><a href="http://www.salemmarafi.com/feed/" class="sm_32_icon sm_32_rss" target="_blank"><span></span></a></li>
+    		    		    		    		    			<li><a href="http://www.linkedin.com/profile/view?id=48287798" class="sm_32_icon sm_32_linkedin" target="_blank"><span></span></a></li>
+    		    		    		    		    			<li><a href="http://twitter.com/salemmarafi" class="sm_32_icon sm_32_twitter" target="_blank"><span></span></a></li>
+    		    		    			<li><a href="http://facebook.com/smarafi" class="sm_32_icon sm_32_facebook" target="_blank"><span></span></a></li>
+    		    	</ul>
+    	    	
+	</div>
+</div>
+    
+<div class="container">
+    
+    <div id="header">
+    	<div class="row">
+    		    			    				<div id="masthead">
+    					<h4 class="site-title"><span><a href="http://www.salemmarafi.com/" title="Salem Marafi" rel="home">Salem Marafi</a></span></h1>
+    					<h5 class="site-description"></h2>
+    				</div>
+    			    		    	</div>
+    </div>
+    
+<!-- BEGIN .row -->
+<div class="row">
+
+    <!-- BEGIN .eight columns -->
+    <div class="eight columns">	
+
+		<div class="post-6292 post type-post status-publish format-standard has-post-thumbnail hentry category-code tag-filtering tag-r tag-recommender content" id="page-6292">
+
+									
+						
+			
+			<div class="article">
+	
+				<h1 class="headline">Collaborative Filtering with R</h1>
+
+                <div class="postauthor">            
+                    <p class="left"><img class="icon" src="http://www.salemmarafi.com/wp-content/themes/organic_tumble/images/icon_author.png" title="Author" alt="Author" /> Posted by <a href="http://www.salemmarafi.com/author/salem/" title="Posts by Salem" rel="author">Salem</a> on April 26, 2014</p>
+                    <p class="right"><img class="icon" src="http://www.salemmarafi.com/wp-content/themes/organic_tumble/images/icon_comment.png" title="Comments" alt="Comments" /> <a class="scroll" href="http://www.salemmarafi.com/code/collaborative-filtering-r/#comments">30 Comments</a></p>
+                </div>
+                
+                	                	                    <div class="feature-img"><img src="http://www.salemmarafi.com/wp-content/uploads/2014/04/collaborativeFiltering-960x540.jpg" class="attachment-feature wp-post-image" alt="Collaborative FIltering" /></div>
+	                                	
+				<p>We already looked at <a href="http://www.salemmarafi.com/code/market-basket-analysis-with-r/" title="Market Basket Analysis with R">Market Basket Analysis with R</a>. <strong>Collaborative filtering</strong> is another technique that can be used for recommendation.</p>
+<p>The underlying concept behind this technique is as follows:</p>
+<ul>
+<li>Assume Person A likes Oranges, and Person B likes Oranges.</li>
+<li>Assume Person A likes Apples.</li>
+<li>Person B is likely to have similar opinions on Apples as A than some other random person.
+</ul>
+<p>The implications of collaborative filtering are obvious: you can predict and recommend items to users based on preference similarities. There are two types of collaborative filtering: user-based and item-based. </p>
+<p><strong>Item Based Collaborative Filtering</strong> takes the similarities between items&#8217; consumption history.<br />
+<strong>User Based Collaborative Filtering</strong> considers similarities between user consumption history.</p>
+<p>We will look at both types of collaborative filtering using a <a href="http://labrosa.ee.columbia.edu/millionsong/lastfm" title="Last.FM Data Set">publicly available dataset from LastFM</a>. </p>
+<h2>Case: Last.FM Music</h2>
+<p>The data set contains information about users, their gender, their age, and which artists they have listened to on Last.FM. We will not use the entire dataset. For simplicity&#8217;s sake we only use songs in Germany and we will transform the data to a item frequency matrix. This means each row will represent a user, and each column represents and artist. For this we use R&#8217;s &#8220;reshape&#8221; package. This is largely administrative, so we will start with the transformed dataset.</p>
+<p>Download the <a href="http://www.salemmarafi.com/wp-content/uploads/2014/04/lastfm-matrix-germany.csv">LastFM Germany frequency matrix</a> and put it in your working directory. Load up R and read the data file.</p>
+
+<div class="wp_syntax"><table><tr><td class="code"><pre class="perl" style="font-family:monospace;"><span style="color: #666666; font-style: italic;"># Read data from Last.FM frequency matrix  </span>
+data<span style="color: #339933;">.</span>germany <span style="color: #339933;">&lt;-</span> <span style="color: #000066;">read</span><span style="color: #339933;">.</span>csv<span style="color: #009900;">&#40;</span>file<span style="color: #339933;">=</span><span style="color: #ff0000;">&quot;lastfm-matrix-germany.csv&quot;</span><span style="color: #009900;">&#41;</span></pre></td></tr></table></div>
+
+<p>Lets look at a sample of our data. The output looks something like this:</p>
+
+<div class="wp_syntax"><table><tr><td class="code"><pre class="perl" style="font-family:monospace;">head<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span>c<span style="color: #009900;">&#40;</span><span style="color: #cc66cc;">1</span><span style="color: #339933;">,</span><span style="color: #cc66cc;">3</span><span style="color: #339933;">:</span><span style="color: #cc66cc;">8</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span>
+&nbsp;
+  user abba ac<span style="color: #339933;">.</span>dc adam<span style="color: #339933;">.</span>green aerosmith afi air
+<span style="color: #cc66cc;">1</span>    <span style="color: #cc66cc;">1</span>    <span style="color: #cc66cc;">0</span>     <span style="color: #cc66cc;">0</span>          <span style="color: #cc66cc;">0</span>         <span style="color: #cc66cc;">0</span>   <span style="color: #cc66cc;">0</span>   <span style="color: #cc66cc;">0</span>
+<span style="color: #cc66cc;">2</span>   <span style="color: #cc66cc;">33</span>    <span style="color: #cc66cc;">0</span>     <span style="color: #cc66cc;">0</span>          <span style="color: #cc66cc;">1</span>         <span style="color: #cc66cc;">0</span>   <span style="color: #cc66cc;">0</span>   <span style="color: #cc66cc;">0</span>
+<span style="color: #cc66cc;">3</span>   <span style="color: #cc66cc;">42</span>    <span style="color: #cc66cc;">0</span>     <span style="color: #cc66cc;">0</span>          <span style="color: #cc66cc;">0</span>         <span style="color: #cc66cc;">0</span>   <span style="color: #cc66cc;">0</span>   <span style="color: #cc66cc;">0</span>
+<span style="color: #cc66cc;">4</span>   <span style="color: #cc66cc;">51</span>    <span style="color: #cc66cc;">0</span>     <span style="color: #cc66cc;">0</span>          <span style="color: #cc66cc;">0</span>         <span style="color: #cc66cc;">0</span>   <span style="color: #cc66cc;">0</span>   <span style="color: #cc66cc;">0</span>
+<span style="color: #cc66cc;">5</span>   <span style="color: #cc66cc;">62</span>    <span style="color: #cc66cc;">0</span>     <span style="color: #cc66cc;">0</span>          <span style="color: #cc66cc;">0</span>         <span style="color: #cc66cc;">0</span>   <span style="color: #cc66cc;">0</span>   <span style="color: #cc66cc;">0</span>
+<span style="color: #cc66cc;">6</span>   <span style="color: #cc66cc;">75</span>    <span style="color: #cc66cc;">0</span>     <span style="color: #cc66cc;">0</span>          <span style="color: #cc66cc;">0</span>         <span style="color: #cc66cc;">0</span>   <span style="color: #cc66cc;">0</span>   <span style="color: #cc66cc;">0</span></pre></td></tr></table></div>
+
+<p>We&#8217;re good to go! </p>
+<h2>Item Based Collaborative Filtering</h2>
+<p>In item based collaborative filtering we do not really care about the users. So the first thing we should do is drop the user column from our data. This is really easy since it is the first column, but if it was not the first column we would still be able to drop it with the following code:</p>
+
+<div class="wp_syntax"><table><tr><td class="code"><pre class="perl" style="font-family:monospace;">  <span style="color: #666666; font-style: italic;"># Drop any column named &quot;user&quot;</span>
+  data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs <span style="color: #339933;">&lt;-</span> <span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #009900;">&#91;</span><span style="color: #339933;">,!</span><span style="color: #009900;">&#40;</span>names<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #009900;">&#41;</span> <span style="color: #0000ff;">%in</span><span style="color: #339933;">%</span> c<span style="color: #009900;">&#40;</span><span style="color: #ff0000;">&quot;user&quot;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span></pre></td></tr></table></div>
+
+<p>We then want to calculate the similarity of each song with the rest of the songs. This means that we want to compare each column in our &#8220;data.germany.ibs&#8221; data set with every other column in the data set. Specifically, we will be comparing what is known as the <a href="http://en.wikipedia.org/wiki/Cosine_similarity">&#8220;Cosine Similarity&#8221;</a>. </p>
+<p>The cosine similarity, in essence takes the sum product of the first and second column, and divide that by the product of the square root of the sum of squares of each column. (that was a mouth-full!)</p>
+<p>The important thing to know is the resulting number represents how &#8220;similar&#8221; the first column is with the second column. We will use the following helper function to product the Cosine Similarity:</p>
+
+<div class="wp_syntax"><table><tr><td class="code"><pre class="perl" style="font-family:monospace;"><span style="color: #666666; font-style: italic;"># Create a helper function to calculate the cosine between two vectors</span>
+  getCosine <span style="color: #339933;">&lt;-</span> function<span style="color: #009900;">&#40;</span>x<span style="color: #339933;">,</span><span style="color: #000066;">y</span><span style="color: #009900;">&#41;</span> 
+  <span style="color: #009900;">&#123;</span>
+    this<span style="color: #339933;">.</span>cosine <span style="color: #339933;">&lt;-</span> sum<span style="color: #009900;">&#40;</span>x<span style="color: #339933;">*</span><span style="color: #000066;">y</span><span style="color: #009900;">&#41;</span> <span style="color: #339933;">/</span> <span style="color: #009900;">&#40;</span><span style="color: #000066;">sqrt</span><span style="color: #009900;">&#40;</span>sum<span style="color: #009900;">&#40;</span>x<span style="color: #0000ff;">*x</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span> <span style="color: #339933;">*</span> <span style="color: #000066;">sqrt</span><span style="color: #009900;">&#40;</span>sum<span style="color: #009900;">&#40;</span><span style="color: #000066;">y</span><span style="color: #339933;">*</span><span style="color: #000066;">y</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #000066;">return</span><span style="color: #009900;">&#40;</span>this<span style="color: #339933;">.</span>cosine<span style="color: #009900;">&#41;</span>
+  <span style="color: #009900;">&#125;</span></pre></td></tr></table></div>
+
+<p>We are now ready to start comparing each of our songs (items). We first need a placeholder to store the results of our cosine similarities. This placeholder will have the songs in both columns and rows:</p>
+
+<div class="wp_syntax"><table><tr><td class="code"><pre class="perl" style="font-family:monospace;"><span style="color: #666666; font-style: italic;"># Create a placeholder dataframe listing item vs. item</span>
+data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #339933;">.</span>similarity  <span style="color: #339933;">&lt;-</span> matrix<span style="color: #009900;">&#40;</span>NA<span style="color: #339933;">,</span> nrow<span style="color: #339933;">=</span>ncol<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>ncol<span style="color: #339933;">=</span>ncol<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>dimnames<span style="color: #339933;">=</span>list<span style="color: #009900;">&#40;</span>colnames<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>colnames<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span></pre></td></tr></table></div>
+
+<p>The first 6 items of the empty placeholder will look like this:</p>
+
+<div class="wp_syntax"><table><tr><td class="code"><pre class="perl" style="font-family:monospace;">                 a<span style="color: #339933;">.</span>perfect<span style="color: #339933;">.</span>circle abba ac<span style="color: #339933;">.</span>dc adam<span style="color: #339933;">.</span>green aerosmith afi
+a<span style="color: #339933;">.</span>perfect<span style="color: #339933;">.</span>circle               NA   NA    NA         NA        NA  NA
+abba                           NA   NA    NA         NA        NA  NA
+ac<span style="color: #339933;">.</span>dc                          NA   NA    NA         NA        NA  NA
+adam<span style="color: #339933;">.</span>green                     NA   NA    NA         NA        NA  NA
+aerosmith                      NA   NA    NA         NA        NA  NA
+afi                            NA   NA    NA         NA        NA  NA</pre></td></tr></table></div>
+
+<p>Perfect, all that&#8217;s left is to loop column by column and calculate the cosine similarities with our helper function, and then put the results into the placeholder data table. That sounds like a pretty straight-forward nested for-loop:</p>
+
+<div class="wp_syntax"><table><tr><td class="code"><pre class="perl" style="font-family:monospace;"><span style="color: #666666; font-style: italic;"># Lets fill in those empty spaces with cosine similarities</span>
+  <span style="color: #666666; font-style: italic;"># Loop through the columns</span>
+  <span style="color: #b1b100;">for</span><span style="color: #009900;">&#40;</span>i in <span style="color: #cc66cc;">1</span><span style="color: #339933;">:</span>ncol<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span> <span style="color: #009900;">&#123;</span>
+    <span style="color: #666666; font-style: italic;"># Loop through the columns for each column</span>
+    <span style="color: #b1b100;">for</span><span style="color: #009900;">&#40;</span>j in <span style="color: #cc66cc;">1</span><span style="color: #339933;">:</span>ncol<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span> <span style="color: #009900;">&#123;</span>
+      <span style="color: #666666; font-style: italic;"># Fill in placeholder with cosine similarities</span>
+      data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #339933;">.</span>similarity<span style="color: #009900;">&#91;</span>i<span style="color: #339933;">,</span>j<span style="color: #009900;">&#93;</span> <span style="color: #339933;">&lt;-</span> getCosine<span style="color: #009900;">&#40;</span>as<span style="color: #339933;">.</span>matrix<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #009900;">&#91;</span>i<span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>as<span style="color: #339933;">.</span>matrix<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #009900;">&#91;</span>j<span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#125;</span>
+  <span style="color: #009900;">&#125;</span>
+&nbsp;
+  <span style="color: #666666; font-style: italic;"># Back to dataframe</span>
+  data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #339933;">.</span>similarity <span style="color: #339933;">&lt;-</span> as<span style="color: #339933;">.</span>data<span style="color: #339933;">.</span>frame<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #339933;">.</span>similarity<span style="color: #009900;">&#41;</span></pre></td></tr></table></div>
+
+<p>Note: For loops in R are infernally slow. We use as.matrix() to transform the columns into matrices since matrix operations run a lot faster. We transform the similarity matrix into a data.frame for later processes that we will use.   </p>
+<p>We have our similarity matrix. Now the question is &#8230; <strong>so what?</strong></p>
+<p>We are now in a position to make recommendations! We look at the top 10 neighbours of each song &#8211; those would be the recommendations we make to people listening to those songs.</p>
+<p>We start off by creating a placeholder:</p>
+
+<div class="wp_syntax"><table><tr><td class="code"><pre class="perl" style="font-family:monospace;"><span style="color: #666666; font-style: italic;"># Get the top 10 neighbours for each</span>
+  data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>neighbours <span style="color: #339933;">&lt;-</span> matrix<span style="color: #009900;">&#40;</span>NA<span style="color: #339933;">,</span> nrow<span style="color: #339933;">=</span>ncol<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #339933;">.</span>similarity<span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>ncol<span style="color: #339933;">=</span><span style="color: #cc66cc;">11</span><span style="color: #339933;">,</span>dimnames<span style="color: #339933;">=</span>list<span style="color: #009900;">&#40;</span>colnames<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #339933;">.</span>similarity<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span></pre></td></tr></table></div>
+
+<p>Our empty placeholder should look like this:</p>
+
+<div class="wp_syntax"><table><tr><td class="code"><pre class="perl" style="font-family:monospace;">                 <span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span><span style="color: #cc66cc;">1</span><span style="color: #009900;">&#93;</span> <span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span><span style="color: #cc66cc;">2</span><span style="color: #009900;">&#93;</span> <span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span><span style="color: #cc66cc;">3</span><span style="color: #009900;">&#93;</span> <span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span><span style="color: #cc66cc;">4</span><span style="color: #009900;">&#93;</span> <span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span><span style="color: #cc66cc;">5</span><span style="color: #009900;">&#93;</span> <span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span><span style="color: #cc66cc;">6</span><span style="color: #009900;">&#93;</span> <span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span><span style="color: #cc66cc;">7</span><span style="color: #009900;">&#93;</span> <span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span><span style="color: #cc66cc;">8</span><span style="color: #009900;">&#93;</span> <span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span><span style="color: #cc66cc;">9</span><span style="color: #009900;">&#93;</span> <span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span><span style="color: #cc66cc;">10</span><span style="color: #009900;">&#93;</span> <span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span><span style="color: #cc66cc;">11</span><span style="color: #009900;">&#93;</span>
+a<span style="color: #339933;">.</span>perfect<span style="color: #339933;">.</span>circle   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA
+abba               NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA
+ac<span style="color: #339933;">.</span>dc              NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA
+adam<span style="color: #339933;">.</span>green         NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA
+aerosmith          NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA
+afi                NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA</pre></td></tr></table></div>
+
+<p>Then we need to find the neighbours. This is another loop but runs much faster.</p>
+
+<div class="wp_syntax"><table><tr><td class="code"><pre class="perl" style="font-family:monospace;">  <span style="color: #b1b100;">for</span><span style="color: #009900;">&#40;</span>i in <span style="color: #cc66cc;">1</span><span style="color: #339933;">:</span>ncol<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span> 
+  <span style="color: #009900;">&#123;</span>
+    data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>neighbours<span style="color: #009900;">&#91;</span>i<span style="color: #339933;">,</span><span style="color: #009900;">&#93;</span> <span style="color: #339933;">&lt;-</span> <span style="color: #009900;">&#40;</span>t<span style="color: #009900;">&#40;</span>head<span style="color: #009900;">&#40;</span>n<span style="color: #339933;">=</span><span style="color: #cc66cc;">11</span><span style="color: #339933;">,</span>rownames<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #339933;">.</span>similarity<span style="color: #009900;">&#91;</span>order<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #339933;">.</span>similarity<span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span>i<span style="color: #009900;">&#93;</span><span style="color: #339933;">,</span>decreasing<span style="color: #339933;">=</span>TRUE<span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#91;</span>i<span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+  <span style="color: #009900;">&#125;</span></pre></td></tr></table></div>
+
+<p>It&#8217;s a little bit more complicated so lets break it down into steps:</p>
+<ul>
+<li> We loop through all our artists</li>
+<li> We sort our similarity matrix for the artist so that we have the most similar first.</li>
+<li> We take the top 11 (first will always be the same artist) and put them into our placeholder</li>
+<li> Note we use t() to rotate the similarity matrix since the neighbour one is shaped differently</li>
+</ul>
+<p>The filled in placeholder should look like this:</p>
+
+<div class="wp_syntax"><table><tr><td class="code"><pre class="perl" style="font-family:monospace;">                 <span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span><span style="color: #cc66cc;">1</span><span style="color: #009900;">&#93;</span>               <span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span><span style="color: #cc66cc;">2</span><span style="color: #009900;">&#93;</span>                    <span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span><span style="color: #cc66cc;">3</span><span style="color: #009900;">&#93;</span>             
+a<span style="color: #339933;">.</span>perfect<span style="color: #339933;">.</span>circle <span style="color: #ff0000;">&quot;a.perfect.circle&quot;</span> <span style="color: #ff0000;">&quot;tool&quot;</span>                  <span style="color: #ff0000;">&quot;dredg&quot;</span>          
+abba             <span style="color: #ff0000;">&quot;abba&quot;</span>             <span style="color: #ff0000;">&quot;madonna&quot;</span>               <span style="color: #ff0000;">&quot;robbie.williams&quot;</span>
+ac<span style="color: #339933;">.</span>dc            <span style="color: #ff0000;">&quot;ac.dc&quot;</span>            <span style="color: #ff0000;">&quot;red.hot.chilli.peppers&quot;</span> <span style="color: #ff0000;">&quot;metallica&quot;</span>      
+adam<span style="color: #339933;">.</span>green       <span style="color: #ff0000;">&quot;adam.green&quot;</span>       <span style="color: #ff0000;">&quot;the.libertines&quot;</span>        <span style="color: #ff0000;">&quot;the.strokes&quot;</span>    
+aerosmith        <span style="color: #ff0000;">&quot;aerosmith&quot;</span>        <span style="color: #ff0000;">&quot;u2&quot;</span>                    <span style="color: #ff0000;">&quot;led.zeppelin&quot;</span>   
+afi              <span style="color: #ff0000;">&quot;afi&quot;</span>              <span style="color: #ff0000;">&quot;funeral.for.a.friend&quot;</span>  <span style="color: #ff0000;">&quot;rise.against&quot;</span></pre></td></tr></table></div>
+
+<p>This means for those listening to Abba we would recommend Madonna and Robbie Williams.<br />
+Likewise for people listening to ACDC we would recommend the Red Hot Chilli Peppers and Metallica. </p>
+<h2>User Based Recommendations</h2>
+<p>We will need our similarity matrix for User Based recommendations. </p>
+<p>The process behind creating a score matrix for the User Based recommendations is pretty straight forward:</p>
+<ul>
+<li> Choose an item and check if a user consumed that item</li>
+<li> Get the similarities of that item&#8217;s top X neighbours</li>
+<li> Get the consumption record of the user of the top X neighbours</li>
+<li> Calculate the score with a formula: sumproduct(purchaseHistory, similarities)/sum(similarities)</li>
+</ul>
+<p>We can start by creating a helper function to calculate the score mentioned in the last step.</p>
+
+<div class="wp_syntax"><table><tr><td class="code"><pre class="perl" style="font-family:monospace;"><span style="color: #666666; font-style: italic;"># Lets make a helper function to calculate the scores</span>
+  getScore <span style="color: #339933;">&lt;-</span> function<span style="color: #009900;">&#40;</span>history<span style="color: #339933;">,</span> similarities<span style="color: #009900;">&#41;</span>
+  <span style="color: #009900;">&#123;</span>
+    x <span style="color: #339933;">&lt;-</span> sum<span style="color: #009900;">&#40;</span>history<span style="color: #0000ff;">*similarities</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">/</span>sum<span style="color: #009900;">&#40;</span>similarities<span style="color: #009900;">&#41;</span>
+    x
+  <span style="color: #009900;">&#125;</span></pre></td></tr></table></div>
+
+<p>We will also need a holder matrix. We will use the original data set now (data.germany):</p>
+
+<div class="wp_syntax"><table><tr><td class="code"><pre class="perl" style="font-family:monospace;"><span style="color: #666666; font-style: italic;"># A placeholder matrix</span>
+ holder <span style="color: #339933;">&lt;-</span> matrix<span style="color: #009900;">&#40;</span>NA<span style="color: #339933;">,</span> nrow<span style="color: #339933;">=</span>nrow<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>ncol<span style="color: #339933;">=</span>ncol<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #009900;">&#41;</span><span style="color: #339933;">-</span><span style="color: #cc66cc;">1</span><span style="color: #339933;">,</span>dimnames<span style="color: #339933;">=</span>list<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #0000ff;">$user</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>colnames<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #009900;">&#91;</span><span style="color: #339933;">-</span><span style="color: #cc66cc;">1</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span></pre></td></tr></table></div>
+
+<p>The rest is one big ugly nested loop. First the loop, then we will break it down step by step:</p>
+
+<div class="wp_syntax"><table><tr><td class="code"><pre class="perl" style="font-family:monospace;"><span style="color: #666666; font-style: italic;"># Loop through the users (rows)</span>
+   <span style="color: #b1b100;">for</span><span style="color: #009900;">&#40;</span>i in <span style="color: #cc66cc;">1</span><span style="color: #339933;">:</span>nrow<span style="color: #009900;">&#40;</span>holder<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span> 
+   <span style="color: #009900;">&#123;</span>
+       <span style="color: #666666; font-style: italic;"># Loops through the products (columns)</span>
+       <span style="color: #b1b100;">for</span><span style="color: #009900;">&#40;</span>j in <span style="color: #cc66cc;">1</span><span style="color: #339933;">:</span>ncol<span style="color: #009900;">&#40;</span>holder<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span> 
+       <span style="color: #009900;">&#123;</span>
+           <span style="color: #666666; font-style: italic;"># Get the user's name and th product's name</span>
+           <span style="color: #666666; font-style: italic;"># We do this not to conform with vectors sorted differently </span>
+             user <span style="color: #339933;">&lt;-</span> rownames<span style="color: #009900;">&#40;</span>holder<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#91;</span>i<span style="color: #009900;">&#93;</span>
+             product <span style="color: #339933;">&lt;-</span> colnames<span style="color: #009900;">&#40;</span>holder<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#91;</span>j<span style="color: #009900;">&#93;</span>
+&nbsp;
+           <span style="color: #666666; font-style: italic;"># We do not want to recommend products you have already consumed</span>
+           <span style="color: #666666; font-style: italic;"># If you have already consumed it, we store an empty string</span>
+             <span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span>as<span style="color: #339933;">.</span>integer<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #009900;">&#91;</span>data<span style="color: #339933;">.</span>germany<span style="color: #0000ff;">$user</span><span style="color: #339933;">==</span>user<span style="color: #339933;">,</span>product<span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span> <span style="color: #339933;">==</span> <span style="color: #cc66cc;">1</span><span style="color: #009900;">&#41;</span>
+             <span style="color: #009900;">&#123;</span> 
+                 holder<span style="color: #009900;">&#91;</span>i<span style="color: #339933;">,</span>j<span style="color: #009900;">&#93;</span><span style="color: #339933;">&lt;-</span><span style="color: #ff0000;">&quot;&quot;</span>
+              <span style="color: #009900;">&#125;</span> <span style="color: #b1b100;">else</span> <span style="color: #009900;">&#123;</span>
+&nbsp;
+           <span style="color: #666666; font-style: italic;"># We first have to get a product's top 10 neighbours sorted by similarity</span>
+             topN<span style="color: #339933;">&lt;-</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#40;</span>head<span style="color: #009900;">&#40;</span>n<span style="color: #339933;">=</span><span style="color: #cc66cc;">11</span><span style="color: #339933;">,</span><span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #339933;">.</span>similarity<span style="color: #009900;">&#91;</span>order<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #339933;">.</span>similarity<span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span>product<span style="color: #009900;">&#93;</span><span style="color: #339933;">,</span>decreasing<span style="color: #339933;">=</span>TRUE<span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#91;</span>product<span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+             topN<span style="color: #339933;">.</span>names <span style="color: #339933;">&lt;-</span> as<span style="color: #339933;">.</span>character<span style="color: #009900;">&#40;</span>rownames<span style="color: #009900;">&#40;</span>topN<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+             topN<span style="color: #339933;">.</span>similarities <span style="color: #339933;">&lt;-</span> as<span style="color: #339933;">.</span>numeric<span style="color: #009900;">&#40;</span>topN<span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span><span style="color: #cc66cc;">1</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span>
+&nbsp;
+           <span style="color: #666666; font-style: italic;"># Drop the first one because it will always be the same song</span>
+             topN<span style="color: #339933;">.</span>similarities<span style="color: #339933;">&lt;-</span>topN<span style="color: #339933;">.</span>similarities<span style="color: #009900;">&#91;</span><span style="color: #339933;">-</span><span style="color: #cc66cc;">1</span><span style="color: #009900;">&#93;</span>
+             topN<span style="color: #339933;">.</span>names<span style="color: #339933;">&lt;-</span>topN<span style="color: #339933;">.</span>names<span style="color: #009900;">&#91;</span><span style="color: #339933;">-</span><span style="color: #cc66cc;">1</span><span style="color: #009900;">&#93;</span>
+&nbsp;
+           <span style="color: #666666; font-style: italic;"># We then get the user's purchase history for those 10 items</span>
+             topN<span style="color: #339933;">.</span>purchases<span style="color: #339933;">&lt;-</span> data<span style="color: #339933;">.</span>germany<span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span>c<span style="color: #009900;">&#40;</span><span style="color: #ff0000;">&quot;user&quot;</span><span style="color: #339933;">,</span>topN<span style="color: #339933;">.</span>names<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#93;</span>
+             topN<span style="color: #339933;">.</span>userPurchases<span style="color: #339933;">&lt;-</span>topN<span style="color: #339933;">.</span>purchases<span style="color: #009900;">&#91;</span>topN<span style="color: #339933;">.</span>purchases<span style="color: #0000ff;">$user</span><span style="color: #339933;">==</span>user<span style="color: #339933;">,</span><span style="color: #009900;">&#93;</span>
+             topN<span style="color: #339933;">.</span>userPurchases <span style="color: #339933;">&lt;-</span> as<span style="color: #339933;">.</span>numeric<span style="color: #009900;">&#40;</span>topN<span style="color: #339933;">.</span>userPurchases<span style="color: #009900;">&#91;</span><span style="color: #339933;">!</span><span style="color: #009900;">&#40;</span>names<span style="color: #009900;">&#40;</span>topN<span style="color: #339933;">.</span>userPurchases<span style="color: #009900;">&#41;</span> <span style="color: #0000ff;">%in</span><span style="color: #339933;">%</span> c<span style="color: #009900;">&#40;</span><span style="color: #ff0000;">&quot;user&quot;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span>
+&nbsp;
+            <span style="color: #666666; font-style: italic;"># We then calculate the score for that product and that user</span>
+             holder<span style="color: #009900;">&#91;</span>i<span style="color: #339933;">,</span>j<span style="color: #009900;">&#93;</span><span style="color: #339933;">&lt;-</span>getScore<span style="color: #009900;">&#40;</span>similarities<span style="color: #339933;">=</span>topN<span style="color: #339933;">.</span>similarities<span style="color: #339933;">,</span>history<span style="color: #339933;">=</span>topN<span style="color: #339933;">.</span>userPurchases<span style="color: #009900;">&#41;</span>
+&nbsp;
+         <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;"># close else statement</span>
+       <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;"># end product for loop   </span>
+   <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;"># end user for loop</span>
+&nbsp;
+data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>user<span style="color: #339933;">.</span>scores <span style="color: #339933;">&lt;-</span> holder</pre></td></tr></table></div>
+
+<p>The loop starts by taking each user (row) and then jumps into another loop that takes each column (artists).<br />
+We then store the user&#8217;s name and artist name in variables to use them easily later.<br />
+We then use an if statement to filter out artists that a user has already listened to &#8211; this is a business case decision. </p>
+<p>The next bit gets the item based similarity scores for the artist under consideration.</p>
+
+<div class="wp_syntax"><table><tr><td class="code"><pre class="perl" style="font-family:monospace;"><span style="color: #666666; font-style: italic;"># We first have to get a product's top 10 neighbours sorted by similarity</span>
+ topN<span style="color: #339933;">&lt;-</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#40;</span>head<span style="color: #009900;">&#40;</span>n<span style="color: #339933;">=</span><span style="color: #cc66cc;">11</span><span style="color: #339933;">,</span><span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #339933;">.</span>similarity<span style="color: #009900;">&#91;</span>order<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #339933;">.</span>similarity<span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span>product<span style="color: #009900;">&#93;</span><span style="color: #339933;">,</span>decreasing<span style="color: #339933;">=</span>TRUE<span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#91;</span>product<span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+ topN<span style="color: #339933;">.</span>names <span style="color: #339933;">&lt;-</span> as<span style="color: #339933;">.</span>character<span style="color: #009900;">&#40;</span>rownames<span style="color: #009900;">&#40;</span>topN<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+ topN<span style="color: #339933;">.</span>similarities <span style="color: #339933;">&lt;-</span> as<span style="color: #339933;">.</span>numeric<span style="color: #009900;">&#40;</span>topN<span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span><span style="color: #cc66cc;">1</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;"># Drop the first one because it will always be the same song</span>
+ topN<span style="color: #339933;">.</span>similarities<span style="color: #339933;">&lt;-</span>topN<span style="color: #339933;">.</span>similarities<span style="color: #009900;">&#91;</span><span style="color: #339933;">-</span><span style="color: #cc66cc;">1</span><span style="color: #009900;">&#93;</span>
+ topN<span style="color: #339933;">.</span>names<span style="color: #339933;">&lt;-</span>topN<span style="color: #339933;">.</span>names<span style="color: #009900;">&#91;</span><span style="color: #339933;">-</span><span style="color: #cc66cc;">1</span><span style="color: #009900;">&#93;</span></pre></td></tr></table></div>
+
+<p>It is important to note the number of artists you pick matters. We pick the top 10.<br />
+We store the similarities score and song names.<br />
+We also drop the first column because, as we saw, it always represents the same song. </p>
+<p>We&#8217;re almost there. We just need the user&#8217;s purchase history for the top 10 songs.</p>
+
+<div class="wp_syntax"><table><tr><td class="code"><pre class="perl" style="font-family:monospace;"><span style="color: #666666; font-style: italic;"># We then get the user's purchase history for those 10 items</span>
+ topN<span style="color: #339933;">.</span>purchases<span style="color: #339933;">&lt;-</span> data<span style="color: #339933;">.</span>germany<span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span>c<span style="color: #009900;">&#40;</span><span style="color: #ff0000;">&quot;user&quot;</span><span style="color: #339933;">,</span>topN<span style="color: #339933;">.</span>names<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#93;</span>
+ topN<span style="color: #339933;">.</span>userPurchases<span style="color: #339933;">&lt;-</span>topN<span style="color: #339933;">.</span>purchases<span style="color: #009900;">&#91;</span>topN<span style="color: #339933;">.</span>purchases<span style="color: #0000ff;">$user</span><span style="color: #339933;">==</span>user<span style="color: #339933;">,</span><span style="color: #009900;">&#93;</span>
+ topN<span style="color: #339933;">.</span>userPurchases <span style="color: #339933;">&lt;-</span> as<span style="color: #339933;">.</span>numeric<span style="color: #009900;">&#40;</span>topN<span style="color: #339933;">.</span>userPurchases<span style="color: #009900;">&#91;</span><span style="color: #339933;">!</span><span style="color: #009900;">&#40;</span>names<span style="color: #009900;">&#40;</span>topN<span style="color: #339933;">.</span>userPurchases<span style="color: #009900;">&#41;</span> <span style="color: #0000ff;">%in</span><span style="color: #339933;">%</span> c<span style="color: #009900;">&#40;</span><span style="color: #ff0000;">&quot;user&quot;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span></pre></td></tr></table></div>
+
+<p>We use the original data set to get the purchases of our users&#8217; top 10 purchases.<br />
+We filter out our current user in the loop and then filter out purchases that match the user. </p>
+<p>We are now ready to calculate the score and store it in our holder matrix:</p>
+
+<div class="wp_syntax"><table><tr><td class="code"><pre class="perl" style="font-family:monospace;"><span style="color: #666666; font-style: italic;"># We then calculate the score for that product and that user</span>
+  holder<span style="color: #009900;">&#91;</span>i<span style="color: #339933;">,</span>j<span style="color: #009900;">&#93;</span><span style="color: #339933;">&lt;-</span>getScore<span style="color: #009900;">&#40;</span>similarities<span style="color: #339933;">=</span>topN<span style="color: #339933;">.</span>similarities<span style="color: #339933;">,</span>history<span style="color: #339933;">=</span>topN<span style="color: #339933;">.</span>userPurchases<span style="color: #009900;">&#41;</span></pre></td></tr></table></div>
+
+<p>Once we are done we can store the results in a data frame.</p>
+<p>The results should look something like this:</p>
+
+<div class="wp_syntax"><table><tr><td class="code"><pre class="perl" style="font-family:monospace;">  X a<span style="color: #339933;">.</span>perfect<span style="color: #339933;">.</span>circle       abba      ac<span style="color: #339933;">.</span>dc
+  <span style="color: #cc66cc;">1</span>        <span style="color: #cc66cc;">0.0000000</span> <span style="color: #cc66cc;">0.00000000</span> <span style="color: #cc66cc;">0.20440540</span>
+ <span style="color: #cc66cc;">33</span>        <span style="color: #cc66cc;">0.0823426</span> <span style="color: #cc66cc;">0.00000000</span> <span style="color: #cc66cc;">0.09591153</span>
+ <span style="color: #cc66cc;">42</span>        <span style="color: #cc66cc;">0.0000000</span> <span style="color: #cc66cc;">0.08976655</span> <span style="color: #cc66cc;">0.00000000</span>
+ <span style="color: #cc66cc;">51</span>        <span style="color: #cc66cc;">0.0823426</span> <span style="color: #cc66cc;">0.08356811</span> <span style="color: #cc66cc;">0.00000000</span>
+ <span style="color: #cc66cc;">62</span>        <span style="color: #cc66cc;">0.0000000</span> <span style="color: #cc66cc;">0.00000000</span> <span style="color: #cc66cc;">0.11430459</span>
+ <span style="color: #cc66cc;">75</span>        <span style="color: #cc66cc;">0.0000000</span> <span style="color: #cc66cc;">0.00000000</span> <span style="color: #cc66cc;">0.00000000</span></pre></td></tr></table></div>
+
+<p>This basically reads that for user 51 we would recommend abba first, then a perfect circle, and we would not recommend ACDC. </p>
+<p>This is not very pretty &#8230; so lets make it pretty:<br />
+We will create another holder matrix and for each user score we will sort the scores and store the artist names in rank order.</p>
+
+<div class="wp_syntax"><table><tr><td class="code"><pre class="perl" style="font-family:monospace;"><span style="color: #666666; font-style: italic;"># Lets make our recommendations pretty</span>
+  data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>user<span style="color: #339933;">.</span>scores<span style="color: #339933;">.</span>holder <span style="color: #339933;">&lt;-</span> matrix<span style="color: #009900;">&#40;</span>NA<span style="color: #339933;">,</span> nrow<span style="color: #339933;">=</span>nrow<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>user<span style="color: #339933;">.</span>scores<span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>ncol<span style="color: #339933;">=</span><span style="color: #cc66cc;">100</span><span style="color: #339933;">,</span>dimnames<span style="color: #339933;">=</span>list<span style="color: #009900;">&#40;</span>rownames<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>user<span style="color: #339933;">.</span>scores<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+  <span style="color: #b1b100;">for</span><span style="color: #009900;">&#40;</span>i in <span style="color: #cc66cc;">1</span><span style="color: #339933;">:</span>nrow<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>user<span style="color: #339933;">.</span>scores<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span> 
+  <span style="color: #009900;">&#123;</span>
+    data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>user<span style="color: #339933;">.</span>scores<span style="color: #339933;">.</span>holder<span style="color: #009900;">&#91;</span>i<span style="color: #339933;">,</span><span style="color: #009900;">&#93;</span> <span style="color: #339933;">&lt;-</span> names<span style="color: #009900;">&#40;</span>head<span style="color: #009900;">&#40;</span>n<span style="color: #339933;">=</span><span style="color: #cc66cc;">100</span><span style="color: #339933;">,</span><span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>user<span style="color: #339933;">.</span>scores<span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span>order<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>user<span style="color: #339933;">.</span>scores<span style="color: #009900;">&#91;</span>i<span style="color: #339933;">,</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">,</span>decreasing<span style="color: #339933;">=</span>TRUE<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#91;</span>i<span style="color: #339933;">,</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+  <span style="color: #009900;">&#125;</span></pre></td></tr></table></div>
+
+<p>The output of this will look like this:</p>
+
+<div class="wp_syntax"><table><tr><td class="code"><pre class="perl" style="font-family:monospace;">  X             V1            V2                    V3
+  <span style="color: #cc66cc;">1</span> flogging<span style="color: #339933;">.</span>molly      coldplay             aerosmith
+ <span style="color: #cc66cc;">33</span>      peter<span style="color: #339933;">.</span>fox     gentleman red<span style="color: #339933;">.</span>hot<span style="color: #339933;">.</span>chili<span style="color: #339933;">.</span>peppers
+ <span style="color: #cc66cc;">42</span>         oomph<span style="color: #339933;">.</span>   lacuna<span style="color: #339933;">.</span>coil             rammstein
+ <span style="color: #cc66cc;">51</span>    the<span style="color: #339933;">.</span>subways     the<span style="color: #339933;">.</span>kooks             the<span style="color: #339933;">.</span>hives
+ <span style="color: #cc66cc;">62</span>     mando<span style="color: #339933;">.</span>diao the<span style="color: #339933;">.</span>fratellis          jack<span style="color: #339933;">.</span>johnson
+ <span style="color: #cc66cc;">75</span>     hoobastank    papa<span style="color: #339933;">.</span>roach           the<span style="color: #339933;">.</span>prodigy</pre></td></tr></table></div>
+
+<p>By sorting we see that actually the top 3 for user 51 is the subways, the kooks, and the hives!</p>
+<h2>References</h2>
+<ul>
+<li><a href="http://www.amazon.com/gp/product/B00D3IPVVE/ref=as_li_ss_tl?ie=UTF8&#038;camp=1789&#038;creative=390957&#038;creativeASIN=B00D3IPVVE&#038;linkCode=as2&#038;tag=salemara-20">Data Mining and Business Analytics with R</a><img src="http://ir-na.amazon-adsystem.com/e/ir?t=salemara-20&#038;l=as2&#038;o=1&#038;a=B00D3IPVVE" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></li>
+<li>This case is based on Professor <a href="http://www.iese.edu/en/faculty-research/professors/faculty-directory/miguel-angel-canela/">Miguel Canela</a> &#8220;Designing a music recommendation app&#8221;</li>
+</ul>
+<h2>Entire Code</h2>
+
+<div class="wp_syntax"><table><tr><td class="code"><pre class="perl" style="font-family:monospace;">&nbsp;
+<span style="color: #666666; font-style: italic;"># Admin stuff here, nothing special </span>
+  options<span style="color: #009900;">&#40;</span>digits<span style="color: #339933;">=</span><span style="color: #cc66cc;">4</span><span style="color: #009900;">&#41;</span>
+  data <span style="color: #339933;">&lt;-</span> <span style="color: #000066;">read</span><span style="color: #339933;">.</span>csv<span style="color: #009900;">&#40;</span>file<span style="color: #339933;">=</span><span style="color: #ff0000;">&quot;lastfm-data.csv&quot;</span><span style="color: #009900;">&#41;</span>
+  data<span style="color: #339933;">.</span>germany <span style="color: #339933;">&lt;-</span> <span style="color: #000066;">read</span><span style="color: #339933;">.</span>csv<span style="color: #009900;">&#40;</span>file<span style="color: #339933;">=</span><span style="color: #ff0000;">&quot;lastfm-matrix-germany.csv&quot;</span><span style="color: #009900;">&#41;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">############################</span>
+<span style="color: #666666; font-style: italic;">#  Item Based Similarity   #</span>
+<span style="color: #666666; font-style: italic;">############################   </span>
+&nbsp;
+<span style="color: #666666; font-style: italic;"># Drop the user column and make a new data frame</span>
+  data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs <span style="color: #339933;">&lt;-</span> <span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #009900;">&#91;</span><span style="color: #339933;">,!</span><span style="color: #009900;">&#40;</span>names<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #009900;">&#41;</span> <span style="color: #0000ff;">%in</span><span style="color: #339933;">%</span> c<span style="color: #009900;">&#40;</span><span style="color: #ff0000;">&quot;user&quot;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;"># Create a helper function to calculate the cosine between two vectors</span>
+  getCosine <span style="color: #339933;">&lt;-</span> function<span style="color: #009900;">&#40;</span>x<span style="color: #339933;">,</span><span style="color: #000066;">y</span><span style="color: #009900;">&#41;</span> 
+  <span style="color: #009900;">&#123;</span>
+    this<span style="color: #339933;">.</span>cosine <span style="color: #339933;">&lt;-</span> sum<span style="color: #009900;">&#40;</span>x<span style="color: #339933;">*</span><span style="color: #000066;">y</span><span style="color: #009900;">&#41;</span> <span style="color: #339933;">/</span> <span style="color: #009900;">&#40;</span><span style="color: #000066;">sqrt</span><span style="color: #009900;">&#40;</span>sum<span style="color: #009900;">&#40;</span>x<span style="color: #0000ff;">*x</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span> <span style="color: #339933;">*</span> <span style="color: #000066;">sqrt</span><span style="color: #009900;">&#40;</span>sum<span style="color: #009900;">&#40;</span><span style="color: #000066;">y</span><span style="color: #339933;">*</span><span style="color: #000066;">y</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #000066;">return</span><span style="color: #009900;">&#40;</span>this<span style="color: #339933;">.</span>cosine<span style="color: #009900;">&#41;</span>
+  <span style="color: #009900;">&#125;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;"># Create a placeholder dataframe listing item vs. item</span>
+  holder <span style="color: #339933;">&lt;-</span> matrix<span style="color: #009900;">&#40;</span>NA<span style="color: #339933;">,</span> nrow<span style="color: #339933;">=</span>ncol<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>ncol<span style="color: #339933;">=</span>ncol<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>dimnames<span style="color: #339933;">=</span>list<span style="color: #009900;">&#40;</span>colnames<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>colnames<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+  data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #339933;">.</span>similarity <span style="color: #339933;">&lt;-</span> as<span style="color: #339933;">.</span>data<span style="color: #339933;">.</span>frame<span style="color: #009900;">&#40;</span>holder<span style="color: #009900;">&#41;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;"># Lets fill in those empty spaces with cosine similarities</span>
+  <span style="color: #b1b100;">for</span><span style="color: #009900;">&#40;</span>i in <span style="color: #cc66cc;">1</span><span style="color: #339933;">:</span>ncol<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span> <span style="color: #009900;">&#123;</span>
+    <span style="color: #b1b100;">for</span><span style="color: #009900;">&#40;</span>j in <span style="color: #cc66cc;">1</span><span style="color: #339933;">:</span>ncol<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span> <span style="color: #009900;">&#123;</span>
+      data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #339933;">.</span>similarity<span style="color: #009900;">&#91;</span>i<span style="color: #339933;">,</span>j<span style="color: #009900;">&#93;</span><span style="color: #339933;">=</span> getCosine<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #009900;">&#91;</span>i<span style="color: #009900;">&#93;</span><span style="color: #339933;">,</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #009900;">&#91;</span>j<span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#125;</span>
+  <span style="color: #009900;">&#125;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;"># Output similarity results to a file</span>
+  <span style="color: #000066;">write</span><span style="color: #339933;">.</span>csv<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #339933;">.</span>similarity<span style="color: #339933;">,</span>file<span style="color: #339933;">=</span><span style="color: #ff0000;">&quot;final-germany-similarity.csv&quot;</span><span style="color: #009900;">&#41;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;"># Get the top 10 neighbours for each</span>
+  data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>neighbours <span style="color: #339933;">&lt;-</span> matrix<span style="color: #009900;">&#40;</span>NA<span style="color: #339933;">,</span> nrow<span style="color: #339933;">=</span>ncol<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #339933;">.</span>similarity<span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>ncol<span style="color: #339933;">=</span><span style="color: #cc66cc;">11</span><span style="color: #339933;">,</span>dimnames<span style="color: #339933;">=</span>list<span style="color: #009900;">&#40;</span>colnames<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #339933;">.</span>similarity<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+&nbsp;
+  <span style="color: #b1b100;">for</span><span style="color: #009900;">&#40;</span>i in <span style="color: #cc66cc;">1</span><span style="color: #339933;">:</span>ncol<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span> 
+  <span style="color: #009900;">&#123;</span>
+    data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>neighbours<span style="color: #009900;">&#91;</span>i<span style="color: #339933;">,</span><span style="color: #009900;">&#93;</span> <span style="color: #339933;">&lt;-</span> <span style="color: #009900;">&#40;</span>t<span style="color: #009900;">&#40;</span>head<span style="color: #009900;">&#40;</span>n<span style="color: #339933;">=</span><span style="color: #cc66cc;">11</span><span style="color: #339933;">,</span>rownames<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #339933;">.</span>similarity<span style="color: #009900;">&#91;</span>order<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #339933;">.</span>similarity<span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span>i<span style="color: #009900;">&#93;</span><span style="color: #339933;">,</span>decreasing<span style="color: #339933;">=</span>TRUE<span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#91;</span>i<span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+  <span style="color: #009900;">&#125;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;"># Output neighbour results to a file  </span>
+  <span style="color: #000066;">write</span><span style="color: #339933;">.</span>csv<span style="color: #009900;">&#40;</span>file<span style="color: #339933;">=</span><span style="color: #ff0000;">&quot;final-germany-item-neighbours.csv&quot;</span><span style="color: #339933;">,</span>x<span style="color: #339933;">=</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>neighbours<span style="color: #009900;">&#91;</span><span style="color: #339933;">,-</span><span style="color: #cc66cc;">1</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span>
+&nbsp;
+&nbsp;
+<span style="color: #666666; font-style: italic;">############################</span>
+<span style="color: #666666; font-style: italic;"># User Scores Matrix       #</span>
+<span style="color: #666666; font-style: italic;">############################    </span>
+<span style="color: #666666; font-style: italic;"># Process:</span>
+<span style="color: #666666; font-style: italic;"># Choose a product, see if the user purchased a product</span>
+<span style="color: #666666; font-style: italic;"># Get the similarities of that product's top 10 neighbours</span>
+<span style="color: #666666; font-style: italic;"># Get the purchase record of that user of the top 10 neighbours</span>
+<span style="color: #666666; font-style: italic;"># Do the formula: sumproduct(purchaseHistory, similarities)/sum(similarities)</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;"># Lets make a helper function to calculate the scores</span>
+  getScore <span style="color: #339933;">&lt;-</span> function<span style="color: #009900;">&#40;</span>history<span style="color: #339933;">,</span> similarities<span style="color: #009900;">&#41;</span>
+  <span style="color: #009900;">&#123;</span>
+    x <span style="color: #339933;">&lt;-</span> sum<span style="color: #009900;">&#40;</span>history<span style="color: #0000ff;">*similarities</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">/</span>sum<span style="color: #009900;">&#40;</span>similarities<span style="color: #009900;">&#41;</span>
+    x
+  <span style="color: #009900;">&#125;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;"># A placeholder matrix</span>
+ holder <span style="color: #339933;">&lt;-</span> matrix<span style="color: #009900;">&#40;</span>NA<span style="color: #339933;">,</span> nrow<span style="color: #339933;">=</span>nrow<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>ncol<span style="color: #339933;">=</span>ncol<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #009900;">&#41;</span><span style="color: #339933;">-</span><span style="color: #cc66cc;">1</span><span style="color: #339933;">,</span>dimnames<span style="color: #339933;">=</span>list<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #0000ff;">$user</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>colnames<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #009900;">&#91;</span><span style="color: #339933;">-</span><span style="color: #cc66cc;">1</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;"># Loop through the users (rows)</span>
+   <span style="color: #b1b100;">for</span><span style="color: #009900;">&#40;</span>i in <span style="color: #cc66cc;">1</span><span style="color: #339933;">:</span>nrow<span style="color: #009900;">&#40;</span>holder<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span> 
+   <span style="color: #009900;">&#123;</span>
+       <span style="color: #666666; font-style: italic;"># Loops through the products (columns)</span>
+       <span style="color: #b1b100;">for</span><span style="color: #009900;">&#40;</span>j in <span style="color: #cc66cc;">1</span><span style="color: #339933;">:</span>ncol<span style="color: #009900;">&#40;</span>holder<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span> 
+       <span style="color: #009900;">&#123;</span>
+           <span style="color: #666666; font-style: italic;"># Get the user's name and th product's name</span>
+           <span style="color: #666666; font-style: italic;"># We do this not to conform with vectors sorted differently </span>
+             user <span style="color: #339933;">&lt;-</span> rownames<span style="color: #009900;">&#40;</span>holder<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#91;</span>i<span style="color: #009900;">&#93;</span>
+             product <span style="color: #339933;">&lt;-</span> colnames<span style="color: #009900;">&#40;</span>holder<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#91;</span>j<span style="color: #009900;">&#93;</span>
+&nbsp;
+           <span style="color: #666666; font-style: italic;"># We do not want to recommend products you have already consumed</span>
+           <span style="color: #666666; font-style: italic;"># If you have already consumed it, we store an empty string</span>
+             <span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span>as<span style="color: #339933;">.</span>integer<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #009900;">&#91;</span>data<span style="color: #339933;">.</span>germany<span style="color: #0000ff;">$user</span><span style="color: #339933;">==</span>user<span style="color: #339933;">,</span>product<span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span> <span style="color: #339933;">==</span> <span style="color: #cc66cc;">1</span><span style="color: #009900;">&#41;</span>
+             <span style="color: #009900;">&#123;</span> 
+                 holder<span style="color: #009900;">&#91;</span>i<span style="color: #339933;">,</span>j<span style="color: #009900;">&#93;</span><span style="color: #339933;">&lt;-</span><span style="color: #ff0000;">&quot;&quot;</span>
+              <span style="color: #009900;">&#125;</span> <span style="color: #b1b100;">else</span> <span style="color: #009900;">&#123;</span>
+&nbsp;
+           <span style="color: #666666; font-style: italic;"># We first have to get a product's top 10 neighbours sorted by similarity</span>
+             topN<span style="color: #339933;">&lt;-</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#40;</span>head<span style="color: #009900;">&#40;</span>n<span style="color: #339933;">=</span><span style="color: #cc66cc;">11</span><span style="color: #339933;">,</span><span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #339933;">.</span>similarity<span style="color: #009900;">&#91;</span>order<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>ibs<span style="color: #339933;">.</span>similarity<span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span>product<span style="color: #009900;">&#93;</span><span style="color: #339933;">,</span>decreasing<span style="color: #339933;">=</span>TRUE<span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#91;</span>product<span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+             topN<span style="color: #339933;">.</span>names <span style="color: #339933;">&lt;-</span> as<span style="color: #339933;">.</span>character<span style="color: #009900;">&#40;</span>rownames<span style="color: #009900;">&#40;</span>topN<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+             topN<span style="color: #339933;">.</span>similarities <span style="color: #339933;">&lt;-</span> as<span style="color: #339933;">.</span>numeric<span style="color: #009900;">&#40;</span>topN<span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span><span style="color: #cc66cc;">1</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span>
+&nbsp;
+           <span style="color: #666666; font-style: italic;"># Drop the first one because it will always be the same song</span>
+             topN<span style="color: #339933;">.</span>similarities<span style="color: #339933;">&lt;-</span>topN<span style="color: #339933;">.</span>similarities<span style="color: #009900;">&#91;</span><span style="color: #339933;">-</span><span style="color: #cc66cc;">1</span><span style="color: #009900;">&#93;</span>
+             topN<span style="color: #339933;">.</span>names<span style="color: #339933;">&lt;-</span>topN<span style="color: #339933;">.</span>names<span style="color: #009900;">&#91;</span><span style="color: #339933;">-</span><span style="color: #cc66cc;">1</span><span style="color: #009900;">&#93;</span>
+&nbsp;
+           <span style="color: #666666; font-style: italic;"># We then get the user's purchase history for those 10 items</span>
+             topN<span style="color: #339933;">.</span>purchases<span style="color: #339933;">&lt;-</span> data<span style="color: #339933;">.</span>germany<span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span>c<span style="color: #009900;">&#40;</span><span style="color: #ff0000;">&quot;user&quot;</span><span style="color: #339933;">,</span>topN<span style="color: #339933;">.</span>names<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#93;</span>
+             topN<span style="color: #339933;">.</span>userPurchases<span style="color: #339933;">&lt;-</span>topN<span style="color: #339933;">.</span>purchases<span style="color: #009900;">&#91;</span>topN<span style="color: #339933;">.</span>purchases<span style="color: #0000ff;">$user</span><span style="color: #339933;">==</span>user<span style="color: #339933;">,</span><span style="color: #009900;">&#93;</span>
+             topN<span style="color: #339933;">.</span>userPurchases <span style="color: #339933;">&lt;-</span> as<span style="color: #339933;">.</span>numeric<span style="color: #009900;">&#40;</span>topN<span style="color: #339933;">.</span>userPurchases<span style="color: #009900;">&#91;</span><span style="color: #339933;">!</span><span style="color: #009900;">&#40;</span>names<span style="color: #009900;">&#40;</span>topN<span style="color: #339933;">.</span>userPurchases<span style="color: #009900;">&#41;</span> <span style="color: #0000ff;">%in</span><span style="color: #339933;">%</span> c<span style="color: #009900;">&#40;</span><span style="color: #ff0000;">&quot;user&quot;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span>
+&nbsp;
+            <span style="color: #666666; font-style: italic;"># We then calculate the score for that product and that user</span>
+             holder<span style="color: #009900;">&#91;</span>i<span style="color: #339933;">,</span>j<span style="color: #009900;">&#93;</span><span style="color: #339933;">&lt;-</span>getScore<span style="color: #009900;">&#40;</span>similarities<span style="color: #339933;">=</span>topN<span style="color: #339933;">.</span>similarities<span style="color: #339933;">,</span>history<span style="color: #339933;">=</span>topN<span style="color: #339933;">.</span>userPurchases<span style="color: #009900;">&#41;</span>
+&nbsp;
+         <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;"># close else statement</span>
+       <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;"># end product for loop   </span>
+   <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;"># end user for loop</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;"># Output the results to a file</span>
+data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>user<span style="color: #339933;">.</span>scores <span style="color: #339933;">&lt;-</span> holder
+<span style="color: #000066;">write</span><span style="color: #339933;">.</span>csv<span style="color: #009900;">&#40;</span>file<span style="color: #339933;">=</span><span style="color: #ff0000;">&quot;final-user-scores.csv&quot;</span><span style="color: #339933;">,</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>user<span style="color: #339933;">.</span>scores<span style="color: #009900;">&#41;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;"># Lets make our recommendations pretty</span>
+  data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>user<span style="color: #339933;">.</span>scores<span style="color: #339933;">.</span>holder <span style="color: #339933;">&lt;-</span> matrix<span style="color: #009900;">&#40;</span>NA<span style="color: #339933;">,</span> nrow<span style="color: #339933;">=</span>nrow<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>user<span style="color: #339933;">.</span>scores<span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>ncol<span style="color: #339933;">=</span><span style="color: #cc66cc;">100</span><span style="color: #339933;">,</span>dimnames<span style="color: #339933;">=</span>list<span style="color: #009900;">&#40;</span>rownames<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>user<span style="color: #339933;">.</span>scores<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+  <span style="color: #b1b100;">for</span><span style="color: #009900;">&#40;</span>i in <span style="color: #cc66cc;">1</span><span style="color: #339933;">:</span>nrow<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>user<span style="color: #339933;">.</span>scores<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span> 
+  <span style="color: #009900;">&#123;</span>
+    data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>user<span style="color: #339933;">.</span>scores<span style="color: #339933;">.</span>holder<span style="color: #009900;">&#91;</span>i<span style="color: #339933;">,</span><span style="color: #009900;">&#93;</span> <span style="color: #339933;">&lt;-</span> names<span style="color: #009900;">&#40;</span>head<span style="color: #009900;">&#40;</span>n<span style="color: #339933;">=</span><span style="color: #cc66cc;">100</span><span style="color: #339933;">,</span><span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>user<span style="color: #339933;">.</span>scores<span style="color: #009900;">&#91;</span><span style="color: #339933;">,</span>order<span style="color: #009900;">&#40;</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>user<span style="color: #339933;">.</span>scores<span style="color: #009900;">&#91;</span>i<span style="color: #339933;">,</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">,</span>decreasing<span style="color: #339933;">=</span>TRUE<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#91;</span>i<span style="color: #339933;">,</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+  <span style="color: #009900;">&#125;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;"># Write output to file</span>
+  <span style="color: #000066;">write</span><span style="color: #339933;">.</span>csv<span style="color: #009900;">&#40;</span>file<span style="color: #339933;">=</span><span style="color: #ff0000;">&quot;final-user-recommendations.csv&quot;</span><span style="color: #339933;">,</span>data<span style="color: #339933;">.</span>germany<span style="color: #339933;">.</span>user<span style="color: #339933;">.</span>scores<span style="color: #339933;">.</span>holder<span style="color: #009900;">&#41;</span></pre></td></tr></table></div>
+
+				
+								<div class="social">
+					<div class="like-btn">
+					  	<div class="fb-like" href="http://www.salemmarafi.com/code/collaborative-filtering-r/" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false"></div>
+					</div>
+					<div class="pin-btn">
+						<a href="http://pinterest.com/pin/create/button/?url=http%3A%2F%2Fwww.salemmarafi.com%2Fcode%2Fcollaborative-filtering-r%2F&media=http://www.salemmarafi.com/wp-content/uploads/2014/04/collaborativeFiltering.jpg&description=Collaborative Filtering with R" class="pin-it-button" count-layout="horizontal"><img border="0" src="//assets.pinterest.com/images/PinExt.png" title="Pin It" /></a>
+					</div>
+					<div class="tweet-btn">
+						<a href="http://twitter.com/share" class="twitter-share-button"
+						data-url="http://www.salemmarafi.com/code/collaborative-filtering-r/"
+						data-via="salemmarafi"
+						data-text="Collaborative Filtering with R"
+						data-related=""
+						data-count="horizontal">Tweet</a>
+					</div>
+					<div class="plus-btn">
+						<g:plusone size="medium" annotation="bubble" href="http://www.salemmarafi.com/code/collaborative-filtering-r/"></g:plusone>
+					</div>
+				</div>
+								
+								<div class="clear"></div>
+				<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+			xmlns:dc="http://purl.org/dc/elements/1.1/"
+			xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+		<rdf:Description rdf:about="http://www.salemmarafi.com/code/collaborative-filtering-r/"
+    dc:identifier="http://www.salemmarafi.com/code/collaborative-filtering-r/"
+    dc:title="Collaborative Filtering with R"
+    trackback:ping="http://www.salemmarafi.com/code/collaborative-filtering-r/trackback/" />
+</rdf:RDF>			
+			<!-- END .article columns -->
+			</div>
+			
+			<div class="postmeta">
+				<p class="left"><img class="icon" src="http://www.salemmarafi.com/wp-content/themes/organic_tumble/images/icon_category.png" title="Category" alt="Category" /> Category: <a href="http://www.salemmarafi.com/category/code/" rel="category tag">Code</a></p> 
+				<p class="right"><img class="icon" src="http://www.salemmarafi.com/wp-content/themes/organic_tumble/images/icon_tag.png" title="Tag" alt="Tag" /> Tags: <a href="http://www.salemmarafi.com/tag/filtering/" rel="tag">filtering</a>, <a href="http://www.salemmarafi.com/tag/r/" rel="tag">R</a>, <a href="http://www.salemmarafi.com/tag/recommender/" rel="tag">recommender</a></p>
+			</div>
+		
+		<!-- END .post columns -->
+		</div>
+
+        <div class="postcomments">
+        	<div class="article">
+        			<div id="comments">
+	
+	
+			<h3 id="comments-title">
+			30 Comments on &ldquo;<span>Collaborative Filtering with R</span>&rdquo;		</h3>
+
+		
+		<ol class="commentlist">
+				<li class="comment even thread-even depth-1" id="li-comment-39454">
+		<article id="comment-39454" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://1.gravatar.com/avatar/52c8e50c6595c71c8ae49eab3bfe2a4b?s=136&amp;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-39454"><time pubdate datetime="2014-09-11T14:08:12+00:00">September 11, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author">Naveen Kaveti</span> </span>				<p>Hi Salem,</p>
+<p>Thanks for clear explanation. I have few queries regarding similarity measures. Example that you considered here is implicit feed back information so it only contains 0&#8217;s and 1&#8217;s (1 &#8211; user purchased a product; 0 &#8211; user didn&#8217;t purchased a product. My doubt is when we have categorical data is cosine (or) Pearson&#8217;s correlation coefficient similarity<br />
+ makes any sense?</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=39454#respond' onclick='return addComment.moveForm( "comment-39454", "39454", "respond", "6292" )' aria-label='Reply to Naveen Kaveti'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-salem bypostauthor odd alt depth-2" id="li-comment-39583">
+		<article id="comment-39583" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://0.gravatar.com/avatar/2d8b286ef23015a525e7314646f430ac?s=136&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-39583"><time pubdate datetime="2014-09-12T21:40:16+00:00">September 12, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href='http://www.salemmarafi.com' rel='external nofollow' class='url'>Salem</a></span> </span>				<p>Hi Naveen,</p>
+<p>Actually it really depends on your data &#8230; but the cosine similarity is used for similarity among non-binary vectors too.<br />
+You can opt to use the same method described in this post with another similarity function (here are a few: <a href="http://mines.humanoriented.com/classes/2010/fall/csci568/portfolio_exports/lguo/similarity.html" rel="nofollow">http://mines.humanoriented.com/classes/2010/fall/csci568/portfolio_exports/lguo/similarity.html</a>) one of which could be Pearsons&#8217;s coeff. </p>
+<p>I hope this helps!</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=39583#respond' onclick='return addComment.moveForm( "comment-39583", "39583", "respond", "6292" )' aria-label='Reply to Salem'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1" id="li-comment-45678">
+		<article id="comment-45678" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://1.gravatar.com/avatar/b47c41edd61be2f56eff715b1124ef36?s=136&amp;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-45678"><time pubdate datetime="2014-10-12T15:50:13+00:00">October 12, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author">ark</span> </span>				<p>Salem, thank you so much for your detailed explanation of collaborative filtering.</p>
+<p>Here, you have dealt with data which is binary (0s and 1s). However, what if the recommendations are to be made on the basis of data which gives the number of times an user listened to a particular artist? Not only 0s and 1s but 0 to any range. It will range up to the number of times that particular user listened to that artist. Maybe this scenario does not make much sense in a music recommendation app, but lets say we have purchase or sales data? One user might have a very high affinity to a certain product or certain groups of product. Does the reco engine change in that case?</p>
+<p>I have tried running your code with the provided data set. Do you have any tips, advice or comments on how to make it run faster? Lets say in cases where there are over 10,000 users! In that scenario does the process of K-Means clustering come into place? If so, could you briefly describe how to go about such a case?</p>
+<p>Thanks.</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=45678#respond' onclick='return addComment.moveForm( "comment-45678", "45678", "respond", "6292" )' aria-label='Reply to ark'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-salem bypostauthor odd alt depth-2" id="li-comment-46327">
+		<article id="comment-46327" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://0.gravatar.com/avatar/2d8b286ef23015a525e7314646f430ac?s=136&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-46327"><time pubdate datetime="2014-10-16T18:02:20+00:00">October 16, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href='http://www.salemmarafi.com' rel='external nofollow' class='url'>Salem</a></span> </span>				<p>Hi Ark,</p>
+<p>There is no reason why you cannot create a matrix of the number of times a user listened to an artist and create a similarity matrix from that &#8211; the scores will adjust based on the similarities. It is extremely slow because of the for loop that I use in the code. For loops are the arch enemy of R <img src="http://www.salemmarafi.com/wp-includes/images/smilies/icon_sad.gif" alt=":(" class="wp-smiley" /> if you have a large dataset I would recommend you port the (part) of the code to python which runs much faster. There is probably a smarter way to do the for loop bits. </p>
+<p>Let us know if you find a way <img src="http://www.salemmarafi.com/wp-includes/images/smilies/icon_smile.gif" alt=":)" class="wp-smiley" /> </p>
+<p>Cheers,<br />
+Salem</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=46327#respond' onclick='return addComment.moveForm( "comment-46327", "46327", "respond", "6292" )' aria-label='Reply to Salem'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1" id="li-comment-48813">
+		<article id="comment-48813" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://1.gravatar.com/avatar/dcbccdfdbfd5761207309648be457f95?s=136&amp;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-48813"><time pubdate datetime="2014-10-27T10:56:04+00:00">October 27, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href='http://-' rel='external nofollow' class='url'>Dunk</a></span> </span>				<p>Hi Salem ,</p>
+<p>I&#8217;m trying to implement this with a large data set in R. (4m customers)</p>
+<p>Any suggestions on how can I do this successfully? </p>
+<p>Thanks in advance </p>
+<p>Dunk</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=48813#respond' onclick='return addComment.moveForm( "comment-48813", "48813", "respond", "6292" )' aria-label='Reply to Dunk'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-salem bypostauthor odd alt depth-2" id="li-comment-48839">
+		<article id="comment-48839" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://0.gravatar.com/avatar/2d8b286ef23015a525e7314646f430ac?s=136&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-48839"><time pubdate datetime="2014-10-27T11:52:01+00:00">October 27, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href='http://www.salemmarafi.com' rel='external nofollow' class='url'>Salem</a></span> </span>				<p>Hey Dunk,</p>
+<p>To be honest I do not know how to improve the performance of the for loops in this code with R.<br />
+I would recommend using more processing power either on your machine (what OS are you using, I can give you hints on how to dedicate more memory to R) or send it to the cloud <a href="http://www.infoworld.com/article/2609990/amazon-web-services/amazon-web-service-now-offers-r-on-demand.html" rel="nofollow">(Amazon has this service)</a>. </p>
+<p>I also recommend you try porting the data processing bit to Python which is a lot friendlier with loops of this sort (I might just make a port of this snippet since it seems to be getting popular). </p>
+<p>I know this is not much help but I hope it puts you on the right track at least. </p>
+<p>Let us know how you solve it. </p>
+<p>Cheers,<br />
+Salem</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=48839#respond' onclick='return addComment.moveForm( "comment-48839", "48839", "respond", "6292" )' aria-label='Reply to Salem'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment even depth-3" id="li-comment-54257">
+		<article id="comment-54257" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://1.gravatar.com/avatar/b47c41edd61be2f56eff715b1124ef36?s=136&amp;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-54257"><time pubdate datetime="2014-11-12T16:27:37+00:00">November 12, 2014</time></a> &nbsp;by&nbsp; <span class="comment-author">ark</span> </span>				<p>+1 for a python port! <img src="http://www.salemmarafi.com/wp-includes/images/smilies/icon_biggrin.gif" alt=":D" class="wp-smiley" /></p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=54257#respond' onclick='return addComment.moveForm( "comment-54257", "54257", "respond", "6292" )' aria-label='Reply to ark'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-salem bypostauthor odd alt depth-4" id="li-comment-90113">
+		<article id="comment-90113" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://0.gravatar.com/avatar/2d8b286ef23015a525e7314646f430ac?s=136&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-90113"><time pubdate datetime="2015-04-28T09:02:45+00:00">April 28, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href='http://www.salemmarafi.com' rel='external nofollow' class='url'>Salem</a></span> </span>				<p>Late, but better than never? <a href="http://www.salemmarafi.com/code/collaborative-filtering-with-python/" rel="nofollow">http://www.salemmarafi.com/code/collaborative-filtering-with-python/</a></p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=90113#respond' onclick='return addComment.moveForm( "comment-90113", "90113", "respond", "6292" )' aria-label='Reply to Salem'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1" id="li-comment-81527">
+		<article id="comment-81527" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://1.gravatar.com/avatar/f73a1ad4363dafddf9783ea823eadd40?s=136&amp;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-81527"><time pubdate datetime="2015-03-04T14:07:20+00:00">March 4, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Raj</span> </span>				<p>Hi,</p>
+<p>There is small correction in the following piece of code,<br />
+# Fill in placeholder with cosine similarities<br />
+data.germany.ibs.similarity[i,j] &lt;- getCosine(as.matrix(data.germany.ibs[i]),as.matrix(data.germany.ibs[j]))</p>
+<p>I think it should be like this,<br />
+data.germany.ibs.similarity[i,j] &lt;- getCosine(as.matrix(data.germany.ibs[,i]),as.matrix(data.germany.ibs[,j]))</p>
+<p>Thank you for the code.</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=81527#respond' onclick='return addComment.moveForm( "comment-81527", "81527", "respond", "6292" )' aria-label='Reply to Raj'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-even depth-1" id="li-comment-82297">
+		<article id="comment-82297" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://0.gravatar.com/avatar/e7c70756d99ed102feb01ff92f64028b?s=136&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-82297"><time pubdate datetime="2015-03-09T20:32:48+00:00">March 9, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Lana</span> </span>				<p>Thanks for the code! But &#8220;big ugly nested loop&#8221; give me the<br />
+error: argument is of length zero and<br />
+In addition: Warning message:<br />
+In is.na(e2) : is.na() applied to non-(list or vector) of type &#8216;NULL&#8217;</p>
+<p>Can you help with that, please?</p>
+<p>Thanks in advance!<br />
+Lana</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=82297#respond' onclick='return addComment.moveForm( "comment-82297", "82297", "respond", "6292" )' aria-label='Reply to Lana'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-salem bypostauthor even depth-2" id="li-comment-82300">
+		<article id="comment-82300" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://0.gravatar.com/avatar/2d8b286ef23015a525e7314646f430ac?s=136&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-82300"><time pubdate datetime="2015-03-09T20:40:56+00:00">March 9, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href='http://www.salemmarafi.com' rel='external nofollow' class='url'>Salem</a></span> </span>				<p>Hi Lana, </p>
+<p>Are you using a different data set? If you are please share it so I can try and see where things are going wrong. That message usually means there are null values causing a problem somewhere.</p>
+<p>Salem</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=82300#respond' onclick='return addComment.moveForm( "comment-82300", "82300", "respond", "6292" )' aria-label='Reply to Salem'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-84258">
+		<article id="comment-84258" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://1.gravatar.com/avatar/111dd2b8572610e763c10b961c84a91d?s=136&amp;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-84258"><time pubdate datetime="2015-03-20T04:17:09+00:00">March 20, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">BK</span> </span>				<p>Interesting to see this as R has so few examples for collaborative filtering.   I&#8217;m running a recommender that produces recommendations for nearly 100K users against a similarity matrix with nearly 1M.   </p>
+<p>You need to avoid for statements entirely and rely on apply functions preferably with parallelization down to reduce processing times.   I&#8217;ve got ours runs down to 1-2 hours daily.</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=84258#respond' onclick='return addComment.moveForm( "comment-84258", "84258", "respond", "6292" )' aria-label='Reply to BK'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-salem bypostauthor even depth-2" id="li-comment-84446">
+		<article id="comment-84446" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://0.gravatar.com/avatar/2d8b286ef23015a525e7314646f430ac?s=136&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-84446"><time pubdate datetime="2015-03-21T16:38:49+00:00">March 21, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href='http://www.salemmarafi.com' rel='external nofollow' class='url'>Salem</a></span> </span>				<p>Thanks! Can you suggest an edit?</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=84446#respond' onclick='return addComment.moveForm( "comment-84446", "84446", "respond", "6292" )' aria-label='Reply to Salem'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt depth-2" id="li-comment-88297">
+		<article id="comment-88297" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://0.gravatar.com/avatar/486ac77161fe4594ab7247443615ed20?s=136&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-88297"><time pubdate datetime="2015-04-14T16:04:32+00:00">April 14, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">CRISTINE</span> </span>				<p>Hi ,</p>
+<p>Thanks for the code! but any help please  you tell us   the script of creating the frequency matrix because it is the first step!</p>
+<p>Thanks in advance!</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=88297#respond' onclick='return addComment.moveForm( "comment-88297", "88297", "respond", "6292" )' aria-label='Reply to CRISTINE'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-salem bypostauthor even depth-3" id="li-comment-88301">
+		<article id="comment-88301" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://0.gravatar.com/avatar/2d8b286ef23015a525e7314646f430ac?s=136&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-88301"><time pubdate datetime="2015-04-14T17:09:07+00:00">April 14, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href='http://www.salemmarafi.com' rel='external nofollow' class='url'>Salem</a></span> </span>				<p>Hi Cristine,</p>
+<p>This depends on your data set and how it is formatted. The purpose of the post is to demonstrate collaborative filtering in R. If you would like consulting or work done for you on data munging please feel free to email me and I can offer you those facilities at a standard daily rate. </p>
+<p>Thanks,<br />
+Salem</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=88301#respond' onclick='return addComment.moveForm( "comment-88301", "88301", "respond", "6292" )' aria-label='Reply to Salem'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment odd alt depth-4" id="li-comment-88350">
+		<article id="comment-88350" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://0.gravatar.com/avatar/486ac77161fe4594ab7247443615ed20?s=136&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-88350"><time pubdate datetime="2015-04-15T11:10:39+00:00">April 15, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">CRISTINE</span> </span>				<p>Hi,</p>
+<p>I have not your email.</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=88350#respond' onclick='return addComment.moveForm( "comment-88350", "88350", "respond", "6292" )' aria-label='Reply to CRISTINE'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1" id="li-comment-84790">
+		<article id="comment-84790" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://0.gravatar.com/avatar/2c9c247d79f412d2ccaf65dd0d989d62?s=136&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-84790"><time pubdate datetime="2015-03-23T08:54:25+00:00">March 23, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">shan</span> </span>				<p>can you please give the script of creating the frequency matrix</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=84790#respond' onclick='return addComment.moveForm( "comment-84790", "84790", "respond", "6292" )' aria-label='Reply to shan'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-86641">
+		<article id="comment-86641" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://0.gravatar.com/avatar/0c64485cf359e8197a1c36e946893e7f?s=136&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-86641"><time pubdate datetime="2015-04-01T10:15:58+00:00">April 1, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Vasundhara</span> </span>				<p>Hi,</p>
+<p>I am using User based collaborative filtering.</p>
+<p>Can you please suggest how can I include demographic similarity between users while creating recommendations in addition to what is already being considered.</p>
+<p>Thanks</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=86641#respond' onclick='return addComment.moveForm( "comment-86641", "86641", "respond", "6292" )' aria-label='Reply to Vasundhara'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-salem bypostauthor even depth-2" id="li-comment-86642">
+		<article id="comment-86642" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://0.gravatar.com/avatar/2d8b286ef23015a525e7314646f430ac?s=136&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-86642"><time pubdate datetime="2015-04-01T10:20:26+00:00">April 1, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href='http://www.salemmarafi.com' rel='external nofollow' class='url'>Salem</a></span> </span>				<p>Yes sure <img src="http://www.salemmarafi.com/wp-includes/images/smilies/icon_smile.gif" alt=":)" class="wp-smiley" /> read this article it talks about both approaches:<br />
+<a href="http://www.ica.stc.sh.cn/picture/article/176/e8/55/189012ce47539f90ed6c0fa8a545/e4a07d49-5f1b-435f-b2db-e150598e8b83.pdf" rel="nofollow">http://www.ica.stc.sh.cn/picture/article/176/e8/55/189012ce47539f90ed6c0fa8a545/e4a07d49-5f1b-435f-b2db-e150598e8b83.pdf</a></p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=86642#respond' onclick='return addComment.moveForm( "comment-86642", "86642", "respond", "6292" )' aria-label='Reply to Salem'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment odd alt depth-3" id="li-comment-86989">
+		<article id="comment-86989" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://0.gravatar.com/avatar/0c64485cf359e8197a1c36e946893e7f?s=136&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-86989"><time pubdate datetime="2015-04-03T09:25:08+00:00">April 3, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Vasundhara</span> </span>				<p>Hi,</p>
+<p>I have gone through the white paper but still not able to figure out how to merge this probability with user demographics similarity.</p>
+<p>Please help.</p>
+<p>Thanks<br />
+Vasundhara</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=86989#respond' onclick='return addComment.moveForm( "comment-86989", "86989", "respond", "6292" )' aria-label='Reply to Vasundhara'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1" id="li-comment-86899">
+		<article id="comment-86899" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://0.gravatar.com/avatar/001c74dd5daa748f2b0b424b7f07e274?s=136&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-86899"><time pubdate datetime="2015-04-02T19:49:00+00:00">April 2, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href='http://.' rel='external nofollow' class='url'>selmi</a></span> </span>				<p>hello Mr.sallam;<br />
+Thank you very much for your R script.<br />
+I have some error in my code </p>
+<p>can you tell me yours email.</p>
+<p>Thanks in advance</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=86899#respond' onclick='return addComment.moveForm( "comment-86899", "86899", "respond", "6292" )' aria-label='Reply to selmi'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment odd alt depth-2" id="li-comment-87550">
+		<article id="comment-87550" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://0.gravatar.com/avatar/001c74dd5daa748f2b0b424b7f07e274?s=136&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-87550"><time pubdate datetime="2015-04-07T19:23:53+00:00">April 7, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">selmi</span> </span>				<p>hello Mr.sallam;<br />
+THANK YOU very much for your R script.<br />
+I have some error in my code<br />
+can you tell me your email.<br />
+Thanks in advance</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=87550#respond' onclick='return addComment.moveForm( "comment-87550", "87550", "respond", "6292" )' aria-label='Reply to selmi'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1" id="li-comment-88499">
+		<article id="comment-88499" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://0.gravatar.com/avatar/45edba71b1833c4a21dbea7a06693258?s=136&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-88499"><time pubdate datetime="2015-04-17T16:25:38+00:00">April 17, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Alex</span> </span>				<p>Hi Salem ,<br />
+thanks for this post!</p>
+<p>For the part &#8220;User Based Recommendations&#8221; I run your code but  R still turns (more than 2 hours) ,I am still awaiting the execution result  of R ; this is normal ?I am still awaiting the execution result R, there is a mistake in your code ?</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=88499#respond' onclick='return addComment.moveForm( "comment-88499", "88499", "respond", "6292" )' aria-label='Reply to Alex'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-even depth-1" id="li-comment-89465">
+		<article id="comment-89465" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://0.gravatar.com/avatar/81745d527634b9af1ffefbc68733e29e?s=136&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-89465"><time pubdate datetime="2015-04-24T07:59:08+00:00">April 24, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Mittal</span> </span>				<p>Hi Salem<br />
+I not good at writing function, the one big ugly nested loop, will you able to write a function for this. I want to test the code&#8217;s performance under the package SNOW for a data of 30000 observations into 200 variables.<br />
+Thanks<br />
+Mittal</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=89465#respond' onclick='return addComment.moveForm( "comment-89465", "89465", "respond", "6292" )' aria-label='Reply to Mittal'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-salem bypostauthor even depth-2" id="li-comment-90112">
+		<article id="comment-90112" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://0.gravatar.com/avatar/2d8b286ef23015a525e7314646f430ac?s=136&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-90112"><time pubdate datetime="2015-04-28T09:02:12+00:00">April 28, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href='http://www.salemmarafi.com' rel='external nofollow' class='url'>Salem</a></span> </span>				<p>Hi Mittal <img src="http://www.salemmarafi.com/wp-includes/images/smilies/icon_smile.gif" alt=":)" class="wp-smiley" /> here is a python version: <a href="http://www.salemmarafi.com/code/collaborative-filtering-with-python/" rel="nofollow">http://www.salemmarafi.com/code/collaborative-filtering-with-python/</a></p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=90112#respond' onclick='return addComment.moveForm( "comment-90112", "90112", "respond", "6292" )' aria-label='Reply to Salem'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment odd alt depth-3" id="li-comment-92376">
+		<article id="comment-92376" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://0.gravatar.com/avatar/81745d527634b9af1ffefbc68733e29e?s=136&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-92376"><time pubdate datetime="2015-05-19T11:22:35+00:00">May 19, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Mittal</span> </span>				<p>Thanks, your python script solved my issue</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=92376#respond' onclick='return addComment.moveForm( "comment-92376", "92376", "respond", "6292" )' aria-label='Reply to Mittal'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="post pingback">
+		<p>Pingback: <a href='http://www.salemmarafi.com/code/collaborative-filtering-with-python/' rel='external nofollow' class='url'>Collaborative Filtering with Python : Salem Marafi</a></p>
+	</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1" id="li-comment-92434">
+		<article id="comment-92434" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://0.gravatar.com/avatar/c91fc8c3c33a1248effcfa52ae0632a6?s=136&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-92434"><time pubdate datetime="2015-05-20T13:01:57+00:00">May 20, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Ravi</span> </span>				<p>This is cool&#8230; Do we have similar R code for temporal collaborative filtering technique?? please help</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=92434#respond' onclick='return addComment.moveForm( "comment-92434", "92434", "respond", "6292" )' aria-label='Reply to Ravi'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-even depth-1" id="li-comment-93574">
+		<article id="comment-93574" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://1.gravatar.com/avatar/163d4fa2c3244532961d38879c30c5be?s=136&amp;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-93574"><time pubdate datetime="2015-06-07T12:52:02+00:00">June 7, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author">Arghavan</span> </span>				<p>Hi,<br />
+Many thanks for your perfect explanations.</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=93574#respond' onclick='return addComment.moveForm( "comment-93574", "93574", "respond", "6292" )' aria-label='Reply to Arghavan'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-salem bypostauthor even depth-2" id="li-comment-93621">
+		<article id="comment-93621" class="comment">
+			<footer class="comment-avatar">
+				<div class="vcard">
+					<img alt='' src='http://0.gravatar.com/avatar/2d8b286ef23015a525e7314646f430ac?s=136&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D136&amp;r=G' class='avatar avatar-136 photo' height='136' width='136' />				</div><!-- .comment-author .vcard -->
+			</footer>
+
+			<div class="comment-content">
+								<span class="comment-meta"><a class="comment-time" href="http://www.salemmarafi.com/code/collaborative-filtering-r/comment-page-1/#comment-93621"><time pubdate datetime="2015-06-08T10:47:06+00:00">June 8, 2015</time></a> &nbsp;by&nbsp; <span class="comment-author"><a href='http://www.salemmarafi.com' rel='external nofollow' class='url'>Salem</a></span> </span>				<p>Happy to help Arghavan, thanks!</p>
+				<div class="reply">
+					<a class='comment-reply-link' href='/code/collaborative-filtering-r/?replytocom=93621#respond' onclick='return addComment.moveForm( "comment-93621", "93621", "respond", "6292" )' aria-label='Reply to Salem'>Reply</a>				</div><!-- .reply -->
+							</div>
+
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+		</ol>
+
+		
+	
+									<div id="respond" class="comment-respond">
+				<h3 id="reply-title" class="comment-reply-title">Leave a Reply <small><a rel="nofollow" id="cancel-comment-reply-link" href="/code/collaborative-filtering-r/#respond" style="display:none;">Cancel reply</a></small></h3>
+									<form action="http://www.salemmarafi.com/wp-comments-post.php" method="post" id="commentform" class="comment-form">
+																			<p class="comment-notes"><span id="email-notes">Your email address will not be published.</span> Required fields are marked <span class="required">*</span></p>							<p class="comment-form-author"><label for="author">Name <span class="required">*</span></label> <input id="author" name="author" type="text" value="" size="30" aria-required='true' /></p>
+<p class="comment-form-email"><label for="email">Email <span class="required">*</span></label> <input id="email" name="email" type="text" value="" size="30" aria-describedby="email-notes" aria-required='true' /></p>
+<p class="comment-form-url"><label for="url">Website</label> <input id="url" name="url" type="text" value="" size="30" /></p>
+												<p class="comment-form-comment"><label for="comment">Comment</label> <textarea id="comment" name="comment" cols="45" rows="8" aria-describedby="form-allowed-tags" aria-required="true"></textarea></p>						<p class="form-allowed-tags" id="form-allowed-tags">You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:  <code>&lt;a href=&quot;&quot; title=&quot;&quot;&gt; &lt;abbr title=&quot;&quot;&gt; &lt;acronym title=&quot;&quot;&gt; &lt;b&gt; &lt;blockquote cite=&quot;&quot;&gt; &lt;cite&gt; &lt;code&gt; &lt;del datetime=&quot;&quot;&gt; &lt;em&gt; &lt;i&gt; &lt;q cite=&quot;&quot;&gt; &lt;strike&gt; &lt;strong&gt; </code></p>						<p class="form-submit">
+							<input name="submit" type="submit" id="submit" class="submit" value="Post Comment" />
+							<input type='hidden' name='comment_post_ID' value='6292' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+						</p>
+						<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="07989417dd" /></p><p style="display: none;"><input type="hidden" id="ak_js" name="ak_js" value="189"/></p>					</form>
+							</div><!-- #respond -->
+			
+</div><!-- #comments -->
+        	</div>
+        </div><!-- .postcomments -->
+
+		
+	<!-- END .eight columns -->
+	</div>
+	
+	<div class="four columns">
+	    <div class="sidebar">
+ 
+	<div id="search-4" class="widget widget_search"><h4 class="title">Search</h4><form method="get" id="searchform" action="http://www.salemmarafi.com/" >
+            <label for="s"></label>
+            <div><input type="text" value="Search Site" name="s" id="s"  onfocus="if(this.value==this.defaultValue)this.value='';" onblur="if(this.value=='')this.value=this.defaultValue;"/><input type="submit" id="searchsubmit" value="Go" />
+            </div>
+            </form></div><div id="categories-4" class="widget widget_categories"><h4 class="title">Topics</h4>		<ul>
+	<li class="cat-item cat-item-330"><a href="http://www.salemmarafi.com/category/books/" >Books</a>
+</li>
+	<li class="cat-item cat-item-40"><a href="http://www.salemmarafi.com/category/business/" >Business</a>
+</li>
+	<li class="cat-item cat-item-15"><a href="http://www.salemmarafi.com/category/code/" >Code</a>
+</li>
+	<li class="cat-item cat-item-26"><a href="http://www.salemmarafi.com/category/personal/" >Personal</a>
+</li>
+		</ul>
+</div><div id="tag_cloud-4" class="widget widget_tag_cloud"><h4 class="title">Tag Cloud</h4><div class="tagcloud"><a href='http://www.salemmarafi.com/tag/alphabet/' class='tag-link-28' title='1 topic' style='font-size: 8pt;'>alphabet</a>
+<a href='http://www.salemmarafi.com/tag/books-2/' class='tag-link-37' title='1 topic' style='font-size: 8pt;'>books</a>
+<a href='http://www.salemmarafi.com/tag/code-2/' class='tag-link-336' title='2 topics' style='font-size: 10.964705882353pt;'>code</a>
+<a href='http://www.salemmarafi.com/tag/conflict/' class='tag-link-60' title='2 topics' style='font-size: 10.964705882353pt;'>conflict</a>
+<a href='http://www.salemmarafi.com/tag/cookie/' class='tag-link-340' title='1 topic' style='font-size: 8pt;'>cookie</a>
+<a href='http://www.salemmarafi.com/tag/cookies/' class='tag-link-56' title='2 topics' style='font-size: 10.964705882353pt;'>cookies</a>
+<a href='http://www.salemmarafi.com/tag/decision/' class='tag-link-59' title='3 topics' style='font-size: 12.941176470588pt;'>decision</a>
+<a href='http://www.salemmarafi.com/tag/decision-book/' class='tag-link-38' title='1 topic' style='font-size: 8pt;'>decision book</a>
+<a href='http://www.salemmarafi.com/tag/eisenhower/' class='tag-link-46' title='1 topic' style='font-size: 8pt;'>eisenhower</a>
+<a href='http://www.salemmarafi.com/tag/excel/' class='tag-link-47' title='2 topics' style='font-size: 10.964705882353pt;'>excel</a>
+<a href='http://www.salemmarafi.com/tag/exercise/' class='tag-link-33' title='1 topic' style='font-size: 8pt;'>exercise</a>
+<a href='http://www.salemmarafi.com/tag/filtering/' class='tag-link-352' title='1 topic' style='font-size: 8pt;'>filtering</a>
+<a href='http://www.salemmarafi.com/tag/food/' class='tag-link-22' title='1 topic' style='font-size: 8pt;'>food</a>
+<a href='http://www.salemmarafi.com/tag/health/' class='tag-link-32' title='3 topics' style='font-size: 12.941176470588pt;'>health</a>
+<a href='http://www.salemmarafi.com/tag/hi3/' class='tag-link-31' title='1 topic' style='font-size: 8pt;'>hi3</a>
+<a href='http://www.salemmarafi.com/tag/innovation/' class='tag-link-54' title='1 topic' style='font-size: 8pt;'>innovation</a>
+<a href='http://www.salemmarafi.com/tag/javascript/' class='tag-link-48' title='1 topic' style='font-size: 8pt;'>javascript</a>
+<a href='http://www.salemmarafi.com/tag/kuwait/' class='tag-link-5' title='3 topics' style='font-size: 12.941176470588pt;'>kuwait</a>
+<a href='http://www.salemmarafi.com/tag/launch/' class='tag-link-25' title='1 topic' style='font-size: 8pt;'>launch</a>
+<a href='http://www.salemmarafi.com/tag/management-2/' class='tag-link-45' title='9 topics' style='font-size: 19.529411764706pt;'>management</a>
+<a href='http://www.salemmarafi.com/tag/marketing/' class='tag-link-14' title='4 topics' style='font-size: 14.588235294118pt;'>Marketing</a>
+<a href='http://www.salemmarafi.com/tag/model/' class='tag-link-52' title='1 topic' style='font-size: 8pt;'>model</a>
+<a href='http://www.salemmarafi.com/tag/models/' class='tag-link-42' title='3 topics' style='font-size: 12.941176470588pt;'>models</a>
+<a href='http://www.salemmarafi.com/tag/money/' class='tag-link-102' title='2 topics' style='font-size: 10.964705882353pt;'>money</a>
+<a href='http://www.salemmarafi.com/tag/morphological-box/' class='tag-link-53' title='1 topic' style='font-size: 8pt;'>morphological box</a>
+<a href='http://www.salemmarafi.com/tag/networks/' class='tag-link-51' title='1 topic' style='font-size: 8pt;'>networks</a>
+<a href='http://www.salemmarafi.com/tag/new-product-development/' class='tag-link-55' title='1 topic' style='font-size: 8pt;'>new product development</a>
+<a href='http://www.salemmarafi.com/tag/performance/' class='tag-link-81' title='2 topics' style='font-size: 10.964705882353pt;'>performance</a>
+<a href='http://www.salemmarafi.com/tag/personal-2/' class='tag-link-92' title='3 topics' style='font-size: 12.941176470588pt;'>personal</a>
+<a href='http://www.salemmarafi.com/tag/personals/' class='tag-link-27' title='1 topic' style='font-size: 8pt;'>personals</a>
+<a href='http://www.salemmarafi.com/tag/poem/' class='tag-link-341' title='1 topic' style='font-size: 8pt;'>poem</a>
+<a href='http://www.salemmarafi.com/tag/price-elasticity/' class='tag-link-366' title='2 topics' style='font-size: 10.964705882353pt;'>price elasticity</a>
+<a href='http://www.salemmarafi.com/tag/product/' class='tag-link-24' title='1 topic' style='font-size: 8pt;'>product</a>
+<a href='http://www.salemmarafi.com/tag/qooqie/' class='tag-link-342' title='1 topic' style='font-size: 8pt;'>qooqie</a>
+<a href='http://www.salemmarafi.com/tag/r/' class='tag-link-335' title='13 topics' style='font-size: 22pt;'>R</a>
+<a href='http://www.salemmarafi.com/tag/relationships/' class='tag-link-50' title='1 topic' style='font-size: 8pt;'>relationships</a>
+<a href='http://www.salemmarafi.com/tag/search/' class='tag-link-49' title='1 topic' style='font-size: 8pt;'>search</a>
+<a href='http://www.salemmarafi.com/tag/spending/' class='tag-link-20' title='3 topics' style='font-size: 12.941176470588pt;'>spending</a>
+<a href='http://www.salemmarafi.com/tag/strategy/' class='tag-link-39' title='2 topics' style='font-size: 10.964705882353pt;'>strategy</a>
+<a href='http://www.salemmarafi.com/tag/sugar/' class='tag-link-362' title='2 topics' style='font-size: 10.964705882353pt;'>sugar</a>
+<a href='http://www.salemmarafi.com/tag/tagged/' class='tag-link-29' title='1 topic' style='font-size: 8pt;'>tagged</a>
+<a href='http://www.salemmarafi.com/tag/time-management/' class='tag-link-44' title='1 topic' style='font-size: 8pt;'>time management</a>
+<a href='http://www.salemmarafi.com/tag/tools-2/' class='tag-link-43' title='9 topics' style='font-size: 19.529411764706pt;'>tools</a>
+<a href='http://www.salemmarafi.com/tag/trends/' class='tag-link-19' title='2 topics' style='font-size: 10.964705882353pt;'>trends</a>
+<a href='http://www.salemmarafi.com/tag/twitter/' class='tag-link-338' title='2 topics' style='font-size: 10.964705882353pt;'>twitter</a></div>
+</div>    
+</div> 
+	</div><!-- .four columns -->
+
+
+<!-- END .row -->
+</div>
+
+<div class="clear"></div>
+
+<div id="footer">
+
+	<div class="row">
+	
+		<div class="eleven columns">
+
+			<div class="left">
+		        <p>Copyright &copy; 2015 &middot; All Rights Reserved &middot; Salem Marafi</p>
+		
+		        <p><a href="http://www.salemmarafi.com/feed/">RSS Feed</a> &middot; <a href="http://www.salemmarafi.com/wp-login.php">Log in</a></p>
+		    </div>
+		    
+		    <div class="right">
+				<a href="http://www.salemmarafi.com" title="Designer WordPress Themes" target="_blank"><img src="http://www.salemmarafi.com/wp-content/themes/organic_tumble/images/favicon.png" alt="Organic Themes" /></a>
+			</div>
+		
+		</div>
+		
+		<div class="one column">
+			<div id="back-top">
+				<a class="scroll" href="http://www.salemmarafi.com/code/collaborative-filtering-r/#header">
+					<img src="http://www.salemmarafi.com/wp-content/themes/organic_tumble/images/back_top.png" title="Top" alt="Top" />
+					<p>Top</p>
+				</a>
+			</div>
+		</div>
+	
+	<!-- END .row -->
+	</div>
+
+<!-- END #footer -->
+</div>
+
+<!-- END .container -->
+</div>
+ 
+
+
+<script type='text/javascript' src='http://www.salemmarafi.com/wp-content/plugins/akismet/_inc/form.js?ver=3.1.1'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var thickboxL10n = {"next":"Next >","prev":"< Prev","image":"Image","of":"of","close":"Close","noiframes":"This feature requires inline frames. You have iframes disabled or your browser does not support them.","loadingAnimation":"http:\/\/www.salemmarafi.com\/wp-includes\/js\/thickbox\/loadingAnimation.gif"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://www.salemmarafi.com/wp-includes/js/thickbox/thickbox.js?ver=3.1-20121105'></script>
+<script type='text/javascript' src='http://www.salemmarafi.com/wp-includes/js/comment-reply.min.js?ver=4.1.5'></script>
+<script type='text/javascript' src='http://www.salemmarafi.com/wp-content/plugins/contact-form-7/includes/js/jquery.form.min.js?ver=3.51.0-2014.06.20'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var _wpcf7 = {"loaderUrl":"http:\/\/www.salemmarafi.com\/wp-content\/plugins\/contact-form-7\/images\/ajax-loader.gif","sending":"Sending ...","cached":"1"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://www.salemmarafi.com/wp-content/plugins/contact-form-7/includes/js/scripts.js?ver=4.1.1'></script>
+<script type='text/javascript' src='http://www.salemmarafi.com/wp-content/themes/organic_tumble/js/superfish.js?ver=1.0'></script>
+<script type='text/javascript' src='http://www.salemmarafi.com/wp-content/themes/organic_tumble/js/hoverIntent.js?ver=1.0'></script>
+<script type='text/javascript' src='http://www.salemmarafi.com/wp-content/themes/organic_tumble/js/jquery.flexslider.js?ver=1.6.2'></script>
+<script type='text/javascript' src='http://www.salemmarafi.com/wp-content/themes/organic_tumble/js/jquery.fitVids.js?ver=4.1.5'></script>
+
+</body>
+
+</html>
+<!-- Dynamic page generated in 1.626 seconds. -->
+<!-- Cached page generated by WP-Super-Cache on 2015-06-10 03:00:27 -->

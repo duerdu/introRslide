@@ -1,0 +1,678 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+
+<head profile="http://gmpg.org/xfn/11">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Logistic Regression with R: step by step implementation part-2 | R-bloggers</title>
+
+<script type="text/javascript">
+//<![CDATA[
+try{if (!window.CloudFlare) {var CloudFlare=[{verbose:0,p:0,byc:0,owlid:"cf",bag2:1,mirage2:0,oracle:0,paths:{cloudflare:"/cdn-cgi/nexp/dok3v=1613a3a185/"},atok:"cca9dbdaa9ce279eed11b4fc26e0a10e",petok:"c8eb339727655d0e8f467de57b62441277037862-1433893830-1800",zone:"r-bloggers.com",rocket:"0",apps:{}}];CloudFlare.push({"apps":{"ape":"878af822582d04327f990d75e5b96864"}});!function(a,b){a=document.createElement("script"),b=document.getElementsByTagName("script")[0],a.async=!0,a.src="//ajax.cloudflare.com/cdn-cgi/nexp/dok3v=7e13c32551/cloudflare.min.js",b.parentNode.insertBefore(a,b)}()}}catch(e){};
+//]]>
+</script>
+<link rel="stylesheet" href="http://www.r-bloggers.com/wp-content/themes/magazine-basic-child/style.css" type="text/css" media="screen" />
+
+<style type="text/css">
+
+body { width: 1024px; }
+
+#mainwrapper { width: 1004px; }
+
+#sidebar { width: 180px; }
+
+#sidebar .side-widget { width: 160px; }
+
+
+#secondsidebar { width: 300px; }
+
+#secondsidebar .side-widget { width: 300px; }
+
+
+#leftcontent, #twocol, #threecol, #threecol2, .commentlist { width: 456px; }
+
+#leftcontent img, .wp-caption { max-width: 456px; }
+
+#leftcontent .wp-caption img, #leftcontent .gallery-thumb img { max-width: 444px; }
+
+<!-- fix for IE & Safari -->
+
+.threepost embed { width: 132.24px !important; }
+
+.twopost embed { width: 209.76px !important; }
+
+<!-- end fix for Safari -->
+
+</style>
+
+	<link rel="pingback" href="http://www.r-bloggers.com/xmlrpc.php" />
+<!--[if IE]>
+<link rel="stylesheet" type="text/css" href="http://www.r-bloggers.com/wp-content/themes/magazine-basic/iestyles.css" />
+<![endif]-->
+
+<!-- All in One SEO Pack 2.2.6.2 by Michael Torbert of Semper Fi Web Design[290,374] -->
+<meta name="description" itemprop="description" content="Welcome to the second part of series blog posts! In previous part, we discussed on the concept of the logistic regression and its mathematical formulation. Now," />
+
+<link rel="canonical" href="http://www.r-bloggers.com/logistic-regression-with-r-step-by-step-implementation-part-2/" />
+<!-- /all in one seo pack -->
+<link rel="alternate" type="application/rss+xml" title="R-bloggers &raquo; Feed" href="http://www.r-bloggers.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="R-bloggers &raquo; Comments Feed" href="http://www.r-bloggers.com/comments/feed/" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"http:\/\/s.w.org\/images\/core\/emoji\/72x72\/","ext":".png","source":{"concatemoji":"http:\/\/www.r-bloggers.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.2.2"}};
+			!function(a,b,c){function d(a){var c=b.createElement("canvas"),d=c.getContext&&c.getContext("2d");return d&&d.fillText?(d.textBaseline="top",d.font="600 32px Arial","flag"===a?(d.fillText(String.fromCharCode(55356,56812,55356,56807),0,0),c.toDataURL().length>3e3):(d.fillText(String.fromCharCode(55357,56835),0,0),0!==d.getImageData(16,16,1,1).data[0])):!1}function e(a){var c=b.createElement("script");c.src=a,c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g;c.supports={simple:d("simple"),flag:d("flag")},c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.simple&&c.supports.flag||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='wpt-twitter-feed-css'  href='http://www.r-bloggers.com/wp-content/plugins/wp-to-twitter/css/twitter-feed.css?ver=4.2.2' type='text/css' media='all' />
+<link rel='stylesheet' id='jetpack-top-posts-widget-css'  href='http://www.r-bloggers.com/wp-content/plugins/jetpack/modules/widgets/top-posts/style.css?ver=20141013' type='text/css' media='all' />
+<link rel='stylesheet' id='jetpack_css-css'  href='http://www.r-bloggers.com/wp-content/plugins/jetpack/css/jetpack.css?ver=3.5.3' type='text/css' media='all' />
+<link rel='stylesheet' id='codebox-css'  href='http://www.r-bloggers.com/wp-content/plugins/wp-codebox/css/codebox.css?ver=0.1' type='text/css' media='screen' />
+<!-- This site uses the Google Analytics by Yoast plugin v5.4.2 - Universal disabled - https://yoast.com/wordpress/plugins/google-analytics/ -->
+<script type="text/javascript">
+
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-419807-53']);
+	_gaq.push(['_gat._forceSSL']);
+	_gaq.push(['_trackPageview']);
+
+	(function () {
+		var ga = document.createElement('script');
+		ga.type = 'text/javascript';
+		ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(ga, s);
+	})();
+
+</script>
+<!-- / Google Analytics by Yoast -->
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-includes/js/jquery/jquery.js?ver=1.11.2'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.2.1'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/jetpack/modules/related-posts/related-posts.js?ver=20150408'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/wp-codebox/js/codebox.js?ver=0.1'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.r-bloggers.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.r-bloggers.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='amazonly associated thanks (&amp; warnin&rsquo;)' href='http://www.r-bloggers.com/amazonly-associated-thanks-warnin/' />
+<link rel='next' title='Forecasting package in R' href='http://www.r-bloggers.com/forecasting-package-in-r/' />
+<meta name="generator" content="WordPress 4.2.2" />
+<link rel='shortlink' href='http://wp.me/pMm6L-jCJ' />
+<!-- This site is powered by Tweet, Like, Plusone and Share Plugin - http://techxt.com/tweet-like-google-1-and-share-plugin-wordpress/ -->
+		<meta property="og:type" content="article" />
+		<meta property="og:title" content="Logistic Regression with R: step by step implementation part-2" />
+		<meta property="og:url" content="http://www.r-bloggers.com/logistic-regression-with-r-step-by-step-implementation-part-2/"/>
+		<meta property="og:site_name" content="R-bloggers" />
+		<meta property="og:description" content="
+Welcome to the second part of series blog posts! In previous part, we discussed on the concept of the logistic regression and its mathematical formulation. Now, we will apply that learning here and try to implement step by step in R. (If you know concept of logistic regression then move ahead in this part, otherwise [&hellip;]
+The post Logistic Regression with R: step by step implementation part-2 appeared first on Pingax.
+"/>
+		<!--[if lt IE 9]>
+	  <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+					<meta property="og:image" content="http://pingax.com/wp-content/uploads/2013/12/plot_2.png" />
+			<style type="text/css">div.socialicons{float:left;display:block;margin-right: 10px;line-height: 1;}div.socialiconsv{line-height: 1;}div.socialicons p{margin-bottom: 0px !important;margin-top: 0px !important;padding-bottom: 0px !important;padding-top: 0px !important;}div.social4iv{background: none repeat scroll 0 0 #FFFFFF;border: 1px solid #aaa;border-radius: 3px 3px 3px 3px;box-shadow: 3px 3px 3px #DDDDDD;padding: 3px;position: fixed;text-align: center;top: 55px;width: 68px;display:none;}div.socialiconsv{padding-bottom: 5px;}</style>
+
+<link rel='dns-prefetch' href='//i0.wp.com'>
+<link rel='dns-prefetch' href='//i1.wp.com'>
+<link rel='dns-prefetch' href='//i2.wp.com'>
+<style type='text/css'>img#wpstats{display:none}</style><style type="text/css" id="syntaxhighlighteranchor"></style>
+</head>
+
+<body class="single single-post postid-75437 single-format-standard">
+<!-- begin header -->
+<div id="header">
+		    	    	<a href="http://www.r-bloggers.com/" class="headerimage"><img src="http://www.r-bloggers.com/wp-content/uploads/2014/08/R_02.png" alt="R-bloggers" class="aligncenter" /></a>
+        <div id="description" class="aligncenter">
+        R news and tutorials contributed by (573) R bloggers    </div>     
+    <div class="main-navigation"><ul id="menu-top-nav" class="sf-menu"><li id="menu-item-48314" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-48314"><a href="http://www.r-bloggers.com">Home</a></li>
+<li id="menu-item-92333" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-92333"><a href="http://www.r-bloggers.com/about/">About</a></li>
+<li id="menu-item-50111" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-50111"><a href="http://feeds.feedburner.com/RBloggers" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://feeds.feedburner.com/RBloggers', 'RSS']);" >RSS</a></li>
+<li id="menu-item-48313" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-48313"><a href="http://www.r-bloggers.com/add-your-blog/">add your blog!</a></li>
+<li id="menu-item-75513" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-75513"><a href="http://www.r-users.com/" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://www.r-users.com/', 'R jobs']);" >R jobs</a>
+<ul class="sub-menu">
+	<li id="menu-item-76945" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-76945"><a href="http://www.r-users.com/submit-job/" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://www.r-users.com/submit-job/', 'Submit a new job (it&#8217;s free)']);" >Submit a new job (it&#8217;s free)</a></li>
+	<li id="menu-item-76946" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-76946"><a href="http://www.r-users.com/" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://www.r-users.com/', 'Browse latest jobs (also free)']);" >Browse latest jobs (also free)</a></li>
+</ul>
+</li>
+<li id="menu-item-48311" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-48311"><a href="http://www.r-bloggers.com/contact-us/">Contact us</a></li>
+</ul></div>
+</div>
+<!-- end header -->
+
+
+<div id="mainwrapper">
+<!-- begin sidebar -->
+    <div id="sidebar">
+		<div class="side-widget"><h2>Welcome!</h2>			<div class="textwidget"><iframe allowtransparency="true" frameborder="0" scrolling="no"
+ src="//platform.twitter.com/widgets/follow_button.html?screen_name=rbloggers&data-show-count"
+  style="width:164px; height:30px;"></iframe>
+
+
+Here you will find daily <strong>news and tutorials about R</strong>, contributed by over 573 bloggers. 
+<br/>
+There are many ways to <strong>follow us - </strong>
+<br/>
+<a href="http://feedburner.google.com/fb/a/mailverify?uri=RBloggers" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://feedburner.google.com/fb/a/mailverify?uri=RBloggers', 'By e-mail:']);" >By e-mail:</a>
+
+<form style="border:1px solid #ccc;padding:3px;text-align:center;" action="http://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('http://feedburner.google.com/fb/a/mailverify?uri=RBloggers', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+<input type="text" style="width:110px"  onclick="if (this.value == 'Your e-mail here') this.value = '';" value='Your e-mail here' name="email"/>
+<input type="hidden" value="RBloggers" name="uri"/><input type="hidden" name="loc" value="en_US"/><input type="submit" value="Subscribe" />
+<a href="http://feeds.feedburner.com/RBloggers" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://feeds.feedburner.com/RBloggers', '']);" ><img src="http://feeds.feedburner.com/~fc/RBloggers?bg=99CCFF&amp;fg=444444&amp;anim=0" height="26" width="88" style="border:0" alt="" /></a>
+</form>
+
+
+
+<a href="https://www.facebook.com/rbloggers" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'https://www.facebook.com/rbloggers', 'On Facebook:']);" >On Facebook:</a>
+<iframe src="//www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2Fpages%2FR-bloggers%2F191414254890&amp;width=160&amp;height=298&amp;show_faces=true&amp;colorscheme=light&amp;stream=false&amp;border_color&amp;header=false&amp;appId=400430016676958" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:160px; height:298px;" allowTransparency="true"></iframe>
+
+
+<br/>
+<strong>If you are an R blogger yourself</strong> you are invited to <a href="http://www.r-bloggers.com/add-your-blog/">add your own R content feed to this site</a> (<strong>Non-English</strong> R bloggers should add themselves- <a href="http://www.r-bloggers.com/lang/add-your-blog">here</a>)</div>
+		</div><div class="side-widget"><h2><a class='rsswidget' href='http://feeds.feedburner.com/Rjobs'><img style='border:0' width='14' height='14' src='http://www.r-bloggers.com/wp-includes/images/rss.png' alt='RSS' /></a> <a class='rsswidget' href='http://www.r-users.com/'>Jobs for R-users</a></h2><ul><li><a class='rsswidget' href='http://feedproxy.google.com/~r/RJobs/~3/4cLP1q-zgqc/'>Data Scientist (@Washington)</a></li><li><a class='rsswidget' href='http://feedproxy.google.com/~r/RJobs/~3/gID4luQNRPk/'>Data Analyst / Healthcare Statitician (@London)</a></li><li><a class='rsswidget' href='http://feedproxy.google.com/~r/RJobs/~3/FooVQHsY_QY/'>Bioinformatician for IMB (@Mainz @Germany)</a></li><li><a class='rsswidget' href='http://feedproxy.google.com/~r/RJobs/~3/nmKre6lQ2qg/'>Statistician for The Food and Agriculture Organization of the UN (@Rome)</a></li><li><a class='rsswidget' href='http://feedproxy.google.com/~r/RJobs/~3/3roU4zkYIZc/'>R/Full Stack Developer (@London – over 100K/year)</a></li></ul></div><div class="side-widget"><form method="get" id="searchform" action="http://www.r-bloggers.com/">
+<div>
+<input type="text" class="search_input" value="Search &amp; Hit Enter" name="s" id="s" onfocus="if (this.value == 'Search &amp; Hit Enter') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search &amp; Hit Enter';}" />
+<input type="hidden" id="searchsubmit" />
+</div>
+</form></div><div class="side-widget"><h2>Popular Searches</h2>
+<ul>
+<li><a href="http://www.r-bloggers.com/search/heatmap">heatmap</a></li>
+<li><a href="http://www.r-bloggers.com/search/web%20scraping">web scraping</a></li>
+<li><a href="http://www.r-bloggers.com/search/hadoop">hadoop</a></li>
+<li><a href="http://www.r-bloggers.com/search/maps">maps</a></li>
+<li><a href="http://www.r-bloggers.com/search/twitter">twitter</a></li>
+<li><a href="http://www.r-bloggers.com/search/latex">latex</a></li>
+<li><a href="http://www.r-bloggers.com/search/shiny">shiny</a></li>
+<li><a href="http://www.r-bloggers.com/search/boxplot">boxplot</a></li>
+<li><a href="http://www.r-bloggers.com/search/ggplot2">ggplot2</a></li>
+<li><a href="http://www.r-bloggers.com/search/animation">animation</a></li>
+<li><a href="http://www.r-bloggers.com/search/trading">trading</a></li>
+<li><a href="http://www.r-bloggers.com/search/finance">finance</a></li>
+<li><a href="http://www.r-bloggers.com/search/ggplot">ggplot</a></li>
+<li><a href="http://www.r-bloggers.com/search/time%20series">time series</a></li>
+<li><a href="http://www.r-bloggers.com/search/excel">excel</a></li>
+<li><a href="http://www.r-bloggers.com/search/PCA">PCA</a></li>
+<li><a href="http://www.r-bloggers.com/search/googlevis">googlevis</a></li>
+<li><a href="http://www.r-bloggers.com/search/eclipse">eclipse</a></li>
+<li><a href="http://www.r-bloggers.com/search/quantmod">quantmod</a></li>
+<li><a href="http://www.r-bloggers.com/search/rstudio">rstudio</a></li>
+<li><a href="http://www.r-bloggers.com/search/market%20research">market research</a></li>
+<li><a href="http://www.r-bloggers.com/search/tutorial">tutorial</a></li>
+<li><a href="http://www.r-bloggers.com/search/how%20to%20import%20image%20file%20to%20R">how to import image file to R</a></li>
+<li><a href="http://www.r-bloggers.com/search/rcmdr">rcmdr</a></li>
+<li><a href="http://www.r-bloggers.com/search/rattle">rattle</a></li>
+<li><a href="http://www.r-bloggers.com/search/knitr">knitr</a></li>
+<li><a href="http://www.r-bloggers.com/search/coplot">coplot</a></li>
+<li><a href="http://www.r-bloggers.com/search/GIS">GIS</a></li>
+<li><a href="http://www.r-bloggers.com/search/sweave">sweave</a></li>
+<li><a href="http://www.r-bloggers.com/search/ecdf">ecdf</a></li>
+</ul>
+
+</div>		<div class="side-widget">		<h2>Recent Posts</h2>		<ul>
+					<li>
+				<a href="http://www.r-bloggers.com/lessons-learned-in-high-performance-r/">Lessons learned in high-performance R</a>
+						</li>
+					<li>
+				<a href="http://www.r-bloggers.com/cracking-safe-cracker-with-r/">Cracking Safe Cracker with R</a>
+						</li>
+					<li>
+				<a href="http://www.r-bloggers.com/modeling-contagion-using-airline-networks-in-r/">Modeling Contagion Using Airline Networks in R</a>
+						</li>
+					<li>
+				<a href="http://www.r-bloggers.com/top-of-the-heap-how-much-can-we-learn-from-partial-rankings/">Top of the Heap: How Much Can We Learn from Partial Rankings?</a>
+						</li>
+					<li>
+				<a href="http://www.r-bloggers.com/chapter-4-of-modeling-data-with-functional-programming-in-r-is-out/">Chapter 4 of Modeling data with functional programming in R is out</a>
+						</li>
+					<li>
+				<a href="http://www.r-bloggers.com/update-on-snowdoop-a-mapreduce-alternative/">Update on Snowdoop, a MapReduce Alternative</a>
+						</li>
+					<li>
+				<a href="http://www.r-bloggers.com/chances-of-going-to-college-based-on-parents-income/">Chances of going to college based on parent’s income</a>
+						</li>
+					<li>
+				<a href="http://www.r-bloggers.com/r-the-excel-connection/">R: the Excel Connection</a>
+						</li>
+					<li>
+				<a href="http://www.r-bloggers.com/bio7-2-1-release-candidate-rc2-for-macosx-available/">Bio7 2.1 Release Candidate RC2 for MacOSX Available</a>
+						</li>
+					<li>
+				<a href="http://www.r-bloggers.com/testthat-0-10-0/">testthat 0.10.0</a>
+						</li>
+					<li>
+				<a href="http://www.r-bloggers.com/rstudio-0-99-released/">RStudio 0.99 released</a>
+						</li>
+					<li>
+				<a href="http://www.r-bloggers.com/data-science-from-small-to-big-data/">Data Science: from Small to Big Data</a>
+						</li>
+					<li>
+				<a href="http://www.r-bloggers.com/roman-dataviz-and-inference-in-complex-systems/">Roman dataviz and inference in complex systems</a>
+						</li>
+					<li>
+				<a href="http://www.r-bloggers.com/r-courses/">R courses</a>
+						</li>
+					<li>
+				<a href="http://www.r-bloggers.com/static-and-moving-circles/">Static and moving circles</a>
+						</li>
+				</ul>
+		</div><div class="side-widget"><h2>Other sites</h2>
+	<ul class='xoxo blogroll'>
+<li><a href="http://www.proc-x.com/" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://www.proc-x.com/', 'SAS blogs']);" rel="nofollow" title="SAS news gathered from bloggers">SAS blogs</a></li>
+<li><a href="http://www.r-users.com/" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://www.r-users.com/', 'Jobs for R-users']);" rel="nofollow">Jobs for R-users</a></li>
+<li><a href="http://statil.org/" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://statil.org/', 'Statistics of Israel']);" rel="nofollow" title="25,000 data sets of time series from the Israeli Central Bureau of Statistics ">Statistics of Israel</a></li>
+
+	</ul>
+</div>
+    </div>
+<!-- end sidebar -->	<div id="leftcontent">
+	
+		
+
+	<div id="post-75437" class="post-75437 post type-post status-publish format-standard hentry category-r-bloggers">
+					
+				
+                <h1>Logistic Regression with R: step by step implementation part-2</h1>
+                <div class="meta"><div class="date">December 8, 2013</div>By <a href="http://www.r-bloggers.com/author/amar-gondaliya/" title="Posts by Amar Gondaliya" rel="author">Amar Gondaliya</a></div><div class="entry"><p class="syndicated-attribution"><div class="social4i" style="height:29px;"><div class="social4in" style="height:29px;float: left;"><div class="socialicons s4fblike" style="float:left;margin-right: 10px;"><div class="fb-like" data-href="http://www.r-bloggers.com/logistic-regression-with-r-step-by-step-implementation-part-2/" data-send="true"  data-layout="button_count" data-width="100" data-height="21"  data-show-faces="false"></div></div><div class="socialicons s4twitter" style="float:left;margin-right: 10px;"><a href="https://twitter.com/share" data-url="http://www.r-bloggers.com/logistic-regression-with-r-step-by-step-implementation-part-2/" data-counturl="http://www.r-bloggers.com/logistic-regression-with-r-step-by-step-implementation-part-2/" data-text="Logistic Regression with R: step by step implementation part-2" class="twitter-share-button" data-count="horizontal" data-via="rbloggers"></a></div></div><div style="clear:both"></div></div>
+
+<div style="border: 1px solid; background: none repeat scroll 0 0 #EDEDED; margin: 1px; font-size: 12px;">
+(This article was first published on  <strong><a href="http://pingax.com/logistic-regression-r-step-step-implementation-part-2/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=logistic-regression-r-step-step-implementation-part-2"> Pingax » R</a></strong>, and kindly contributed to <a href="http://www.r-bloggers.com/" rel="nofollow">R-bloggers)</a>      
+</div></p>
+<div class="bottomcontainerBox" style="border:1px solid #808080; border-radius:5px 5px 5px 5px; box-shadow:2px 2px 5px rgba(0,0,0,0.3);background-color:#F0F4F9;">
+			<div style="float:left; width:85px;padding-right:10px; margin:4px 4px 4px 4px;height:30px;">
+			<iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fpingax.com%2Flogistic-regression-r-step-step-implementation-part-2%2F&amp;layout=button_count&amp;show_faces=false&amp;width=85&amp;action=like&amp;font=verdana&amp;colorscheme=light&amp;height=21" scrolling="no" frameborder="0" allowTransparency="true" style="border:none; overflow:hidden; width:85px; height:21px;"></iframe></div>
+			<div style="float:left; width:80px;padding-right:10px; margin:4px 4px 4px 4px;height:30px;">
+			<g:plusone size="medium" href="http://pingax.com/logistic-regression-r-step-step-implementation-part-2/"></g:plusone>
+			</div>
+			<div style="float:left; width:95px;padding-right:10px; margin:4px 4px 4px 4px;height:30px;">
+			<a href="http://twitter.com/share" class="twitter-share-button" data-url="http://pingax.com/logistic-regression-r-step-step-implementation-part-2/" data-text="Logistic Regression with R: step by step implementation part-2" data-count="horizontal" ref="nofollow" target="_blank"></a>
+			</div><div style="float:left; width:105px;padding-right:10px; margin:4px 4px 4px 4px;height:30px;"><script type="in/share" data-url="http://pingax.com/logistic-regression-r-step-step-implementation-part-2/" data-counter="right"></script></div>			
+			<div style="float:left; width:85px;padding-right:10px; margin:4px 4px 4px 4px;height:30px;"><script src="http://www.stumbleupon.com/hostedbadge.php?s=1&amp;r=http://pingax.com/logistic-regression-r-step-step-implementation-part-2/"></script></div>			
+			</div><div style="clear:both"></div><div style="padding-bottom:4px;"></div><p style="text-align: justify;">Welcome to the second part of series blog posts! In <a title="Logistic Regression with R : step by step implementation part-1" href="http://pingax.com/logistic-regression-wirh-r-step-by-step-implementation-part-1/" ref="nofollow" target="_blank">previous part</a>, we discussed on the concept of the logistic regression and its mathematical formulation. Now, we will apply that learning here and try to implement step by step in R. (If you know concept of logistic regression then move ahead in this part, otherwise you can view <a title="Logistic Regression with R : step by step implementation part-1" href="http://pingax.com/logistic-regression-wirh-r-step-by-step-implementation-part-1/" ref="nofollow" target="_blank">previous post</a> to understand it in very short manner).</p>
+<p style="text-align: justify;">In this post, We will discuss on implementation of cost function, gradient descent using optim() function and calculate accuracy  in R. So, let’s start.</p>
+<p style="text-align: justify;">Before, we create any code, it is good start to formulate logistic regression problem first. I will use same data set and problem provided the <a title="Machine Learning" href="https://www.coursera.org/course/ml" ref="nofollow" target="_blank">Coursera Machine Learning </a>class logistic regression assignment. We will build logistic regression model to predict whether student will get admission or not in university.</p>
+<p style="text-align: justify;">Suppose that you are an administrator of a university and you want to know the chance of admission of each applicant based on their two exams. You have historical data from previous applicants which can be used as the training data for logistic regression.  Your task is to build a classification model that estimates each applicant’s probability of admission in university (Source:coursera machine learning class).</p>
+<p style="text-align: justify;">Now, we have understood classification problem that we are going to address. Let us understand the data. In data we have records of previous applicants’ two exams score and label whether applicant got admission or not (1-if got admission 0-otherwise).</p>
+<p style="text-align: justify;">Before starting implement any learning algorithm, it is always good to visualize the data if possible. So, let us plot data and understand who did get the admission in past. (<a title="Data set" href="http://pingax.com/wp-content/uploads/2013/12/data.csv" ref="nofollow" target="_blank">Download</a> data)</p>
+<pre style="background: none repeat scroll 0 0 #eeeeee; border: 1px solid #dddddd;">#Load data
+data &lt;- read.csv("data.csv")
+
+#Create plot
+plot(data$score.1,data$score.2,col=as.factor(data$label),xlab="Score-1",ylab="Score-2")</pre>
+<p><a href="http://i0.wp.com/pingax.com/wp-content/uploads/2013/12/plot_2.png" ref="nofollow" target="_blank"><img class="alignnone size-full wp-image-235" alt="plot_2" src="http://i0.wp.com/pingax.com/wp-content/uploads/2013/12/plot_2.png?resize=384%2C315" data-recalc-dims="1" /></a></p>
+<p style="text-align: justify;">From, the plot you can see that red marked observations indicate they got admission and black marked observation indicate they did not get.  We can imagine clear cut classification boundary between these two groups.</p>
+<p style="text-align: justify;">So, in this case we have two predictor variables (two exams’ scores) and label as response variable. Let us set predictor and response variables.</p>
+<pre style="background: none repeat scroll 0 0 #eeeeee; border: 1px solid #dddddd;">#Predictor variables
+X &lt;- as.matrix(data[,c(1,2)])
+
+#Add ones to X
+X &lt;- cbind(rep(1,nrow(X)),X)
+
+#Response variable
+Y &lt;- as.matrix(data$label)</pre>
+<p style="text-align: justify;">Before, we start with actual cost function. Recall the logistic regression hypothesis is defined as:</p>
+<p style="text-align: justify;"><a href="http://i1.wp.com/pingax.com/wp-content/uploads/2013/11/sigmoid_hypothesis.png" ref="nofollow" target="_blank"><img class="alignnone size-full wp-image-217" alt="sigmoid_hypothesis" src="http://i1.wp.com/pingax.com/wp-content/uploads/2013/11/sigmoid_hypothesis.png?resize=135%2C25" data-recalc-dims="1" /></a></p>
+<p style="text-align: left;">Where function g is the sigmoid function. The sigmoid function is defined as:</p>
+<p style="text-align: justify;"><a href="http://i1.wp.com/pingax.com/wp-content/uploads/2013/11/sigmoid.png" ref="nofollow" target="_blank"><img class="alignnone size-full wp-image-215" alt="sigmoid" src="http://i1.wp.com/pingax.com/wp-content/uploads/2013/11/sigmoid.png?resize=127%2C31" data-recalc-dims="1" /></a></p>
+<p style="text-align: left;">Our first step is to implement sigmoid function.</p>
+<pre style="background: none repeat scroll 0 0 #eeeeee; border: 1px solid #dddddd;">#Sigmoid function
+sigmoid &lt;- function(z)
+{
+g &lt;- 1/(1+exp(-z))
+return(g)
+}</pre>
+<p style="text-align: justify;">Now we will implement cost function. Recall the cost function in logistic regression is</p>
+<p style="text-align: justify;"><a href="http://i2.wp.com/pingax.com/wp-content/uploads/2013/11/costfunction.png" ref="nofollow" target="_blank"><img class="alignnone size-full wp-image-216" alt="costfunction" src="http://i2.wp.com/pingax.com/wp-content/uploads/2013/11/costfunction.png?resize=456%2C40" data-recalc-dims="1" /></a></p>
+<p style="text-align: left;">Equivalent R code is as:</p>
+<pre style="background: none repeat scroll 0 0 #eeeeee; border: 1px solid #dddddd;">#Cost Function
+cost &lt;- function(theta)
+{
+m &lt;- nrow(X)
+g &lt;- sigmoid(X%*%theta)
+J &lt;- (1/m)*sum((-Y*log(g)) - ((1-Y)*log(1-g)))
+return(J)
+}</pre>
+<p style="text-align: justify;">Let’s test this cost function with initial theta parameters. We will set theta parameters equal to zero initially and check the cost.</p>
+<pre style="background: none repeat scroll 0 0 #eeeeee; border: 1px solid #dddddd;">#Intial theta
+initial_theta &lt;- rep(0,ncol(X))
+
+#Cost at inital theta
+cost(initial_theta)</pre>
+<p style="text-align: justify;">You will find cost is 0.693 with initial parameters. Now, our objective is to minimize this cost and derive the optimal value of the thetas. For that we will use gradient descent optimization. In blog post ‘<a title="Linear Regression with R : step by step implementation part-2" href="http://pingax.com/linear-regression-with-r-step-by-step-implementation-part-2/" ref="nofollow" target="_blank">Linear regression with R:step by step implementation part-2</a>’, I implemented gradient descent and defined the update function to optimize the values of theta.</p>
+<p style="text-align: justify;">Here I will use inbuilt function of R optim() to derive the best fitting parameters. Ultimately we want to have optimal value of the cost function and theta.</p>
+<pre style="background: none repeat scroll 0 0 #eeeeee; border: 1px solid #dddddd;"># Derive theta using gradient descent using optim function
+theta_optim &lt;- optim(par=initial_theta,fn=cost)
+
+#set theta
+theta &lt;- theta_optim$par
+
+#cost at optimal value of the theta
+theta_optim$value</pre>
+<p style="text-align: justify;">We have optimal values of the theta and cost is about 0.2034 at optimal value of theta. We can now use this theta parameter for predicting for the admission probability for new applicant based on the score of two exams.</p>
+<p style="text-align: left;">For example, a student is with exam-1 score of 45 and exam-2 score of 85.</p>
+<pre style="background: none repeat scroll 0 0 #eeeeee; border: 1px solid #dddddd;"># probability of admission for student
+prob &lt;- sigmoid(t(c(1,45,85))%*%theta)</pre>
+<p style="text-align: justify;">You will find probability is 0.774, it is above 0.5 which means that student will get admission.</p>
+<p style="text-align: justify;">So, until now we understood how to implement cost function, gradient descent and derived optimal values of the learning parameters (this looks very easy right?).  We started with one problem definition of the classification and ended up with prediction. In the next part, we will try to implement prediction function for batch prediction, calculate training accuracy and compare results with the glm() function output. Do post your comments and queries. That is extremely important for me to learn new things.</p>
+<p>Powered by <a href="http://3doordigital.com/wordpress/plugins/google-plus-comments/" ref="nofollow" target="_blank">Google+ Comments</a></p><p>The post <a href="http://pingax.com/logistic-regression-r-step-step-implementation-part-2/" ref="nofollow" target="_blank">Logistic Regression with R: step by step implementation part-2</a> appeared first on <a href="http://pingax.com/" ref="nofollow" target="_blank">Pingax</a>.</p>
+<p class="syndicated-attribution"><div class="social4i" style="height:82px;"><div class="social4in" style="height:82px;float: left;"><div class="socialicons s4fblike" style="float:left;margin-right: 10px;"><div class="fb-like" data-href="http://www.r-bloggers.com/logistic-regression-with-r-step-by-step-implementation-part-2/" data-send="true"  data-layout="box_count" data-width="55" data-height="62"  data-show-faces="false"></div></div><div class="socialicons s4twitter" style="float:left;margin-right: 10px;"><a href="https://twitter.com/share" data-url="http://www.r-bloggers.com/logistic-regression-with-r-step-by-step-implementation-part-2/" data-counturl="http://www.r-bloggers.com/logistic-regression-with-r-step-by-step-implementation-part-2/" data-text="Logistic Regression with R: step by step implementation part-2" class="twitter-share-button" data-count="vertical" data-via="rbloggers"></a></div></div><div style="clear:both"></div></div>
+
+<div style="border: 1px solid; background: none repeat scroll 0 0 #EDEDED; margin: 1px; font-size: 13px;">
+<div style="text-align: center;">To <strong>leave a comment</strong> for the author, please follow the link and comment on his blog: <strong><a href="http://pingax.com/logistic-regression-r-step-step-implementation-part-2/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=logistic-regression-r-step-step-implementation-part-2"> Pingax » R</a></strong>.</div>
+<hr />
+<a href="http://www.r-bloggers.com/" rel="nofollow">R-bloggers.com</a> offers <strong><a href="http://feedburner.google.com/fb/a/mailverify?uri=RBloggers" rel="nofollow">daily e-mail updates</a></strong> about <a title="The R Project for Statistical Computing" href="http://www.r-project.org/" rel="nofollow">R</a> news and <a title="R tutorials" href="http://www.r-bloggers.com/?s=tutorial" rel="nofollow">tutorials</a> on topics such as: visualization (<a title="ggplot and ggplot2 tutorials" href="http://www.r-bloggers.com/?s=ggplot2" rel="nofollow">ggplot2</a>, <a title="Boxplots using lattice and ggplot2 tutorials" href="http://www.r-bloggers.com/?s=boxplot" rel="nofollow">Boxplots</a>, <a title="Maps and gis" href="http://www.r-bloggers.com/?s=map" rel="nofollow">maps</a>, <a title="Animation in R" href="http://www.r-bloggers.com/?s=animation" rel="nofollow">animation</a>), programming (<a title="RStudio IDE for R" href="http://www.r-bloggers.com/?s=RStudio" rel="nofollow">RStudio</a>, <a title="Sweave and literate programming" href="http://www.r-bloggers.com/?s=sweave" rel="nofollow">Sweave</a>, <a title="LaTeX in R" href="http://www.r-bloggers.com/?s=LaTeX" rel="nofollow">LaTeX</a>, <a title="SQL and databases" href="http://www.r-bloggers.com/?s=SQL" rel="nofollow">SQL</a>, <a title="Eclipse IDE for R" href="http://www.r-bloggers.com/?s=eclipse" rel="nofollow">Eclipse</a>, <a title="git and github, Version Control System" href="http://www.r-bloggers.com/?s=git" rel="nofollow">git</a>, <a title="Large data in R using Hadoop" href="http://www.r-bloggers.com/?s=hadoop" rel="nofollow">hadoop</a>, <a title="Web Scraping of google, facebook, yahoo, twitter and more using R" href="http://www.r-bloggers.com/?s=Web+Scraping" rel="nofollow">Web Scraping</a>) statistics (<a title="Regressions and ANOVA analysis tutorials" href="http://www.r-bloggers.com/?s=regression" rel="nofollow">regression</a>, <a title="principal component analysis tutorial" href="http://www.r-bloggers.com/?s=PCA" rel="nofollow">PCA</a>, <a title="Time series" href="http://www.r-bloggers.com/?s=time+series" rel="nofollow">time series</a>, <a title="finance trading" href="http://www.r-bloggers.com/?s=trading" rel="nofollow">trading</a>) and more...
+</div></p><hr /><hr />
+<div style="border: 1px solid #EB9349; background: none repeat scroll 0 0 #FDEADA; text-align: center; margin: 10px; font-size: 16px;">
+If you got this far, why not <strong><u>subscribe for updates</u> </strong>from the site?  Choose your flavor: <a href="http://feedburner.google.com/fb/a/mailverify?uri=RBloggers" rel="nofollow">e-mail</a>, <a href="https://twitter.com/#!/rbloggers" rel="nofollow">twitter</a>, <a href="http://feeds.feedburner.com/RBloggers" rel="nofollow">RSS</a>, or <a href="http://www.facebook.com/pages/R-bloggers/191414254890" rel="nofollow">facebook</a>...
+</div><div class="social4i" style="height:29px;"><div class="social4in" style="height:29px;float: left;"><div class="socialicons s4fblike" style="float:left;margin-right: 10px;"><div class="fb-like" data-href="http://www.r-bloggers.com/logistic-regression-with-r-step-by-step-implementation-part-2/" data-send="true"  data-layout="button_count" data-width="100" data-height="21"  data-show-faces="false"></div></div><div class="socialicons s4twitter" style="float:left;margin-right: 10px;"><a href="https://twitter.com/share" data-url="http://www.r-bloggers.com/logistic-regression-with-r-step-by-step-implementation-part-2/" data-counturl="http://www.r-bloggers.com/logistic-regression-with-r-step-by-step-implementation-part-2/" data-text="Logistic Regression with R: step by step implementation part-2" class="twitter-share-button" data-count="horizontal" data-via="rbloggers"></a></div></div><div style="clear:both"></div></div></div>
+
+	</div><!-- #post-## -->
+
+
+
+   				<div id="comments">
+
+
+<div id="comment-user-details">
+
+
+
+
+
+		<p class="nocomments">Comments are closed.</p>
+
+
+
+</div>
+
+</div><!-- #comments -->
+
+       
+	</div>
+    <!-- begin second sidebar -->
+    <div id="secondsidebar">
+
+		
+		<div class="side-widget"><h2>Top 3 Posts from the past 2 days</h2><ul>				<li>
+										<a href="http://www.r-bloggers.com/r-the-excel-connection/" class="bump-view" data-bump-view="tp">
+						R: the Excel Connection					</a>
+									</li>
+							<li>
+										<a href="http://www.r-bloggers.com/data-science-from-small-to-big-data/" class="bump-view" data-bump-view="tp">
+						Data Science: from Small to Big Data					</a>
+									</li>
+							<li>
+										<a href="http://www.r-bloggers.com/in-depth-introduction-to-machine-learning-in-15-hours-of-expert-videos/" class="bump-view" data-bump-view="tp">
+						In-depth introduction to machine learning in 15 hours of expert videos					</a>
+									</li>
+			</ul></div><div class="side-widget"><form method="get" id="searchform" action="http://www.r-bloggers.com/">
+<div>
+<input type="text" class="search_input" value="Search &amp; Hit Enter" name="s" id="s" onfocus="if (this.value == 'Search &amp; Hit Enter') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search &amp; Hit Enter';}" />
+<input type="hidden" id="searchsubmit" />
+</div>
+</form></div><div class="side-widget"><h2>Top 9 articles of the week</h2>
+<ol class='wppp_list'>
+	<li><a href='http://www.r-bloggers.com/installing-r-packages/' title='Installing R packages'>Installing R packages</a></li>
+	<li><a href='http://www.r-bloggers.com/in-depth-introduction-to-machine-learning-in-15-hours-of-expert-videos/' title='In-depth introduction to machine learning in 15 hours of expert videos'>In-depth introduction to machine learning in 15 hours of expert videos</a></li>
+	<li><a href='http://www.r-bloggers.com/new-version-of-rstudio-v0-99-available-now/' title='New Version of RStudio (v0.99) Available Now'>New Version of RStudio (v0.99) Available Now</a></li>
+	<li><a href='http://www.r-bloggers.com/using-apply-sapply-lapply-in-r/' title='Using apply, sapply, lapply in R'>Using apply, sapply, lapply in R</a></li>
+	<li><a href='http://www.r-bloggers.com/review-of-advanced-r-by-hadley-wickham/' title='Review of ‘Advanced R’ by Hadley Wickham'>Review of ‘Advanced R’ by Hadley Wickham</a></li>
+	<li><a href='http://www.r-bloggers.com/scatterplots/' title='Scatterplots'>Scatterplots</a></li>
+	<li><a href='http://www.r-bloggers.com/an-r-enthusiast-goes-pythonic/' title='An R Enthusiast Goes Pythonic!'>An R Enthusiast Goes Pythonic!</a></li>
+	<li><a href='http://www.r-bloggers.com/open-data-sets-you-can-use-with-r/' title='Open data sets you can use with R'>Open data sets you can use with R</a></li>
+	<li><a href='http://www.r-bloggers.com/basics-of-histograms/' title='Basics of Histograms'>Basics of Histograms</a></li>
+</ol>
+</div><div class="side-widget"><h2>Sponsors</h2>			<div class="textwidget"><a href="http://www.mango-solutions.com/" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://www.mango-solutions.com/', '\n\n']);" rel="nofollow">
+<img src="http://www.r-bloggers.com/wp-content/uploads/2014/09/R-Bloggers-ad.jpg" alt="Mango solutions">
+</a>
+
+<br /><hr>
+
+<a href="http://www.highstat.com/" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://www.highstat.com/', '\n\n']);" rel="nofollow">
+<img src="http://www.r-bloggers.com/wp-content/uploads/2013/11/highland_stat_banner_300_1251.jpg" alt="Zero Inflated Models and Generalized Linear Mixed Models with R">
+</a>
+
+
+<br /><hr>
+
+<a href="http://www.quantide.com/" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://www.quantide.com/', '\n\n']);" rel="nofollow">
+<img src="http://www.quantide.com/logo/quantide4rbloggers.png" alt="Quantide: statistical consulting and training">
+</a>
+
+
+<br /><hr>
+
+<a href="http://www.rstudio.org/" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://www.rstudio.org/', '\n\n']);" rel="nofollow">
+<img src="http://www.r-bloggers.com/wp-content/uploads/2014/09/R-Bloggernoanima.png" alt="RStudio homepage">
+</a>
+
+<br /><hr>
+
+<a href="http://www.revolutionanalytics.com/" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://www.revolutionanalytics.com/', '\n\n']);" rel="nofollow">
+<img src="http://www.r-bloggers.com/wp-content/uploads/2012/09/Revolution-Analytics-Ad.png" alt="REvolution analytics">
+</a>
+
+
+
+
+<br /><hr>
+
+<a href="http://www.eoda.de/de/r-akademie.html" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://www.eoda.de/de/r-akademie.html', '\n\n']);" rel="nofollow">
+<img src="http://www.r-bloggers.com/wp-content/uploads/2015/01/R-Bloggers-Logo-ohne-Rahmen.png" alt="http://www.eoda.de">
+</a>
+
+
+<br /><hr>
+
+<a href="https://plot.ly/api/r/" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'https://plot.ly/api/r/', '\n    \nPlotly: collaborative, publication-quality graphing.\n']);" rel="nofollow">
+    <img src="http://www.r-bloggers.com/wp-content/uploads/2014/01/plotly_ad_r_bloggers.jpg" alt="" title="Plotly">
+Plotly: collaborative, publication-quality graphing.
+</a>
+
+<br /><hr>
+
+
+
+<a href="http://www.statisticsviews.com/view/index.html?utm_source=RBlogger&utm_medium=banner&utm_term=StatViews&utm_content=StatViewsAd&utm_campaign=webbanner" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://www.statisticsviews.com/view/index.html?utm_source=RBlogger&amp;utm_medium=banner&amp;utm_term=StatViews&amp;utm_content=StatViewsAd&amp;utm_campaign=webbanner', '\n\n']);" rel="nofollow">
+<img src="http://www.r-bloggers.com/wp-content/uploads/2014/03/SVbanner300x125.jpg" >
+</a>
+
+<br /><hr>
+<a href=" http://bit.ly/nycbootcamp" rel="nofollow">
+<img src="http://www.r-bloggers.com/wp-content/uploads/2015/03/rblogger_ad_300_nyc.jpg" alt="" title="">
+</a>
+
+<br /><hr>
+<a href="http://www.datacamp.com/?utm_source=R-bloggers&utm_medium=Add&utm_content=The%20r-blogger%20add&utm_campaign=R-bloggers-add" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://www.datacamp.com/?utm_source=R-bloggers&amp;utm_medium=Add&amp;utm_content=The%20r-blogger%20add&amp;utm_campaign=R-bloggers-add', '\n\n']);" rel="nofollow">
+<img src="http://www.r-bloggers.com/wp-content/uploads/2013/12/DataCamp_banner_rbloggers.jpg" >
+</a>
+
+<br /><hr>
+<a href="http://intuitics.com/?utm_source=rblg&utm_medium=banner&utm_campaign=v1" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://intuitics.com/?utm_source=rblg&amp;utm_medium=banner&amp;utm_campaign=v1', '\n\n']);" rel="nofollow">
+<img src="http://cdn.intuitics.com/r-blg-ad-v2.png" >
+</a>
+
+
+<br /><hr>
+<a href="http://www.crcpress.com/go/the-r-series" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://www.crcpress.com/go/the-r-series', '\n    \n']);" rel="nofollow">
+    <img src="http://www.r-bloggers.com/wp-content/uploads/2015/03/R-series-banner-300-125.jpg" 
+alt="CRC R books series" title="CRC R books series">
+</a>
+
+
+<br /><hr>
+<a href="http://www.dotplot.com/data_analysis_signup/" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://www.dotplot.com/data_analysis_signup/', '\n    \n']);" rel="nofollow">
+    <img src="http://www.r-bloggers.com/wp-content/uploads/2014/01/dotplot_banner300x150_1a.png" alt="" title="dotplot">
+</a>
+
+
+<br /><hr>
+<a href="http://www.statworx.de/r-statistik/" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://www.statworx.de/r-statistik/', '\n    \n']);" rel="nofollow">
+    <img src="http://www.r-bloggers.com/wp-content/uploads/2014/07/STATWORX-R-Bloggers.png" alt="" title="STATWORX">
+</a>
+
+
+<br /><hr>
+<a href="http://yottamine.com/try-yottamine-now" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://yottamine.com/try-yottamine-now', '\n    \n']);" rel="nofollow">
+    <img src=" http://www.r-bloggers.com/wp-content/uploads/2014/09/R-Blog_Speed.png" alt="" title="yottamine">
+</a>
+
+
+
+<br /><hr>
+<a href="http://www.simplilearn.com/big-data-and-analytics/all-in-one-big-data-and-analytics-training?utm_source=R-bloggers&utm_medium=affiliate-cpm&utm_campaign=NC-OS-ONLIN-0229-16-05012015-rbloggers#/osl" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://www.simplilearn.com/big-data-and-analytics/all-in-one-big-data-and-analytics-training?utm_source=R-bloggers&amp;utm_medium=affiliate-cpm&amp;utm_campaign=NC-OS-ONLIN-0229-16-05012015-rbloggers#/osl', '\n    \n']);" rel="nofollow">
+    <img src=" http://www.r-bloggers.com/wp-content/uploads/2015/02/Big-Data-and-Analytics-300x125.png" alt="" title="simplilearn.com">
+</a>
+
+
+<br /><hr>
+<a href="http://bit.ly/rblg-odsc" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://bit.ly/rblg-odsc', '\n    \n']);" rel="nofollow">
+    <img src="http://www.r-bloggers.com/wp-content/uploads/2015/04/BannerAd4.png" alt="Open Data Science Conference" title="opendatascicon.com">
+</a>
+
+
+
+<br /><hr>
+<a href="http://www.6sigma.us/six-sigma-online-training.php/?r" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://www.6sigma.us/six-sigma-online-training.php/?r', '\n    \n']);" rel="nofollow">
+    <img src="http://www.r-bloggers.com/wp-content/uploads/2015/04/sixsigma300x125-1.jpg" alt="" title="6 sigma">
+</a>
+
+
+
+<br /><hr>
+<a href="http://user2015.math.aau.dk/" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'http://user2015.math.aau.dk/', '\n    \n']);" rel="nofollow">
+    <img src="http://www.r-bloggers.com/wp-content/uploads/2015/05/useR2015_01.png" alt="useR 2015" title="useR 2015">
+</a>
+
+
+<br /><hr>
+<a href="https://requestinfo.datascience.berkeley.edu/index4.html?s=rbloggersflatbanner&utm_source=rbloggersflatbanner&utm_medium=banner" onclick="_gaq.push(['_trackEvent', 'outbound-widget', 'https://requestinfo.datascience.berkeley.edu/index4.html?s=rbloggersflatbanner&amp;utm_source=rbloggersflatbanner&amp;utm_medium=banner', '\n    \n']);" rel="nofollow">
+    <img src="http://www.r-bloggers.com/wp-content/uploads/2015/05/Berkeley_J2148-15-ADS_Banner-Resize_p1.jpg" alt="Berkeley" title="">
+</a>
+</div>
+		</div><div class="side-widget"><form method="get" id="searchform" action="http://www.r-bloggers.com/">
+<div>
+<input type="text" class="search_input" value="Search &amp; Hit Enter" name="s" id="s" onfocus="if (this.value == 'Search &amp; Hit Enter') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search &amp; Hit Enter';}" />
+<input type="hidden" id="searchsubmit" />
+</div>
+</form></div><div class="side-widget">			<div class="textwidget"><strong><a href="http://www.r-bloggers.com/blogs-list/">Full list of contributing R-bloggers</a></strong></div>
+		</div>    </div>
+<!-- end second sidebar --></div>
+<!-- begin footer -->
+<div id="footer">
+	<strong><a href="http://www.r-bloggers.com">R-bloggers</a></strong> was founded by <a href="http://www.r-statistics.com/about/">Tal Galili</a>, with gratitude to the <a href="http://www.r-project.org/">R</a> community.  <br />
+    Is powered by <a href="http://www.wordpress.org">WordPress</a> using a <a href="http://themes.bavotasan.com" rel="nofollow">bavotasan.com</a> design.<br />
+    Copyright &copy; 2015 <strong>R-bloggers</strong>. All Rights Reserved. <a href="http://www.r-bloggers.com/terms/">Terms and Conditions</a> for this website<br />
+</div>
+
+<!--
+TPC! Memory Usage (http://webjawns.com)
+Memory Usage: 63273080Memory Peak Usage: 63591928WP Memory Limit: 820MPHP Memory Limit: 512MCheckpoints: 11-->
+
+<!-- Powered by WPtouch: 3.7.9 --><script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shCore.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushAS3.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushBash.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushColdFusion.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/third-party-brushes/shBrushClojure.js?ver=20090602'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushCpp.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushCSharp.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushCss.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushDelphi.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushDiff.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushErlang.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/third-party-brushes/shBrushFSharp.js?ver=20091003'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushGroovy.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushJava.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushJavaFX.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushJScript.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/third-party-brushes/shBrushLatex.js?ver=20090613'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/third-party-brushes/shBrushMatlabKey.js?ver=20091209'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/third-party-brushes/shBrushObjC.js?ver=20091207'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushPerl.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushPhp.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushPlain.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushPowerShell.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushPython.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/third-party-brushes/shBrushR.js?ver=20100919'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushRuby.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushScala.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushSql.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushVb.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushXml.js?ver=3.0.9b'></script>
+<script type='text/javascript'>
+	(function(){
+		var corecss = document.createElement('link');
+		var themecss = document.createElement('link');
+		var corecssurl = "http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/styles/shCore.css?ver=3.0.9b";
+		if ( corecss.setAttribute ) {
+				corecss.setAttribute( "rel", "stylesheet" );
+				corecss.setAttribute( "type", "text/css" );
+				corecss.setAttribute( "href", corecssurl );
+		} else {
+				corecss.rel = "stylesheet";
+				corecss.href = corecssurl;
+		}
+		document.getElementsByTagName("head")[0].insertBefore( corecss, document.getElementById("syntaxhighlighteranchor") );
+		var themecssurl = "http://www.r-bloggers.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/styles/shThemeDefault.css?ver=3.0.9b";
+		if ( themecss.setAttribute ) {
+				themecss.setAttribute( "rel", "stylesheet" );
+				themecss.setAttribute( "type", "text/css" );
+				themecss.setAttribute( "href", themecssurl );
+		} else {
+				themecss.rel = "stylesheet";
+				themecss.href = themecssurl;
+		}
+		//document.getElementById("syntaxhighlighteranchor").appendChild(themecss);
+		document.getElementsByTagName("head")[0].insertBefore( themecss, document.getElementById("syntaxhighlighteranchor") );
+	})();
+	SyntaxHighlighter.config.strings.expandSource = '+ expand source';
+	SyntaxHighlighter.config.strings.help = '?';
+	SyntaxHighlighter.config.strings.alert = 'SyntaxHighlighter\n\n';
+	SyntaxHighlighter.config.strings.noBrush = 'Can\'t find brush for: ';
+	SyntaxHighlighter.config.strings.brushNotHtmlScript = 'Brush wasn\'t configured for html-script option: ';
+	SyntaxHighlighter.defaults['pad-line-numbers'] = false;
+	SyntaxHighlighter.defaults['toolbar'] = false;
+	SyntaxHighlighter.all();
+</script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-includes/js/comment-reply.min.js?ver=4.2.2'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/themes/magazine-basic/js/effects.js?ver=4.2.2'></script>
+<script type='text/javascript' src='http://www.r-bloggers.com/wp-content/plugins/jetpack/modules/photon/photon.js?ver=20130122'></script>
+<script type='text/javascript' src='http://s0.wp.com/wp-content/js/devicepx-jetpack.js?ver=201522'></script>
+	<div id="fb-root"></div>
+	<script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script><script type="text/javascript" src="//connect.facebook.net/en_US/all.js#xfbml=1"></script><script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script><script type="text/javascript" src="https://platform.linkedin.com/in.js"></script><script type='text/javascript' src='http://stats.wp.com/e-201522.js' async defer></script>
+<script type='text/javascript'>
+	_stq = window._stq || [];
+	_stq.push([ 'view', {v:'ext',j:'1:3.5.3',blog:'11524731',post:'75437',tz:'-6',srv:'www.r-bloggers.com'} ]);
+	_stq.push([ 'clickTrackerInit', '11524731', '75437' ]);
+</script>
+<script type="text/javascript" src="http://www.r-bloggers.com/wp-content/themes/magazine-basic/js/effects.js"></script> 
+<script type="text/javascript">
+/* <![CDATA[ */
+jQuery(function(){
+	jQuery("ul.sf-menu").supersubs({ 
+		minWidth:    12,
+		maxWidth:    27,
+		extraWidth:  1
+	}).superfish({ 
+		delay:       100,
+		speed:       250 
+	});	});
+/* ]]> */
+</script>
+
+
+
+</body>
+</html>
+<!-- Dynamic page generated in 0.547 seconds. -->
+<!-- Cached page generated by WP-Super-Cache on 2015-05-31 03:55:38 -->
+
+<!-- Compression = gzip -->
