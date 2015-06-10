@@ -1,7 +1,7 @@
 ---
 title: "第四篇 R聚类分析"
 author: "杜强, beitta#微信, ddqquu#qq.com"
-date: "2014-12-03"
+date: "2015-06-08"
 output:  ioslides_presentation
 logo: ../pic/rlogo.png
 css: ../html/0intro.css

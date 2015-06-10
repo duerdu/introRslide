@@ -1,7 +1,7 @@
 ---
 title: "第三篇 R统计分析-示例"
 author: "杜强, beitta#微信,ddqquu#qq.com"
-date: "2014-11-30"
+date: "2015-06-10"
 output:  ioslides_presentation
 logo: ../pic/rlogo.png
 css: ../html/0intro.css
@@ -16,350 +16,181 @@ css: ../html/0intro.css
 
 
 ##  线性回归
-- 数据编辑  
+- 数据描述  
 ```{r}
-v0=rnorm(10);             # v1=edit(v0)
-m0=sapply(c(2,2),runif)   # m1=edit(m0)
-d0=data.frame(m0)         # d0[2,2]=0; d0$X1[1]=0;
+data(economics,package="ggplot2"); tail(economics,2)  #help(economics)
+x<-economics$psavert
+y<-economics$pce
+summary(cbind(x,y))
 ```
-- 自带数据  
+
+##  线性回归
+- 负相关  
 ```{r}
-#data()
-data(sleep);tail(sleep,2)
-
+plot(y~x) 
 ```
 
-##  数据操作
-- 筛选  
+##  线性回归
+- 参数估计初始化  
 ```{r}
-v0=rnorm(10); v1=v0[v0>0.5]; v1
-d0=data.frame(n=1:4,s=rep(c("aa","bb"),2),x=runif(4))
-d1=d0[d0$n>2 & d0$s=="aa",]
-```
-- 排序  
-```{r,echo=1}
-v0=round(runif(n=10,min=1,max=20));               # v0[order(v0)]==sort[v0]
-c(paste('v0       :',paste(v0,collapse = " ,")),  # decreasing = FALSE
-  paste('sort(v0) :',paste(sort(v0),collapse = " ,")),
-  paste('order(v0):',paste(order(v0),collapse = " ,"))
-  )
+x <- cbind(1,x)
+n <- nrow(x)
+#待估参数
+aa <- c(0,-10) 
+aa2<- c(0,0)
+#初始损失函数值
+cost <- sum(((x%*%aa)- y)^2)/(2*n)
+
+#学习率
+rr <- 0.01
+#迭代次数
+nt <- 1000
+
 ```
 
-##  数据操作
-- 排序2  
+##  线性回归
+- 参数估计梯度下降  
 ```{r}
-d0=round(sapply(rep(5,3),runif)*20);d0=data.frame(d0);
-colnames(d0)=c("x","y","z");d0
-ord=order(d0$x,-d0$y);      d1=d0[ord,];d1
+for(i in 1:nt)
+{
+  aa[1] <- aa[1] - rr * (1/n) * sum(((x%*%aa)- y))
+  aa[2] <- aa[2] - rr * (1/n) * sum(((x%*%aa)- y)*x[,2])
+}
+#估计参数
+aa
+#预测结果
+yp<-x%*%aa
+head(cbind(x,y,yp))
 
 ```
 
-##  数据操作
-- 抽样  
+##  线性回归
+- 梯度下降预测结果  
 ```{r}
-x=1:10;sample(x,5); # replace, prob
-sample(x,20,replace=TRUE,prob=rep(c(0.2,0.8),5)) #rnorm
-
+x<-x[,2]
+plot(y~x) 
+lines(yp~x,col='blue')
 ```
 
-##  概率统计-不得不说
-- 概率分布  
+##  线性回归
+- lm预测结果  
 ```{r}
-# 样本空间/随机变量/概率分布  
-par(mfrow = c(1, 3));xu=runif(100);xn=rnorm(100);xl=rlnorm(100);
-hist(xu,col='blue');hist(xn,col='green');hist(xl,col='black');
+md<-lm(y~x,data=data.frame(cbind(x,y)))
+plot(y~x) 
+lines(md$fitted.values~x,col='red');lines(yp~x,col='blue')
 ```
 
-##  概率统计-不得不说
-- 概率分布  
+##  线性回归
+- 公式计算  
 ```{r}
-# 密度函数/分布函数  
-par(mfrow = c(1, 2)); x=seq(-3,3,0.1);
-plot(dnorm(x),type='b');plot(pnorm(x),type='b');
-
+aa2[2]=(n*sum(x*y)-sum(x)*sum(y))/(n*sum(x^2)-(sum(x))^2)
+aa2[1]=mean(y)-aa2[2]*mean(x)
+yp2=cbind(1,x)%*%aa2
+plot(y~x);lines(md$fitted.values~x,col='red');lines(yp~x,col='blue');lines(yp2~x,col='green')
 ```
 
-##  概率统计-不得不说
-- [大数定律](http://baike.baidu.com/view/21250.htm)      
-> 切比雪夫/伯努利/辛钦  
-> 数学期望/标准差/方差(统计量)
-
-- [中心极限定理](http://lxy.cumtb.edu.cn/gailvtongjidaoxue/chap5.htm)  
-> 自然规律  
-> 高尔顿钢板试验  
-[试验](../ref/galton.exe) 
-
-- 概率统计应用  
-> 不规则面积计算    
-> 仿真模拟    
-> 圆周率估计  
-[试验](../ref/pai.exe)  
-
-##  描述统计
-- 统计量    
+##  线性回归
+- 三种方法的估计比较  
 ```{r}
-data(cars)
-cars$price=round(runif(nrow(cars),min=0.8,max=10),2)
-head(cars)
-
+#梯度下降
+aa
+#公式
+aa2
+#lm
+md$coefficients
 ```
 
-##  描述统计
-- 基本统计    
+##  逻辑回归
+- 数据描述  
 ```{r}
-# sum , (mean,var,sd,min,max,,median,mad),FBasics::skewness/kurtosis
-sum(cars)  #vector/list/matrix/data.frame
-sum(cars$speed)  #vector/list/matrix/data.frame
-# 行列统计  
-#apply(cars,1,sum)
-apply(cars,2,sum)
-
+df <- read.csv("../data/admission-data.csv")  
+names(df)<-c('s1','s2','label')  
+plot(s2~s1,col=as.factor(label),data=df)  
 ```
 
-##  描述统计
-- 基本统计    
+##  逻辑回归
+- 初始化   
 ```{r}
-# 非单一返回  fivenum, quantile
-range(cars)
-range(cars$speed)
-apply(cars,2,range)
+x <- as.matrix(df[,c(1,2)])  
+x <- cbind(1,x)  
+y <- as.matrix(df$label)  
+  
+mysig <- function(z)  
+{  
+  g <- 1/(1+exp(-z))  
+  return(g)  
+}  
 
 ```
 
-##  描述统计
-- 分类汇总     
+##  逻辑回归
+- 损失函数     
 ```{r}
-dtmp=tail(cars)
-x=ave(dtmp[,2],dtmp[,1],FUN=function(x) median(x))  # factor
-dtmp$distgpspeed=x; dtmp
-
+mycost <- function(aa)  
+{  
+n <- nrow(x)  
+g <- mysig(x%*%aa)  
+cost <- (1/n)*sum((-y*log(g)) - ((1-y)*log(1-g)))  
+return(cost)  
+}  
+  
+aa <- rep(0,ncol(x))  
+mycost(aa)  
 ```
 
-##  描述统计
-- 分类汇总     
+
+##  逻辑回归
+- 参数估计     
 ```{r}
-dagg=aggregate(cbind(dist,price)~speed,cars,mean);head(dagg,3)
-xtabs(price~speed+dist ,head(dagg))  
-
+aaoptim <- optim(par=aa,fn=mycost)  
+aa <- aaoptim$par  ;aa  
+yp <- mysig(x%*%aa)  
+df$yp=ifelse(yp>=0.5,1,0)  
+head(df)  
 ```
 
-##  描述统计
-- 分类汇总     
+##  逻辑回归
+- 预测结果     
 ```{r}
-table(tail(cars$speed))
-s=cars$speed;max(s);length(s)
-a=tabulate(s);length(a) # 小于等于0，忽略
+tb <- with(df, table(label, yp));tb  
+prop.table(tb)  
+
+#glm,自行比较
 
 ```
 
-##  描述统计
-- 茎叶图       
-```{r}
-dt=cars$dist;dt[dt>=60&dt<80];stem(dt)
+##  协同过滤
+- 原理示意    
+![thanks](../pic/cf.jpg)  
 
-```
+##  协同过滤
+- 代码示例      
+   for(i in 1:nrow(holder))   
+   {  
+       for(j in 1:ncol(holder))   
+       {  
+             user <- rownames(holder)[i]  
+             product <- colnames(holder)[j]  
+             if(as.integer(data.germany[data.germany$user==user,product]) == 1)  
+             {   
+                 holder[i,j]<-""  
+              } else {  
+             topN<-((head(n=11,(data.germany.ibs.similarity[order(data.germany.ibs.similarity[,product],decreasing=TRUE),][product]))))  
+             topN.names <- as.character(rownames(topN))  
+             topN.similarities <- as.numeric(topN[,1])  
+             topN.similarities<-topN.similarities[-1]  
+             topN.names<-topN.names[-1]  
+             topN.purchases<- data.germany[,c("user",topN.names)]  
+             topN.userPurchases<-topN.purchases[topN.purchases$user==user,]  
+             topN.userPurchases <- as.numeric(topN.userPurchases[!(names(topN.userPurchases) %in% c("user"))])  
+             holder[i,j]<-getScore(similarities=topN.similarities,history=topN.userPurchases)  
+         } # close else statement  
+       } # end product for loop    
+   } # end user for loop   
 
-##  描述统计
-- 基本统计量       
-```{r}
-summary(cars) # r object
-
-```
-
-
-##  假设检验
-- 均值检验     
-```{r}
-data(sleep);head(sleep,1);plot(extra ~ group,sleep)#boxplot 
-
-```
-
-##  假设检验
-- 均值检验     
-```{r}
-# t.test(x,y=NULL,alternative=c("two.sided","less","greater"),conf.level=0.95)
-t.test(extra ~ group,data=sleep) 
-
-```
-
-
-##  假设检验
-- 没有假设，就没有靠谱的检验     
-```{r}
-t.test(rnorm(100),rnorm(100)+1)
-```
-
-##  假设检验
-- 没有假设，就没有靠谱的检验     
-```{r}
-t.test(rnorm(100),c(rnorm(100)+1,1000)) # 尽然没差异了...
-```
-
-##  假设检验
-- 比例检验     
-```{r}
-smokers  <- c( 83, 90, 129, 70 ) #抽烟vs肺癌  
-patients <- c( 86, 93, 136, 82 )
-prop.test(smokers, patients)
-
-```
-
-##  假设检验
-- 列联表/卡方检验   
-```{r,echo=c(4,5)}
-## From Agresti(2007) p.39
-M <- as.table(rbind(c(762, 327, 468), c(484, 239, 477)))
-dimnames(M) <- list(gender = c("M","F"),
-                    party = c("Democrat","Independent", "Republican"))
-M;Xsq=chisq.test(M);Xsq  # Prints test summary
-
-```
-
-##  假设检验
-- 列联表/卡方检验   
-```{r}
-Xsq$observed
-Xsq$expected  
-```
-
-
-##  假设检验
-- KS检验，样本分布是否一样   
-```{r,echo=c(1,3)}
-x <- rnorm(200);y <- runif(200);
-par(mfrow = c(1, 2)); 
-hist(x);hist(y);
-
-```
-
-##  假设检验
-- KS检验，样本分布是否一样   
-```{r}
-ks.test(x,y);ks.test(x,rnorm(50));  #help(anova)
-```  
-
-##  相关分析  
-- 相关系数        
-```{r}
-attach(cars) ; cor(dist,speed);
-plot(speed,dist); abline(m<-lm(dist~speed),col='red')
-
-```
-
-##  相关分析  
-- 相关系数的检验(零假设r=0)        
-```{r}
-r=cor(dist,speed);r
-cor.test(dist,speed)
-
-```
-
-##  相关分析  
-- 相关系数的检验(t统计量的计算)     
-公式：$t=r*sqrt(n-2)/sqrt(1-r^2)$  
-$$t=r*sqrt(n-2)/sqrt(1-r^2)$$  
-```{r}
-r*sqrt(length(dist)-2)/sqrt(1-r^2)
-
-```  
-- 其他相关  
-> cov,var,cov2cor,cor2pcor  # library(corpcor)  
-> method = c("pearson", "kendall", "spearman")  
-
-##  回归分析  
-- 一元回归    
-```{r}
-mcars=lm(dist~speed,cars);summary(mcars)
-
-```
-
-##  回归分析  
-- 一元回归,R的模型对象    
-```{r}
-names(mcars);anova(mcars) #attributes
-
-```
-
-##  回归分析  
-- 一元回归,置信区间    
-```{r,echo=c(1,3,4)}
-pdist=predict(mcars,interval='confidence');
-head(pdist,10)
-```
-
-##  回归分析  
-- 一元回归,置信区间    
-```{r,echo=c(2,3)}
-par(mfrow = c(1, 1))
-plot(speed,dist);lines(speed,pdist[,1]);
-lines(speed,pdist[,2],col='red');lines(speed,pdist[,3],col='red');
-
-```
-
-##  回归分析  
-- 回归诊断    
-```{r,echo=c(2,3)}
-par(mfrow = c(1, 3))
-plot(mcars$residuals);abline(h=0)
-hist(mcars$residuals);boxplot(mcars$residuals) #qqplot
-
-```
-
-##  回归分析  
-- 线性回归，更多  
-> 多元回归  
-  ** 共线性,异方差性，自相关  
-> 局部回归  
-> 广义线性回归  
-> 逻辑回归  
-> 逐步回归  
-
-##  时间序列  
-- 生成时间序列   
-```{r,eval=TRUE,echo=c(1,2,4)}  
-vn=(11:90)+rep(c(5,4,-1,2),20)+rnorm(80,mean=2,sd=2) #runif(80,min=0,max=2)
-tsvn=ts(vn,frequency=4,start=c(1995, 1))
-par(mfrow = c(1, 2))
-plot(vn,type="l");plot(tsvn)
-
-```
-
-##  时间序列  
-- 序列分解    
-```{r}  
-dtsvn=decompose(tsvn,type="additive") #multiplicative
-plot(dtsvn)
-
-```
-
-##  时间序列  
-- 序列分解    
-```{r}  
-attributes(dtsvn)
-dtsvn$figure
-```
-
-##  时间序列  
-- 序列分解    
-```{r}  
-# stl,  HoltWinters 
-d2tsvn=stl(tsvn,s.window = "periodic");plot(d2tsvn)
-
-```
-
-##  时间序列  
-- 时间序列arima      
-> 自回归  
-> 滑动平均  
-> 平稳性  
-> 差分/季节差分  
-> 定阶 #acf/pacf  
-> 残差检验   
-
-For time-series prediction, predict.ar, predict.Arima, predict.arima0, predict.HoltWinters, predict.StructTS.
 
 ##  参考
-![1]: 毛岭峰,2011,"R语言基础"   
-![2]: 徐俊晓,2012,"统计学与R读书笔记(第六版)"  
-![3]: 薛毅,陈立萍,2006,统计建模与R软件
+![1]: Amar Gondaliya,2013,Linear Regression with R : step by step implementation    
+![2]: Amar Gondaliya,2013,Logistic Regression with R: step by step implementation  
+![3]: Salem,2014,Collaborative Filtering with R
 

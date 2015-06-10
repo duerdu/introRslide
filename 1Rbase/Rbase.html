@@ -10,7 +10,7 @@
 
 
 
-  <meta name="date" content="2014-11-26" />
+  <meta name="date" content="2015-06-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -102,7 +102,7 @@
       <h1 data-config-title><!-- populated from slide_config.json --></h1>
       <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
       <p data-config-presenter><!-- populated from slide_config.json --></p>
-            <p style="margin-top: 6px; margin-left: -2px;">2014-11-26</p>
+            <p style="margin-top: 6px; margin-left: -2px;">2015-06-08</p>
           </hgroup>
   </slide>
 
@@ -309,8 +309,8 @@ sv2=paste(sv,1:9,sep=&#39;&#39;,collapse = &#39;;&#39;);sv2</pre>
 <pre class = 'prettyprint lang-r'>x=rnorm(4);  nm=c(&quot;orange&quot;, &quot;banana&quot;, &quot;apple&quot;, &quot;peach&quot;);
 names(x)=nm; x ;   # x[&quot;banana&quot;]</pre>
 
-<pre >##      orange      banana       apple       peach 
-##  0.09272826  0.37282124  0.73769851 -0.84429714</pre>
+<pre >##     orange     banana      apple      peach 
+## -0.7082397  1.1089627  0.6661708 -1.8157613</pre>
 
 </article></slide><slide class=''><hgroup><h2>数据结构-字符串</h2></hgroup><article  id="--1">
 
@@ -661,7 +661,7 @@ if (x&gt;5) {
   }</pre>
 
 <pre >## [1] &quot;x&lt;=5&quot;
-## [1] -0.3859696 -0.2109907</pre>
+## [1] -0.7383106 -0.3922707</pre>
 
 </article></slide><slide class=''><hgroup><h2>控制语句</h2></hgroup><article  id="-2">
 
@@ -740,14 +740,14 @@ system.time({
 })</pre>
 
 <pre >##    user  system elapsed 
-##    0.22    0.00    0.22</pre>
+##     0.2     0.0     0.2</pre>
 
 <pre class = 'prettyprint lang-r'>system.time({
   m = sapply(rep(n,n),rnorm)
 })</pre>
 
 <pre >##    user  system elapsed 
-##    0.22    0.00    0.22</pre>
+##    0.21    0.00    0.20</pre>
 
 </article></slide><slide class=''><hgroup><h2>并行效率</h2></hgroup><article >
 
