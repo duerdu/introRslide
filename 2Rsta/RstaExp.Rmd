@@ -30,6 +30,7 @@ summary(cbind(x,y))
 plot(y~x) 
 ```
 
+
 ##  线性回归
 - 参数估计初始化  
 ```{r}
@@ -81,6 +82,11 @@ lines(md$fitted.values~x,col='red');lines(yp~x,col='blue')
 ```
 
 ##  线性回归
+- 公式推导      
+![thanks](../pic/ols.png)  
+
+
+##  线性回归
 - 公式计算  
 ```{r}
 aa2[2]=(n*sum(x*y)-sum(x)*sum(y))/(n*sum(x^2)-(sum(x))^2)
@@ -107,6 +113,15 @@ df <- read.csv("../data/admission-data.csv")
 names(df)<-c('s1','s2','label')  
 plot(s2~s1,col=as.factor(label),data=df)  
 ```
+
+##  逻辑回归
+- 公式推导      
+![thanks](../pic/lr1.png)  
+
+##  逻辑回归
+- 公式推导      
+![thanks](../pic/lr2.png)  
+
 
 ##  逻辑回归
 - 初始化   
