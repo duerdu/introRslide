@@ -1,6 +1,6 @@
 ---
 title: "第一篇 数据与分析"
-author: "杜强, beitta#微信, ddqquu#qq.com"
+author: "小强C, beitta#微信, ddqquu#qq.com"
 date: "2015-06-08"
 output:  ioslides_presentation
 logo: ../pic/rlogo.png
@@ -84,6 +84,19 @@ install.packages(pkg)
 - 相关性假象  
 - 一步到位的分析  
 - 辛普森悖论  
+
+##  数据<dfb>分析</dfb>方法
+- 噪音大过信息，一团糟的数据中规律在哪儿  
+```{r,echo=FALSE,warning=FALSE}
+library(MSG)
+data(BinormCircle)
+
+```
+```{r,echo=TRUE,warning=FALSE,message=FALSE}
+par(mfrow = c(1, 2), ann = FALSE)
+plot(BinormCircle)
+
+```
 
 ##  数据<dfb>分析</dfb>方法
 - 噪音大过信息，一团糟的数据中规律在哪儿  
