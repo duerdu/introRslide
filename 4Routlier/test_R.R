@@ -33,7 +33,7 @@ sort( x[x<(-2) & (x> (quantile(x,25/100)-1.5*IQR(x)))] )
 
 #### 图有偏移
 x2=c(rnorm(n,mean=0,sd=1),rnorm(n/3,mean=8,sd=2))
-xh=hist(x2,breaks=seq(-10,20,0.5))
+xh=hist(x2,breaks=seq(range(x2)[1]-1,range(x2)[2]+1,0.5))
 lines(range(xh$mids[xh$density<0.01 & xh$mids <5 & xh$mids>1]),c(2,2),col='red',lwd=10 )
 par(new=TRUE)
 boxplot(x2,horizontal = TRUE,col='grey')
@@ -47,6 +47,16 @@ plot(dfxy)
 score_dfxy=lofactor(dfxy, k = 5)
 out_dfxy=order(score_dfxy, decreasing = T)[1:20]
 points(dfxy[out_dfxy,],col='red',pch='x',cex=1)
+
+
+# kmeans
+dfxy$cc=NULL
+cc=kmeans(dfxy,6)
+ccout=fitted(cc)
+#table(dfxy$cc, cc$cluster)
+
+plot(y2~x2,col=rownames(ccout),dfxy)
+plot(y2~x2,dfxy)
 
 #
 library(quantmod)
