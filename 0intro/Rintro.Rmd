@@ -253,13 +253,13 @@ plot(seq(1,10)+runif(10,min=0,max=15),type='b',col='green')
 - 工程  
 
 ##  方法--4.分析工具
-Gartner：Magic Quadrant for...   by [gartner Analytics](http://www.gartner.com/technology/reprints.do?id=1-2AHPOU0&ct=150225&st=sb)  
-![gartner](../pic/GanrtnerAnalyze2015.png)  
+Gartner：Magic Quadrant for...   by [gartner Analytics](https://www.gartner.com/doc/reprints?id=1-2YEIILW&ct=160210&st=sb)  
+![gartner](../pic/GanrtnerAnalyze2016.png)  
 
 
 ##  方法--4.分析工具
-Gartner：Magic Quadrant for...   by [gartner BI](http://www.gartner.com/technology/reprints.do?id=1-2AJGAKH&ct=150225&st=sb)   
-![gartner](../pic/GanrtnerBI2015.png)  
+Gartner：Magic Quadrant for...   by [gartner BI](https://www.gartner.com/doc/reprints?id=1-2XXET8P&ct=160204)   
+![gartner](../pic/GanrtnerBI2016.png)  
 
 
 ##  方法--4.分析工具
@@ -280,12 +280,25 @@ sql,hadoop,storm,spark,
 * 数据挖掘  
 * 代码流  
 * 工具流  
+因地制宜，发挥所长。  
 
-因地制宜，发挥所长。
+* 浩瀚如海的算法 
+![rf](../pic/rf.png)  
+
+## 数据>分析>方法--小结
+* 浩瀚如海的算法 
+![rf-xgboos](../pic/rf-xgboos.png)  
+* spark风潮    
+![sparkATbaidu](../pic/sparkATbaidu.png)  
+
 
 ## 参考
 ![1]:谢益辉,2010,"统计图形和模拟视角下的模型理论解析".  
 ![2]:达莱尔,廖颖林译,2002,《统计陷阱》.  
 ![3]:耿直,2009,"如何从生命科学研究数据中挖掘因果关系和评价因果作用？"  
 ![4]:刘德寰,李雪莲,2013,"大数据的风险和现存问题"  
+![5]:吴恩达,Spark Summit 2016,"AI超能力"  
+![6]:Kumar Ashish,2016,"Deeplearning&XgBoost:Winning it hands down", http://www.datasciencecentral.com/profiles/blogs/deep-learning-xgboost-winning-it-hands-down  
+![7]:Manuel Fernández-Delgado,Eva Cernadas,etc,2014,"Do we Need Hundreds of Classifiers to Solve Real World Classification Problems?",http://jmlr.org/papers/v15/delgado14a.html   
+
 
