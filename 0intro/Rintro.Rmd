@@ -8,6 +8,16 @@ css: ../html/0intro.css
 
 ---
 
+## 开篇--心法篇 
+-  **交叉学科**  
+  <dfp>
+  背景多样，机会均等，算法关键也不过是小小一隅  
+  </dfp>
+![math-psy](../pic/math-psy.jpg)  
+-  **你的心与相**  
+![xyxs2](../pic/xyxs2.jpg)  
+
+
 ## 大纲
 -  **数据**
 -  **分析**
@@ -290,6 +300,27 @@ sql,hadoop,storm,spark,
 ![rf-xgboos](../pic/rf-xgboos.png)  
 * spark风潮    
 ![sparkATbaidu](../pic/sparkATbaidu.png)  
+
+
+## 数据>分析>方法--思考作业
+```{r,echo=FALSE}
+par(mfrow = c(2, 1));
+hist(rnorm(500),axes = FALSE,xlab = NULL,ylab = NULL, main = '正妹正态')
+hist(rf(500,20,5),axes = FALSE,xlab = NULL,ylab = NULL, main = '歪妹歪态')
+```
+![lazhuai](../pic/lazhuai.jpg)  
+
+
+## 结语--心法篇 
+-  **谁的心与相**  
+  <dfb6>
+  心之所属  
+  相之所至  
+  无相无我  
+  无我无相  
+  </dfb6>  
+![xyxs](../pic/xyxs.jpg)  
+
 
 
 ## 参考
