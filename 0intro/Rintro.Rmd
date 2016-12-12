@@ -14,8 +14,8 @@ css: ../html/0intro.css
   背景多样，机会均等，算法关键也不过是小小一隅  
   </dfp>
 ![math-psy](../pic/math-psy.jpg)  
--  **你的心与相**  
-![xyxs2](../pic/xyxs2.jpg)  
+-  **你的心在何方 你的相在何处**  
+![xyxs2](../pic/xyxs2.jpg)   ![niudun](../pic/niudun.jpg) 
 
 
 ## 大纲
@@ -42,7 +42,7 @@ css: ../html/0intro.css
 - 数据量级
 - 抽样分析
 - 认识数据
-[大数据的九点思考,刘德寰](http://www.emarketing.net.cn/magazine/adetail.jsp?aid=2381) 
+[大数据的九点思考,刘德寰](http://weibo.com/1497587753/zxL2g0Lq2) 
 
 pkg=c('rmarkdown',
       'knitr',
@@ -237,16 +237,16 @@ plot(seq(1,10)+runif(10,min=0,max=15),type='b',col='green')
 
 ##  方法--1.分析与观察
 最常用的图形    
-[excel图表](http://image.baidu.com/i?tn=baiduimage&ipn=r&ct=201326592&cl=2&lm=-1&st=-1&fm=index&fr=&sf=1&fmq=&pv=&ic=0&nc=1&z=&se=1&showtab=0&fb=0&width=&height=&face=0&istype=2&ie=utf-8&word=excel+%E5%9B%BE%E8%A1%A8&oq=excel+%E5%9B%BE%E8%A1%A8&rsp=-1)  
+[excel图表](http://image.baidu.com/search/index?tn=baiduimage&word=excel+graph)  
 [百度指数](http://index.baidu.com)  
-[淘宝指数](http://shu.taobao.com)  
+[淘宝指数](https://alizs.taobao.com/)  
 
 ##  方法--1.分析与观察
 复杂的图形  
 ![圆盘](../pic/yuan.PNG) 
 
 ##  方法--1.分析与观察
-复杂的图形-艺术与设计,[京东数据汇](http://2012.jd.com/) 
+复杂的图形-艺术与设计,[京东数据汇](http://shu.jd.com/2014.html) 
 ![JD信息图](../pic/2012jd.jpg) 
 
 ##  方法--2.统计建模
@@ -283,6 +283,15 @@ python,
 sql,hadoop,storm,spark,  
 ... ...  
 
+##  方法--附：一份报告的前世今生
+* 分析报告套路    
+![ana_tree](../pic/ana_tree.JPG) 
+
+##  方法--附：garbage的来龙去脉
+* Garbage in, garbage out ([GIGO](https://thedailyomnivore.net/2015/12/02/garbage-in-garbage-out/))      
+![gigo](../pic/gigo.JPG) 
+
+
 ## 数据>分析>方法--小结
 
 * 兴趣+观察+分析    
@@ -304,12 +313,13 @@ sql,hadoop,storm,spark,
 
 ## 数据>分析>方法--思考作业
 ```{r,echo=FALSE}
-par(mfrow = c(2, 1));
+par(mfrow = c(1, 2));
 hist(rnorm(500),axes = FALSE,xlab = NULL,ylab = NULL, main = '正妹正态')
 hist(rf(500,20,5),axes = FALSE,xlab = NULL,ylab = NULL, main = '歪妹歪态')
 ```
+<div align="center">
 ![lazhuai](../pic/lazhuai.jpg)  
-
+</div>
 
 ## 结语--心法篇 
 -  **谁的心与相**  
