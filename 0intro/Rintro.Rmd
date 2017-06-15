@@ -14,6 +14,7 @@ css: ../html/0intro.css
   背景多样，机会均等，算法关键也不过是小小一隅  
   </dfp>
 ![math-psy](../pic/math-psy.jpg)  
+
 -  **你的心在何方 你的相在何处**  
 ![xyxs2](../pic/xyxs2.jpg)   ![niudun](../pic/niudun.jpg) 
 
