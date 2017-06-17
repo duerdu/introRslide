@@ -16,7 +16,7 @@ css: ../html/0intro.css
 
 
 ##  线性回归
-- 数据描述  
+- 数据描述(pce个人消费支出,psavert个人储蓄率)  
 ```{r}
 data(economics,package="ggplot2"); tail(economics,2)  #help(economics)
 x<-economics$psavert
