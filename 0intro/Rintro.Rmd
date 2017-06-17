@@ -13,10 +13,10 @@ css: ../html/0intro.css
   <dfp>
   背景多样，机会均等，算法关键也不过是小小一隅  
   </dfp>
-![math-psy](../pic/math-psy.jpg)  
+![mathpsy](../pic/mathpsy.jpg)  
 
 -  **你的心在何方 你的相在何处**  
-![xyxs2](../pic/xyxs2.jpg)   ![niudun](../pic/niudun.jpg) 
+![xyxs2](../pic/xyxs2.jpg)   ![niudun](../pic/niudun.JPG) 
 
 
 ## 大纲
@@ -264,13 +264,13 @@ plot(seq(1,10)+runif(10,min=0,max=15),type='b',col='green')
 - 工程  
 
 ##  方法--4.分析工具
-Gartner：Magic Quadrant for...   by [gartner Analytics](https://www.gartner.com/doc/reprints?id=1-2YEIILW&ct=160210&st=sb)  
-![gartner](../pic/GanrtnerAnalyze2016.png)  
+Gartner：Magic Quadrant for...   by [gartner DataScience](https://www.gartner.com/doc/reprints?id=1-3TK9NW2&ct=170215&st=sb)  
+![gartner](../pic/GanrtnerAnalyze2017.png)  
 
 
 ##  方法--4.分析工具
-Gartner：Magic Quadrant for...   by [gartner BI](https://www.gartner.com/doc/reprints?id=1-2XXET8P&ct=160204)   
-![gartner](../pic/GanrtnerBI2016.png)  
+Gartner：Magic Quadrant for...   by [gartner BI](https://www.gartner.com/doc/reprints?id=1-3TYE0CD&ct=170221&st=sb)   
+![gartner](../pic/GanrtnerBI2017.png)  
 
 
 ##  方法--4.分析工具
