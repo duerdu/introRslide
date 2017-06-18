@@ -19,6 +19,17 @@ css: ../html/0intro.css
 ![xyxs2](../pic/xyxs2.jpg)   ![niudun](../pic/niudun.JPG) 
 
 
+## 开篇--心法篇 
+-  **谎言与数字**  
+  <dfp>
+  江西财经大学公开课《爱上统计学》，李燕辉   
+  [统计谎言——混淆视听的伎俩](http://open.163.com/movie/2014/12/Q/M/MAC0OTBRG_MAERJNVQM.html ).  
+  </dfp>
+  <dfp>
+  “世界上三种谎言,分别是谎言,该死的谎言和统计数字（There are three kinds of lies:lies,damnedlies,and statistics)”.Arthur Balfour / Mark Twain .  
+  “数字不会说谎,但说谎的人会玩弄数字。(Figures Don’t Lie, But Liars Do Figure)”  Carroll D. Wright / Charles H. Grosvenor 
+  </dfp>
+
 ## 大纲
 -  **数据**
 -  **分析**
@@ -157,9 +168,9 @@ plot(身高~体重,d2);text(d2[,2],d2[,3],d2[,1]);
 library(quantmod)
 options("getSymbols.warning4.0"=FALSE)
 getSymbols("^SSEC");SSEC=data.frame(SSEC)
+#load('../data/SSEC.RData')
 SSEC$t=rownames(SSEC);tail(SSEC)
 #SSEC=data.frame(SSEC.volume=rnorm(30)+10000,SSEC.close=rnorm(30)+4000)
-#plot(filter(SSEC$SSEC.Open/12,rep(1,12)))
 
 ```
 ##  数据<dfb>分析</dfb>方法
@@ -241,6 +252,7 @@ plot(seq(1,10)+runif(10,min=0,max=15),type='b',col='green')
 [excel图表](http://image.baidu.com/search/index?tn=baiduimage&word=excel+graph)  
 [百度指数](http://index.baidu.com)  
 [淘宝指数](https://alizs.taobao.com/)  
+[TBI腾讯浏览指数](http://tbi.tencent.com/)  
 
 ##  方法--1.分析与观察
 复杂的图形  
