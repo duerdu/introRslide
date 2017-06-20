@@ -1,7 +1,7 @@
 ---
 title: "第一篇 数据与分析"
 author: "小强C, beitta#微信, ddqquu#qq.com"
-date: "2015-06-08"
+date: "2017-06-18"
 output:  ioslides_presentation
 logo: ../pic/rlogo.png
 css: ../html/0intro.css
@@ -10,13 +10,12 @@ css: ../html/0intro.css
 
 ## 开篇--心法篇 
 -  **交叉学科**  
+  
   <dfp>
   背景多样，机会均等，算法关键也不过是小小一隅  
   </dfp>
-![mathpsy](../pic/mathpsy.jpg)  
-
--  **你的心在何方 你的相在何处**  
-![xyxs2](../pic/xyxs2.jpg)   ![niudun](../pic/niudun.JPG) 
+    
+![math-cross](../pic/mathpsy.jpg)  
 
 
 ## 开篇--心法篇 
@@ -29,6 +28,19 @@ css: ../html/0intro.css
   “世界上三种谎言,分别是谎言,该死的谎言和统计数字（There are three kinds of lies:lies,damnedlies,and statistics)”.Arthur Balfour / Mark Twain .  
   “数字不会说谎,但说谎的人会玩弄数字。(Figures Don’t Lie, But Liars Do Figure)”  Carroll D. Wright / Charles H. Grosvenor 
   </dfp>
+
+## 开篇--心法篇 
+-  **确定性与不确定性**  
+  <dfp>
+一千个人眼中有一千个Hamlets－Shakespeare  
+仁者见仁，智者见智－周易·系辞上  
+[诺贝尔经济学奖揭晓 两观点相反者分享诺奖](http://phtv.ifeng.com/program/cjxqs/detail_2013_11/04/30941298_0.shtml )    
+代码确定？结果/解读是较为确定的。分析不确定？天气／销量／风险...,又往往寻求先入为主的安慰。最远的距离不是算法之于前手不能会，而是明知10%的中奖率仍纠结如何投入。没有怀疑与反驳，就没有反映出不确定性，要么是已培养起信徒的专家，要么是受众本就不关心你的分析。  
+  </dfp>
+  
+-  **你的心在何方 你的相在何处**  
+![xyxs2](../pic/xyxs2.jpg)   ![niudun](../pic/niudun.JPG) 
+
 
 ## 大纲
 -  **数据**
@@ -302,8 +314,16 @@ sql,hadoop,storm,spark,
 
 ##  方法--附：garbage的来龙去脉
 * Garbage in, garbage out ([GIGO](https://thedailyomnivore.net/2015/12/02/garbage-in-garbage-out/))      
-![gigo](../pic/gigo.JPG) 
+![gigo](../pic/gigo.JPG)   
 
+ 
+
+## 数据>分析>方法--小结(套路)
+
+[CRISP-DM](http://kb.cnblogs.com/page/76804/)   
+[POLL CRISP-DM](http://www.kdnuggets.com/polls/2014/analytics-data-mining-data-science-methodology.html)   
+
+![crisp-dm](../pic/crispdm.png)  
 
 ## 数据>分析>方法--小结
 
@@ -325,13 +345,19 @@ sql,hadoop,storm,spark,
 
 
 ## 数据>分析>方法--思考作业
+-  **正态vs歪态** 
+
 ```{r,echo=FALSE}
 par(mfrow = c(1, 2));
 hist(rnorm(500),axes = FALSE,xlab = NULL,ylab = NULL, main = '正妹正态',family='STHeiti')
 hist(rf(500,20,5),axes = FALSE,xlab = NULL,ylab = NULL, main = '歪妹歪态',family='STHeiti')
 ```
+
+## 数据>分析>方法--思考作业
+-  **备受关注的黑天鹅** 
+
 <div align="center">
-![lazhuai](../pic/lazhuai.jpg)  
+![blackbird](../pic/bigbird.png)  
 </div>
 
 ## 结语--心法篇 

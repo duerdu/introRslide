@@ -1,7 +1,7 @@
 ---
 title: "第二篇 R分析基础"
 author: "小强C, beitta#微信, ddqquu#qq.com"
-date: "2015-06-08"
+date: "2017-06-18"
 output:  ioslides_presentation
 logo: ../pic/rlogo.png
 css: ../html/0intro.css
@@ -302,7 +302,7 @@ attributes(d1)  # names ; row.names ;  class ;
 ```{r}
 d1=data.frame(x=c(5,6,7),a=c("a1","a2","a3"),list(6,'b'),matrix(1:6,nrow=3)) 
 cbind(d1$x,d1$X2)  #rbind类似
-merge(data.frame(id=1:3,a="d1"),data.frame(id=1:3,b="d2"))  # by.x="id",by.y="id"
+merge(data.frame(id=1:4,a="d1"),data.frame(id=2:5,b="d2"))  # by.x="id",by.y="id"
 ```
 
 
@@ -505,7 +505,7 @@ close(con)
 - MYSQL  
 ```{r,eval=FALSE}
 library(RMySQL)
-db="rdb";u="root";pa="toor";h="127.0.0.1";po=3306;
+db="rdb";u="ruser";pa="rpass";h="127.0.0.1";po=3306;
 conn <- dbConnect(MySQL(), dbname=db, username=u, password=pa,host=h,port=po)
 summary(conn, verbose = TRUE)
 dbDisconnect(conn)
@@ -514,11 +514,11 @@ dbDisconnect(conn)
 ##  数据IO 
 ```{r,echo=c(4:6),eval=FALSE}
 library(RMySQL)
-db="rdb";u="root";pa="toor";h="127.0.0.1";po=3306;
+db="rdb";u="ruser";pa="rpass";h="127.0.0.1";po=3306;
 conn <- dbConnect(MySQL(), dbname=db, username=u, password=pa,host=h,port=po)
 dbListTables(conn)
 dbListFields(conn, "babyweight")
-d1=dbGetQuery(conn, "SELECT * FROM babyweight limit 1");d1  #dbSendQuery,dbFetch,dbClearResult
+d1=dbGetQuery(conn, "SELECT * FROM babyweight limit 3");d1  #dbSendQuery,dbFetch,dbClearResult
 dbDisconnect(conn)
 ```
 > <dfb>更多数据IO：R Data Import/Export </dfb>

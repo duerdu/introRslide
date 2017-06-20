@@ -10,7 +10,7 @@
 
 
 
-  <meta name="date" content="2015-06-08" />
+  <meta name="date" content="2017-06-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -112,7 +112,7 @@
       <h1 data-config-title><!-- populated from slide_config.json --></h1>
       <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
       <p data-config-presenter><!-- populated from slide_config.json --></p>
-            <p style="margin-top: 6px; margin-left: -2px;">2015-06-08</p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-06-18</p>
           </hgroup>
   </slide>
 
@@ -319,8 +319,8 @@ sv2=paste(sv,1:9,sep=&#39;&#39;,collapse = &#39;;&#39;);sv2</pre>
 <pre class = 'prettyprint lang-r'>x=rnorm(4);  nm=c(&quot;orange&quot;, &quot;banana&quot;, &quot;apple&quot;, &quot;peach&quot;);
 names(x)=nm; x ;   # x[&quot;banana&quot;]</pre>
 
-<pre >##      orange      banana       apple       peach 
-## -1.31524400 -2.39010639  0.04762567 -0.37479125</pre>
+<pre >##     orange     banana      apple      peach 
+##  0.3556825 -1.1283375 -2.2208697  0.7182299</pre>
 
 </article></slide><slide class=''><hgroup><h2>数据结构-字符串</h2></hgroup><article  id="--1">
 
@@ -610,12 +610,12 @@ cbind(d1$x,d1$X2)  #rbind类似</pre>
 ## [2,]    6    5
 ## [3,]    7    6</pre>
 
-<pre class = 'prettyprint lang-r'>merge(data.frame(id=1:3,a=&quot;d1&quot;),data.frame(id=1:3,b=&quot;d2&quot;))  # by.x=&quot;id&quot;,by.y=&quot;id&quot;</pre>
+<pre class = 'prettyprint lang-r'>merge(data.frame(id=1:4,a=&quot;d1&quot;),data.frame(id=2:5,b=&quot;d2&quot;))  # by.x=&quot;id&quot;,by.y=&quot;id&quot;</pre>
 
 <pre >##   id  a  b
-## 1  1 d1 d2
-## 2  2 d1 d2
-## 3  3 d1 d2</pre>
+## 1  2 d1 d2
+## 2  3 d1 d2
+## 3  4 d1 d2</pre>
 
 </article></slide><slide class=''><hgroup><h2>函数</h2></hgroup><article >
 
@@ -671,7 +671,7 @@ if (x&gt;5) {
   }</pre>
 
 <pre >## [1] &quot;x&lt;=5&quot;
-## [1] 0.9673011 1.4582842</pre>
+## [1] -0.1018290 -0.4548311</pre>
 
 </article></slide><slide class=''><hgroup><h2>控制语句</h2></hgroup><article  id="-2">
 
@@ -750,14 +750,14 @@ system.time({
 })</pre>
 
 <pre >##    user  system elapsed 
-##   0.136   0.005   0.142</pre>
+##   0.137   0.005   0.146</pre>
 
 <pre class = 'prettyprint lang-r'>system.time({
   m = sapply(rep(n,n),rnorm)
 })</pre>
 
 <pre >##    user  system elapsed 
-##   0.125   0.007   0.131</pre>
+##   0.134   0.009   0.145</pre>
 
 </article></slide><slide class=''><hgroup><h2>并行效率</h2></hgroup><article >
 
@@ -859,7 +859,7 @@ close(con)</pre>
 </ul>
 
 <pre class = 'prettyprint lang-r'>library(RMySQL)
-db=&quot;rdb&quot;;u=&quot;root&quot;;pa=&quot;toor&quot;;h=&quot;127.0.0.1&quot;;po=3306;
+db=&quot;rdb&quot;;u=&quot;ruser&quot;;pa=&quot;rpass&quot;;h=&quot;127.0.0.1&quot;;po=3306;
 conn &lt;- dbConnect(MySQL(), dbname=db, username=u, password=pa,host=h,port=po)
 summary(conn, verbose = TRUE)
 dbDisconnect(conn)</pre>
@@ -868,7 +868,7 @@ dbDisconnect(conn)</pre>
 
 <pre class = 'prettyprint lang-r'>dbListTables(conn)
 dbListFields(conn, &quot;babyweight&quot;)
-d1=dbGetQuery(conn, &quot;SELECT * FROM babyweight limit 1&quot;);d1  #dbSendQuery,dbFetch,dbClearResult</pre>
+d1=dbGetQuery(conn, &quot;SELECT * FROM babyweight limit 3&quot;);d1  #dbSendQuery,dbFetch,dbClearResult</pre>
 
 <blockquote>
 <p><dfb>更多数据IO：R Data Import/Export </dfb></p>
