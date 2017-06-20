@@ -145,10 +145,10 @@ plot(BinormCircle,pch=19,cex=0.01)
 - 普遍的"相关性"   
 ```{r,echo=5,warning=FALSE}  
 # 小孩的身高体重数据  
-fen="../data/babyen.txt";fcn="../data/babycn.txt";
+fen="../data/babyen.txt";fcn="../data/babycn.txt";#
 d1=read.table(fen,header=T,sep="\t",encoding="ascii");#head(d1,2)
 d2=read.table(fcn,header=T,sep="\t",encoding="ascii");#head(d2,2)
-plot(身高~体重,d2)
+plot(身高~体重,d2,family='STHeiti')
 
 ```
 
@@ -157,7 +157,7 @@ plot(身高~体重,d2)
 ```{r,echo=3,warning=FALSE}
 # 小孩的身高体重数据
 par(new=T)
-plot(身高~体重,d2);text(d2[,2],d2[,3],d2[,1]);
+plot(身高~体重,d2,family='STHeiti');text(d2[,2],d2[,3],d2[,1],family='STHeiti');
 
 ```
 
@@ -167,8 +167,8 @@ plot(身高~体重,d2);text(d2[,2],d2[,3],d2[,1]);
 # 上证综指
 library(quantmod)
 options("getSymbols.warning4.0"=FALSE)
-getSymbols("^SSEC");SSEC=data.frame(SSEC)
-#load('../data/SSEC.RData')
+#getSymbols("^SSEC");SSEC=data.frame(SSEC)
+load('../data/SSEC.RData')
 SSEC$t=rownames(SSEC);tail(SSEC)
 #SSEC=data.frame(SSEC.volume=rnorm(30)+10000,SSEC.close=rnorm(30)+4000)
 
@@ -180,7 +180,7 @@ library(plotrix)
 n=nrow(SSEC);x=1:n;y1=SSEC$SSEC.Volum;y2=SSEC$SSEC.Close;
 twoord.plot(x,y1,x,y2,xlim=c(0,n),lylim=c(0,300000),rylim=c(2000,6000), lcol=4,rcol=2,xlab="name",ylab="volume",rylab="close",type=c("bar","b"),xticklab=SSEC$t,halfwidth=0.2)
 par(new=T,mar=c(5,8,8,10))
-plot(身高~体重,d2,axes=F,col="blue",pch=19,type='b',cex=2,xlab='',ylab='')
+plot(身高~体重,d2,axes=F,col="blue",pch=19,type='b',cex=2,xlab='',ylab='',family='STHeiti')
 
 ```
 
@@ -327,8 +327,8 @@ sql,hadoop,storm,spark,
 ## 数据>分析>方法--思考作业
 ```{r,echo=FALSE}
 par(mfrow = c(1, 2));
-hist(rnorm(500),axes = FALSE,xlab = NULL,ylab = NULL, main = '正妹正态')
-hist(rf(500,20,5),axes = FALSE,xlab = NULL,ylab = NULL, main = '歪妹歪态')
+hist(rnorm(500),axes = FALSE,xlab = NULL,ylab = NULL, main = '正妹正态',family='STHeiti')
+hist(rf(500,20,5),axes = FALSE,xlab = NULL,ylab = NULL, main = '歪妹歪态',family='STHeiti')
 ```
 <div align="center">
 ![lazhuai](../pic/lazhuai.jpg)  
