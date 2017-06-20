@@ -1,7 +1,7 @@
 ---
 title: "第四篇 R聚类分析"
 author: "小强C, beitta#微信, ddqquu#qq.com"
-date: "2015-06-08"
+date: "2017-06-18"
 output:  ioslides_presentation
 logo: ../pic/rlogo.png
 css: ../html/0intro.css
@@ -117,7 +117,7 @@ mdata=dfnormal
 mdata$cc=NULL
 
 #执行kmeans
-cc=kmeans(mdata,3)
+cc=kmeans(mdata,4)
 ccout=fitted(cc)
 
 #查看聚类结果

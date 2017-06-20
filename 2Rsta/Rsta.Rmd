@@ -89,13 +89,15 @@ plot(dnorm(x),type='b');plot(pnorm(x),type='b');
 - [中心极限定理](http://lxy.cumtb.edu.cn/gailvtongjidaoxue/chap5.htm)  
 > 自然规律  
 > 高尔顿钢板试验  
-[试验](../ref/galton.exe) 
+[试验](../ref/galton.exe)  
+[galton.gif](../pic/galton.gif)  
 
 - 概率统计应用  
 > 不规则面积计算    
 > 仿真模拟    
 > 圆周率估计  
-[试验](../ref/pai.exe)  
+[试验](../ref/pai.exe)   
+[pai.gif](../pic/pai.gif)  
 
 ##  描述统计
 - 统计量    

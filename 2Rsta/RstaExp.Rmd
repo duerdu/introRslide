@@ -1,7 +1,7 @@
 ---
 title: "第三篇 R统计分析-示例"
 author: "小强C, beitta#微信,ddqquu#qq.com"
-date: "2015-06-10"
+date: "2017-06-18"
 output:  ioslides_presentation
 logo: ../pic/rlogo.png
 css: ../html/0intro.css
